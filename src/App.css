@@ -1,0 +1,183 @@
+.App {
+    text-align: center;
+    /* background-color: purple; */
+}
+
+body {
+    background-color: #610C8D;
+}
+
+.swipenavbar {
+    background-color: #4F0675;
+    height: 65px;
+    position: relative;
+}
+
+#moviedisplay div {
+    display: inline-block;
+    margin: 10px;
+}
+
+.text-reposition {
+    text-align: center;
+}
+
+.movieimg {
+    width: 250px ;
+    height: 400px;
+}
+
+.backgroundcover {
+    width: 310px;
+    height: 550px;
+    border-radius: 20px;
+    background-color: whitesmoke;
+}
+
+.moviedisplay {
+    display: inline-block;
+    margin: auto;
+}
+
+.movietitle {
+    margin-bottom: -20px;
+}
+
+#loginform {
+    margin-top: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#registerform {
+    margin-top: 40px;
+    margin-bottom: 35px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.formgroup {
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: fit-content;
+}
+
+label {
+    font-size: 20px;
+}
+
+input {
+    margin-top: 6px;
+    min-width: 300px;
+    height: 37px;
+    padding: 0px 10px;
+    font-size: 16px;
+    font-family: "Open Sans", sans-serif;
+    background-color: whitesmoke;
+    border: 0;
+    border-radius: 4px;
+    margin-bottom: 31px;
+    transition: all 250ms ease-in-out;
+    outline: none;
+    box-shadow: 0px 0px 12px 0.8px white;
+}
+
+#login-button {
+    align-items: center;
+    display: inline-block;
+}
+
+#setting-list {
+    margin:auto;
+    width: 300px;
+    height: 350px;
+    padding: 5px;
+    margin-top: 100px;
+}
+
+.dark-mode-switch {
+    padding: 5px;
+    margin-top: -140px;
+}
+
+#new-movie div{
+    display: inline-block;
+    margin: 10px;
+}
+
+.backgroundcover2 {
+    width: 310px;
+    height: 550px;
+    border-radius: 20px;
+    background-color: whitesmoke;
+}
+
+.welcome-message {
+    color: whitesmoke;
+}
+
+h1 {
+    color: whitesmoke;
+}
+
+.displaycinema {
+    width: 260px;
+    height: 220px;
+    background-color: whitesmoke;
+    display: inline-block;
+    border-radius: 10px;
+}
+
+.displayprices {
+    width: 380px;
+    height: 300px;
+    background-color: whitesmoke;
+    display: inline-block;
+    border-radius: 10px;
+}
+
+container {
+    width: 600px;
+    margin: auto;
+  }
+  
+  .grid td {
+    width: 80px;
+    height: 50px;
+    padding: 50px 30px;
+    border: 2px solid orange;
+    text-align: center;
+    float: left;
+    margin: 5px;
+  }
+  
+  .grid td:hover {
+    opacity: .7;
+    cursor: pointer;
+  }
+  
+  .reserved {
+    background: orange;
+    color: #fff;
+    display: inline-block;
+  }
+  
+  .reserved::after {
+    content: 'RESERVED'
+  }
+  
+  .available::after {
+    content: 'AVAILABLE'
+  }
+  
+  .available {
+    color: #333;
+  }
+  
+  li {
+    list-style: none;
+  }
