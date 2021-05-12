@@ -1,0 +1,245 @@
+.page-container {
+  text-align: center;
+  /* background-color: purple; */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content-wrap{
+  flex: 1;
+}
+
+body {
+  background-color: #610C8D;
+}
+
+.swipenavbar {
+  background-color: #4F0675;
+  height: 65px;
+  position: relative;
+}
+
+#moviedisplay div {
+  display: inline-block;
+  margin: 10px;
+}
+
+.text-reposition {
+  text-align: center;
+}
+
+.movieimg {
+  width: 250px ;
+  height: 400px;
+}
+
+.backgroundcover {
+  width: 330px;
+  height: 565px;
+  border-radius: 20px;
+  background-color: whitesmoke;
+  overflow: auto;
+}
+
+/* .moviedisplay {
+  display: inline-block;
+  margin: auto;
+} */
+
+/* .movietitle {
+  margin-bottom: -20px;
+} */
+
+#loginform {
+  margin-top: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#registerform {
+  margin-top: 40px;
+  margin-bottom: 35px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.formgroup {
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: fit-content;
+}
+
+label {
+  font-size: 20px;
+}
+
+input {
+  margin-top: 6px;
+  min-width: 300px;
+  height: 37px;
+  padding: 0px 10px;
+  font-size: 16px;
+  font-family: "Open Sans", sans-serif;
+  background-color: whitesmoke;
+  border: 0;
+  border-radius: 4px;
+  margin-bottom: 31px;
+  transition: all 250ms ease-in-out;
+  outline: none;
+  box-shadow: 0px 0px 12px 0.8px white;
+}
+
+#login-register {
+  align-items: center;
+  display: inline-block;
+}
+
+#setting-list {
+  margin:auto;
+  width: 300px;
+  height: 350px;
+  padding: 5px;
+  margin-top: 100px;
+}
+
+#new-movie div{
+  display: inline-block;
+  margin: 10px;
+}
+
+.backgroundcover2 {
+  width: 310px;
+  height: 550px;
+  border-radius: 20px;
+  background-color: whitesmoke;
+}
+
+.welcome-message {
+  color: whitesmoke;
+}
+
+h1 {
+  color: whitesmoke;
+}
+
+.displaycinema {
+  width: 260px;
+  height: 220px;
+  background-color: whitesmoke;
+  display: inline-block;
+  border-radius: 10px;
+}
+
+.displayprices {
+  width: 380px;
+  height: 380px;
+  background-color: whitesmoke;
+  display: inline-block;
+  border-radius: 10px;
+  margin-bottom: 35px;
+}
+
+.routelinkreact {
+  color: transparent;
+}
+
+#userprofile  {
+  width: 470px;
+  color: whitesmoke;
+  background-color: #4F0675;
+  display: inline-block;
+  margin: 40px;
+  border-radius: 20px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  overflow: visible;
+}
+
+#profilecontent {
+  text-align: center;
+  margin: 20px;
+}
+
+#profile-logo {
+  margin-top: 30px;
+}
+
+.acc-button-arrangement {
+  display: inline-flex;
+  margin-bottom: 12px;
+}
+
+.main-footer {
+  color: whitesmoke;
+  background-color: #4F0675;
+  padding-top: 1em;
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  /* margin-right: 30px; */
+}
+
+#loading-spinner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin-top: 200px;
+}
+
+/* #testmovies {
+  margin: 60px 220px 80px;
+  width: 1000px;
+  height: 500px;
+  background-color: white;
+  overflow: auto;
+} */
+
+#moviecontents {
+  width: 330px; 
+  height: 565px; 
+  border-radius: 20px; 
+  background-color: whitesmoke; 
+  overflow: visible;
+}
+
+#movie-image {
+  margin: auto;
+}
+
+@media all and (min-width: 370px) {
+  .main-footer {
+    color: whitesmoke;
+    background-color: #4F0675;
+    padding-top: 1em;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    /* margin-right: 30px; */
+  }
+
+  /* #userprofile  {
+    width: 350px;
+    color: whitesmoke;
+    background-color: #4F0675;
+    display: inline-block;
+    margin: 40px;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    overflow: visible;
+  } */
+
+  /* #testmovies {
+    margin: 70px 30px 80px;
+    max-width: 400px;
+    height: 500px;
+    background-color: white;
+    overflow: auto;
+  } */
+
+}
