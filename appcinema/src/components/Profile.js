@@ -75,7 +75,7 @@ export default function Profile() {
         var output = '';
         var output2 = '';
         var output3 = '';
-        fetch("http://localhost/appcinema/src/api/api.php?action=displayprofile",{
+        fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=displayprofile",{
             method: "GET",
             credentials: "include"
         })
@@ -154,7 +154,7 @@ export default function Profile() {
             'EmailUpd': document.getElementById("EmailUpd").value,
             'PhoneUpd': document.getElementById("PhoneUpd").value
         }    
-        fetch("http://localhost/appcinema/src/api/api.php?action=updateprofile",{
+        fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=updateprofile",{
             method: "POST",
             body: JSON.stringify(profileUpdate),
             credentials: 'include'
@@ -183,7 +183,7 @@ function postDeleteProfile(id) {
     var IDuser = {
         'userid' : id
     }
-    fetch("http://localhost/appcinema/src/api/api.php?action=deleteprofile",{
+    fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=deleteprofile",{
         // The function applies DELETE method. It will delete the users account along with all its details from the database.
         method: "POST",
         body: JSON.stringify(IDuser),
@@ -212,7 +212,7 @@ function postDeleteProfile(id) {
 }
 // ----------------------------------------------Logout user when user click Log Out Button----------------------------------------------------------------------------------------
 function postLogOut() {                                                                   
-    fetch("http://localhost/appcinema/src/api/api.php?action=logout",{
+    fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=logout",{
         method: "POST",
         credentials: 'include'
     })

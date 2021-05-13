@@ -34,7 +34,7 @@ export default function Register() {
             'Email': document.getElementById("Email").value,
             'Phone': document.getElementById("Phone").value
         }
-        fetch("http://localhost/solarviewcinema/appcinema/src/api/api.php?action=register",{
+        fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=register",{
             method: "POST",
             body: JSON.stringify(registration),
             credentials: 'include',

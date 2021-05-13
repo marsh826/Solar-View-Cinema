@@ -1,7 +1,7 @@
 import React from 'react';
-import PeninsulaIMG from '../img/peninsula.jpg';
-import knymgIMG from '../img/KNYMT.jpg';
-import fitwIMG from '../img/FITW.jpg';
+// import PeninsulaIMG from '../img/peninsula.jpg';
+// import knymgIMG from '../img/KNYMT.jpg';
+// import fitwIMG from '../img/FITW.jpg';
 import Button from '@material-ui/core/Button'
 import { makeStyles } from '@material-ui/core/styles';
 import '../App.css'
@@ -20,7 +20,7 @@ export default function HomePage() {
     return(
         <div id = "new-movie">
           <h1>Newly Released Movie</h1>
-          <div className = "backgroundcover2">
+          {/* <div className = "backgroundcover2">
                 <div className = "movietitle">
                     <h2>Peninsula</h2>
                 </div>
@@ -71,7 +71,7 @@ export default function HomePage() {
           <div className = "welcome-message">
             <h2>Welcome to Solar View Cinema</h2>
                 <h4>We are the newly established cinema in Brisbane. We are aiming to bring you top quality cinema experiene for your entertainment</h4>  
-          </div>
+          </div> */}
         </div>
     );
 }

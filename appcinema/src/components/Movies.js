@@ -43,25 +43,27 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function MovieDisplay() {
     const classes = useStyles();
 
+    // React const set up for Snackbar Alert messages
+    const [openSnackbar, setOpenSnackBar] = useState(false);
+    const [severity, setSeverity] = useState("info");
+    const [message, setMessage] = useState("");
+
+    // React Const Movie set up empty array to store data that is successfully fetched
+    const [movie, setMovie] = useState([]);
+
+    // React Const Movie Session set up empty array to store data that is successfully fetched
+    const [movieSession, setMovieSession] = useState([]);
+    const [currentMovie, setCurrentMovie] = useState([]);
+
     // React consts set up for Dialog
-    const [movieDisplay, setMovieDisplay] = React.useState(false);
-    function openMovieDisplay() {
+    const [movieDisplay, setMovieDisplay] = useState(false);
+    function openMovieDisplay(id) {
         setMovieDisplay(true);
+        setCurrentMovie(id);
     };
     function closeMovieDisplay() {
         setMovieDisplay(false);
     };
-
-    // React const set up for Snackbar Alert messages
-    const [openSnackbar, setOpenSnackBar] = React.useState(false);
-    const [severity, setSeverity] = React.useState("info");
-    const [message, setMessage] = React.useState("");
-
-    // React Const Movie set up empty array to store data that is successfully fetched
-    const [movie, setMovie] = React.useState([]);
-
-    // React Const Movie Session set up empty array to store data that is successfully fetched
-    const [movieSession, setMovieSession] = React.useState([]);
 
     // React Const Seat set up empty array to store data that is succesfully fetched 
     const [seat, setSeat] = React.useState([]);
@@ -84,7 +86,7 @@ export default function MovieDisplay() {
     };
 //-----------------------------------------------------------Display Movies on Home Page-------------------------------------------------------------------------------------------
     function postDisplayMovies() {
-        fetch("http://localhost/appcinema/src/api/api.php?action=displaymovies",{
+        fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=displaymovies",{
             method: "GET",
             redirect: "error",
             credentials: 'include'
@@ -96,6 +98,7 @@ export default function MovieDisplay() {
                 setOpenSnackBar(true);
                 setSeverity("warning");
             }
+            
             if (res.status === 201) {
                 console.log('created');
                 res.json().then((data) => {
@@ -105,12 +108,12 @@ export default function MovieDisplay() {
             }
         })   
     }
-// //-----------------------------------------------------------Display Movie Sessions------------------------------------------------------------------------------------------------
+//------------------------------------------------------------Display Movie Sessions------------------------------------------------------------------------------------------------
     function postDisplaySession(id) {
         var movie = {
             'movieid' : id
         }
-        fetch("http://localhost/appcinema/src/api/api.php?action=displaymoviesession",{
+        fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=displaymoviesession",{
             method: "POST",
             body: JSON.stringify(movie),
             credentials: 'include'
@@ -138,7 +141,7 @@ function postDisplaySeats(id) {
     var moviesession = {
         'moviesessionid' : id
     }
-    fetch("http://localhost/appcinema/src/api/api.php?action=displayseats",{
+    fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=displayseats",{
         method: "POST",
         body: JSON.stringify(moviesession),
         credentials: 'include'
@@ -184,17 +187,17 @@ function transferTicketID(id) {
     document.getElementById("ticket-id").value = TicketIDValue;
 }
 //-------------------------------------------------------Open and Close Seat Display-----------------------------------------------------------------------------------------------
-function openSeatDisplay() {
-    document.getElementById("display-movie").display = "block";
-    document.getElementById("seat-display").display = "none";
-}
-function closeSeatDisplay() {
-    document.getElementById("display-movie").display = "none";
-    document.getElementById("seat-display").display = "block";
-}
+// function closeSeatDisplay() {
+//     document.getElementById("display-movie").display = "block";
+//     document.getElementById("seat-display").display = "none";
+// }
+// function openSeatDisplay() {
+//     document.getElementById("display-movie").display = "none";
+//     document.getElementById("seat-display").display = "block";
+// }
 //---------------------------------------------------------Displaying Ticket Type--------------------------------------------------------------------------------------------------
 function postTicketTypes() {
-    fetch("http://localhost/appcinema/src/api/api.php?action=displaytickettype",{
+    fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=displaytickettype",{
         method: "GET",
         credentials: "include"
     })
@@ -250,7 +253,7 @@ function postSeatBooking() {
         var favouritemovie = {
             "movieid": id
         }
-        fetch("http://localhost/appcinema/src/api/api.php?action=addfavouritemovie",{
+        fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=addfavouritemovie",{
             method: "POST",
             body: JSON.stringify(favouritemovie),
             credentials: "include"
@@ -296,93 +299,13 @@ function postSeatBooking() {
                         </div>
                     {/* View Movie Session Button */}
                         <Button
-                            onClick={() => {openMovieDisplay(movie.MovieID); postDisplaySession(movie.MovieID);}}
+                            onClick={() => {openMovieDisplay(index); postDisplaySession(movie.MovieID);}}
                             variant="contained" 
                             color="primary"
                             className={classes.margin}>
                             View Sessions
                         </Button>
                     {/* Material UI Dialog that stores and display Movie details */}
-                        <Dialog
-                            // PaperProps={}
-                            open={movieDisplay}
-                            TransitionComponent={Transition}
-                            keepMounted
-                            onClose={closeMovieDisplay}
-                            aria-labelledby="alert-dialog-slide-title"
-                            aria-describedby="alert-dialog-slide-description"
-                        >
-                            <DialogTitle id="alert-dialog-slide-title">{movie.MovieName}</DialogTitle>
-                                <DialogContent>
-                                <DialogContentText id="alert-dialog-slide-description">
-                                    <div id="display-movie">
-                                        <div id="imgMovieDisplay">
-                                        <img 
-                                            style={{borderRadius: 50}}
-                                            width='300px'
-                                            height='480px'
-                                            src={movie.MovieImage}/>
-                                        </div>
-                                        {/* Render Movie Details in Material UI Dialog */}
-                                        <div id="movie-details">
-                                            <div>{movie.MovieDescription}</div><br></br>
-                                            <div><strong>Genre:</strong> {movie.Genre}</div>
-                                            <div><strong>Release Date:</strong> {movie.ReleaseDate}</div>
-                                            <br></br>
-                                        {/* Render Movie Sessions in Material UI Dialog*/}
-                                        <div id="sessiondisplay">
-                                            <h3>Available Sessions</h3>
-                                            {movieSession.map((movieSession, index) =>
-                                                <div>
-                                                    <div>{movieSession.SessionDate}</div>
-                                                    <div>{movieSession.TimeStart}</div>
-                                                    <Button
-                                                        endIcon={<EventSeat />}
-                                                        onClick={() => openSeatDisplay()}
-                                                            // postDisplaySeats(movieSession.MovieID);
-                                                            // postTicketTypes();}}
-                                                        variant="contained" 
-                                                        color="primary"
-                                                        className={classes.margin}>
-                                                        View Seats
-                                                    </Button>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                    
-                                    {/* Render Seats in Material UI Dialog */}
-                                        <div id="seat-display" style={{display: "none"}}>
-                                            <h3>Available Seats</h3>
-                                            {seat.map((seat, index) =>
-                                                <div>
-                                                    <div className={classes.root}>
-                                                    <IconButton 
-                                                        onClick={() => transferSeatValue(seat.SeatID)}>
-                                                        <EventSeat />
-                                                    </IconButton>
-                                                    </div> 
-                                                </div>
-                                            )}
-                                            <h3>Ticket Types</h3>
-                                            {tickettype.map((tickettype, index) => 
-                                                <div>
-
-                                                </div>
-                                            )}
-                                            <input id="seat-id" value="" readOnly></input>
-                                            <input id="ticket-type" value="" readOnly></input>
-                                            <Prices />
-                                        </div>
-                                    </div>
-                                </DialogContentText>
-                                </DialogContent>
-                                <DialogActions>
-                                    <Button onClick={() => {closeMovieDisplay(); closeSeatDisplay()}} color="primary">
-                                        Close
-                                    </Button>
-                                </DialogActions>
-                        </Dialog>
                     {/* Add Favourite Movie Button */}
                         <Button
                             onClick={() => postAddFavouriteMovie(movie.MovieID)}
@@ -393,6 +316,90 @@ function postSeatBooking() {
                         </Button> 
                     </div>
                 ))}
+
+                {Object.keys(movie).map((index => (
+                    <Dialog
+                        // PaperProps={}
+                        open={movieDisplay}
+                        TransitionComponent={Transition}
+                        keepMounted
+                        onClose={closeMovieDisplay}
+                        aria-labelledby="alert-dialog-slide-title"
+                        aria-describedby="alert-dialog-slide-description"
+                    >
+                        <DialogTitle id="alert-dialog-slide-title">{movie[currentMovie].MovieName}</DialogTitle>
+                            <DialogContent>
+                            <DialogContentText id="alert-dialog-slide-description">
+                                <div id="display-movie">
+                                    <div id="imgMovieDisplay">
+                                    <img 
+                                        style={{borderRadius: 50}}
+                                        width='300px'
+                                        height='480px'
+                                        src={movie[currentMovie].MovieImage}/>
+                                    </div>
+                                    
+                                    {/* Render Movie Details in Material UI Dialog */}
+                                    <div id="movie-details">
+                                        <div>{movie[currentMovie].MovieDescription}</div><br></br>
+                                        <div><strong>Genre:</strong> {movie[currentMovie].Genre}</div>
+                                        <div><strong>Release Date:</strong> {movie[currentMovie].ReleaseDate}</div>
+                                        <br></br>
+                                    {/* Render Movie Sessions in Material UI Dialog*/}
+                                    <div id="sessiondisplay">
+                                        <h3>Available Sessions</h3>
+                                        {movieSession.map((movieSession, index) =>
+                                            <div>
+                                                <div>{movieSession.SessionDate}</div>
+                                                <div>{movieSession.TimeStart}</div>
+                                                <Button
+                                                    endIcon={<EventSeat />}
+                                                    // onClick={() => openSeatDisplay()}
+                                                        // postDisplaySeats(movieSession.MovieID);
+                                                        // postTicketTypes();}}
+                                                    variant="contained" 
+                                                    color="primary"
+                                                    className={classes.margin}>
+                                                    View Seats
+                                                </Button>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                                
+                                {/* Render Seats in Material UI Dialog */}
+                                    {/* <div id="seat-display" style={{display: "none"}}>
+                                        <h3>Available Seats</h3>
+                                        {seat.map((seat, index) =>
+                                            <div>
+                                                <div className={classes.root}>
+                                                <IconButton 
+                                                    onClick={() => transferSeatValue(seat.SeatID)}>
+                                                    <EventSeat />
+                                                </IconButton>
+                                                </div> 
+                                            </div>
+                                        )}
+                                        {/* <h3>Ticket Types</h3>
+                                        {tickettype.map((tickettype, index) => 
+                                            <div>
+
+                                            </div>
+                                        )} */}
+                                        {/* <input id="seat-id" value="" readOnly></input>
+                                        <input id="ticket-type" value="" readOnly></input>
+                                        <Prices />
+                                    </div> */} 
+                                </div>
+                            </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={() => {closeMovieDisplay()}} color="primary">
+                                    Close
+                                </Button>
+                            </DialogActions>
+                    </Dialog>
+                )))}
             </div>
         
                 

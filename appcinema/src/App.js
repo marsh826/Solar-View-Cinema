@@ -12,6 +12,18 @@ import Favourite from './components/Favourite';
 import Profile from './components/Profile';
 import Confirm from './components/BookingConfirm';
 import Footer from './components/Footer';
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/lab/Alert';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    width: '100%',
+    '& > * + *': {
+      marginTop: theme.spacing(2),
+    },
+  },
+}));
 
 export default function App() {
   window.onload = function() {
@@ -21,16 +33,38 @@ export default function App() {
     localStorage.setItem('font', 'default');
     localStorage.setItem('backgroundColour', 'default');
   }
+  const classes = useStyles();
+
+  // React const set up for Snackbar Alert messages
+  const [openSnackbar, setOpenSnackBar] = React.useState(false);
+  const [severity, setSeverity] = React.useState("info");
+  const [message, setMessage] = React.useState("");
+
+  // On clickaway, close Snackbar Alert
+  const closeSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSnackBar(false);
+};
+
   function checkLoginStatus(){
-    fetch("http://localhost/appcinema/src/api/api.php?action=loginstatus",{
+    fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=loginstatus",{
       method: 'GET',
       credentials: "include",
     }).then(function(response){
         if(response.status === 202){
+            // setMessage("Welcome back!");
+            // setOpenSnackBar(true);
+            // setSeverity("success");
             console.log('Status: Logged In');
             localStorage.setItem('userStatus', 'logged in');
+            
         }
         if(response.status === 401) {
+            // setMessage("You are not logged in.");
+            // setOpenSnackBar(true);
+            // setSeverity("warning");
             console.log('Status: Logged Out');
             localStorage.setItem('userStatus', 'logged out');
         }
@@ -39,6 +73,13 @@ export default function App() {
   return (
     <div className = "page-container">
       <div className = "content-wrap">
+          <div className={classes.root}>
+            <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={closeSnackbar}>
+                <Alert variant="filled" onClose={closeSnackbar} severity={severity}>
+                    {message}
+                </Alert>
+            </Snackbar>
+          </div>
         <Router>  
           <Navbar />
           <Switch>
