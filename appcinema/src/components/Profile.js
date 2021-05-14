@@ -252,10 +252,7 @@ function postLogOut() {
                                 <DialogContent>
                                     <DialogContentText id="update-acc-content">
                                         <div id="update-account">
-                                            <form id="registerform">
-                                                <div>
-                                                    abracabadaletamos
-                                                </div>
+                                            <form id="updateform">
                                                 <div className="formgroup">
                                                     <label for="firstname">First Name</label>
                                                     <input type="text" placeholder="First Name" name="firstname" id="FirstNameUpd" value={profile.FirstName}></input>
@@ -263,32 +260,32 @@ function postLogOut() {
 
                                                 <div className="formgroup">
                                                     <label for="lastname">Last Name</label>
-                                                    <input type="text" placeholder="Last Name" name="lastname" id="LastNameUpd" value={profile.FirstName}></input>    
+                                                    <input type="text" placeholder="Last Name" name="lastname" id="LastNameUpd" value={profile.LastName}></input>    
                                                 </div>  
 
                                                 <div className="formgroup">
                                                     <label for="dateofbirth">Last Name</label>
-                                                    <input type="text" placeholder="Date of Birth" name="dateofbirth" id="DateOfBirthUpd" value={profile.FirstName}></input>    
+                                                    <input type="text" placeholder="Date of Birth" name="dateofbirth" id="DateOfBirthUpd" value={profile.DateOfBirth}></input>    
                                                 </div>  
 
                                                 <div className="formgroup">
                                                     <label for="email">Email</label>
-                                                    <input type="text" placeholder="Email" name="email" id="EmailUpd" value={profile.FirstName}></input>    
+                                                    <input type="text" placeholder="Email" name="email" id="EmailUpd" value={profile.Email}></input>    
                                                 </div>
 
                                                 <div className="formgroup">
                                                     <label for="Phone">Mobile Phone</label>
-                                                    <input type="text" placeholder="Phone" name="phone" id="PhoneUpd" value={profile.FirstName}></input>    
+                                                    <input type="text" placeholder="Phone" name="phone" id="PhoneUpd" value={profile.Phone}></input>    
                                                 </div>
 
                                                 <div className="formgroup">
                                                     <label for="username">Username</label>
-                                                    <input type="text" placeholder="Username" name="username" id="UsernameUpd" value={profile.FirstName}></input>
+                                                    <input type="text" placeholder="Username" name="username" id="UsernameUpd" value={profile.Username}></input>
                                                 </div>
 
                                                 <div className="formgroup">
                                                     <label for="password">Password</label>
-                                                    <input type="password" placeholder="Password" name="password" id="PasswordUpd" value={profile.FirstName}></input>    
+                                                    <input type="password" placeholder="Password" name="password" id="PasswordUpd" value={profile.Password}></input>    
                                                 </div>
                                             </form>
                                         </div>   
@@ -327,7 +324,7 @@ function postLogOut() {
                                 variant="contained" 
                                 color="secondary"
                                 className={classes.margin}>
-                                Close Account
+                                Closing Account
                             </Button> 
                             <Dialog
                                 open={openDeleteAccount}
@@ -337,7 +334,7 @@ function postLogOut() {
                                 aria-labelledby="delete-profile"
                                 aria-describedby="delete-acc-content"
                             >
-                                <DialogTitle id="delete-profile">{"Close Account"}</DialogTitle>
+                                <DialogTitle id="delete-profile">{"Closing Your Solar View Cinema Account"}</DialogTitle>
                                 <DialogContent>
                                     <DialogContentText id="delete-acc-content">
                                         <div id="delete-account">

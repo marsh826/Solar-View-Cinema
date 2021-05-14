@@ -55,7 +55,7 @@ switch($_GET['action']) {
 // -------------------------------------------------Checking Log In Status------------------------------
     case 'loginstatus':
         // A super global variable which is used to collect data from REQUEST METHOD that is POST
-        $_SERVER['REQUEST_METHOD'] == 'POST';
+        $_SERVER['REQUEST_METHOD'] == 'GET';
         if($_SESSION['session']->logged_in_check()){
             http_response_code(202);
         } else {

@@ -52,6 +52,7 @@ body {
 } */
 
 #loginform {
+  color: white;
   margin-top: 80px;
   display: flex;
   flex-direction: column;
@@ -59,6 +60,7 @@ body {
 }
 
 #registerform {
+  color: white;
   margin-top: 40px;
   margin-bottom: 35px;
   display: flex;
@@ -67,7 +69,6 @@ body {
 }
 
 .formgroup {
-  color: white;
   display: flex;
   flex-direction: column;
   align-items: flex-start;

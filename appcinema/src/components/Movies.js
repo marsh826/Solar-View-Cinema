@@ -68,7 +68,7 @@ export default function MovieDisplay() {
     const [movieDisplay, setMovieDisplay] = useState(false);
     function openMovieDisplay(id) {
         setMovieDisplay(true);
-        setCurrentMovie(id);
+        setCurrentMovie(id); 
     };
     function closeMovieDisplay() {
         setMovieDisplay(false);
@@ -85,7 +85,7 @@ export default function MovieDisplay() {
         // showLoading();
         postDisplayMovies();
     }, []);
-
+     
 //-----------------------------------------------------------Display Movies on Home Page-------------------------------------------------------------------------------------------
     function postDisplayMovies() {
         fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=displaymovies",{
@@ -301,7 +301,7 @@ function postSeatBooking() {
 
                     {/* View Movie Session Button */}
                         <Button
-                            onClick={() => {openMovieDisplay(index); postDisplaySession(movie.MovieID);}}
+                            onClick={() => {openMovieDisplay([index]); postDisplaySession(movie.MovieID);}}
                             variant="contained" 
                             color="primary"
                             className={classes.margin}>
@@ -319,7 +319,7 @@ function postSeatBooking() {
                     </div>
                 ))}
 
-                {Object.keys(movie||{}).map((index => (
+                {Object.keys(movie).map((index => (
                     <Dialog
                         // PaperProps={}
                         open={movieDisplay}

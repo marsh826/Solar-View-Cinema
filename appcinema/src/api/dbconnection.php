@@ -21,8 +21,6 @@ class databaseOBJ {
         if(password_verify($passwordlogin, $row['Password'])){
             $userid = $row["UserID"];
             $_SESSION["UserID"] = $userid;
-            // $_SESSION["loggedin"] = 1;
-            // $this->USERID = $userid;
             return true;
         } else {
             return false;

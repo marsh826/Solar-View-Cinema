@@ -4,7 +4,6 @@ import Button from '@material-ui/core/Button';
 import '../App.css';
 import { makeStyles } from '@material-ui/core/styles';
 import { Link, useHistory } from 'react-router-dom';
-import AlertTitle from '@material-ui/lab/AlertTitle';
 import Alert from '@material-ui/lab/Alert';
 import Snackbar from '@material-ui/core/Snackbar';
 
@@ -15,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
         '& > * + *': {
           marginTop: theme.spacing(2),
         },
-      },
+    },
     margin: {
       margin: theme.spacing(1),
     },
@@ -31,6 +30,18 @@ export default function Login() {
     // React Router Dom useHistory in a const 
     const history = useHistory();
 
+    // React const set up for Snackbar Alert messages
+    const [openSnackbar, setOpenSnackBar] = React.useState(false);
+    const [severity, setSeverity] = React.useState("info");
+    const [message, setMessage] = React.useState("");
+
+    // On clickaway, close Snackbar Alert
+    const closeSnackbar = (event, reason) => {
+        if (reason === "clickaway") {
+        return;
+        }
+        setOpenSnackBar(false);
+    };
     
 
 //---------------------------------------------Log user into their account on the web app------------------------------------------------------------------------------------------
@@ -48,14 +59,18 @@ export default function Login() {
         .then(function(response){    
             if(response.status === 403) {
                 console.log('forbidden');
+                setOpenSnackBar(true);
+                setSeverity("error");
+                setMessage("Error: Invalid Username or Password.");
                 return;
             }
             if(response.status === 202) {
                 console.log('success');
-                // document.getElementById('mainpage').style.display = 'block';
-                // document.getElementById('indexpage').style.display = 'none';
                 localStorage.setItem('userStatus', 'logged in');
                 console.log('Status: Logged In');
+                setOpenSnackBar(true);
+                setSeverity("success");
+                setMessage("Login Success!");
                 history.push("/Profile")
                 // document.getElementById('login-form').reset();
                 return;
@@ -69,6 +84,11 @@ export default function Login() {
     }
     return(
         <Container maxWidth="sm" >
+            <Snackbar open={openSnackbar} autoHideDuration={4000} onClose={closeSnackbar}>
+                <Alert variant="filled" onClose={closeSnackbar} severity={severity}>
+                    {message}
+                </Alert>
+            </Snackbar>
             <div id="login-page">
                 <form id="loginform" autoComplete="off">
                     <div className="formgroup">

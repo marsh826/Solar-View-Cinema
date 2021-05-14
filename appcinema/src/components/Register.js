@@ -4,6 +4,8 @@ import Button from '@material-ui/core/Button';
 import '../App.css';
 import { makeStyles } from '@material-ui/core/styles';
 import {Link, useHistory} from 'react-router-dom';
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/lab/Alert';
 
 const useStyles = makeStyles((theme) => ({
     margin: {
@@ -12,15 +14,34 @@ const useStyles = makeStyles((theme) => ({
     extendedIcon: {
       marginRight: theme.spacing(1),
     },
+    root: {
+        width: '100%',
+        '& > * + *': {
+          marginTop: theme.spacing(2),
+        },
+    }
 }));
 
 // Register Functional Component with export default
 export default function Register() {
+
     const classes = useStyles();
 
     // React Router Dom useHistory in a const 
     const history = useHistory();
 
+    // React const set up for Snackbar Alert messages
+    const [openSnackbar, setOpenSnackBar] = React.useState(false);
+    const [severity, setSeverity] = React.useState("info");
+    const [message, setMessage] = React.useState("");
+
+    // On clickaway, close Snackbar Alert
+    const closeSnackbar = (event, reason) => {
+        if (reason === "clickaway") {
+        return;
+        }
+        setOpenSnackBar(false);
+    };
 
 //---------------------------------------------Registering a new accounts when the users entering register details-----------------------------------------------------------------
     function postRegister() {
@@ -43,12 +64,17 @@ export default function Register() {
             // If the form was not fully filled in 
             if(response.status === 406){
                 console.log('unaccepted');
-                console.log('Form not fully filled');
+                setOpenSnackBar(true);
+                setSeverity("error");
+                setMessage("Error: Register details are either not valid or fully provided.");
                 return;
             }
             if(response.status === 202) {
             // If the form was fully filled in and data was successfully inserted
                 console.log('success');
+                setOpenSnackBar(true);
+                setSeverity("success");
+                setMessage("You have been successfully registered!");
                 history.push("/Profile");
                 return;
             }
@@ -62,6 +88,14 @@ export default function Register() {
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     return(
         <Container maxWidth="sm">
+            <div className={classes.root}>
+                <Snackbar open={openSnackbar} autoHideDuration={4000} onClose={closeSnackbar}>
+                    <Alert variant="filled" onClose={closeSnackbar} severity={severity}>
+                        {message}
+                    </Alert>
+                </Snackbar>
+            </div>
+            {/* Register Page Render*/}
             <div id="register-page">
                 <form id="registerform">
                     <div className="formgroup">
