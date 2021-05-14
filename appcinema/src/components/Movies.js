@@ -41,12 +41,21 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 // Movie Display Function Component with export default
 export default function MovieDisplay() {
+    // A React const that is assigned with Material UI Component Style Const
     const classes = useStyles();
 
     // React const set up for Snackbar Alert messages
     const [openSnackbar, setOpenSnackBar] = useState(false);
     const [severity, setSeverity] = useState("info");
     const [message, setMessage] = useState("");
+
+    // On clickaway, close Snackbar Alert
+    const closeSnackbar = (event, reason) => {
+        if (reason === "clickaway") {
+            return;
+        }
+        setOpenSnackBar(false);
+    };
 
     // React Const Movie set up empty array to store data that is successfully fetched
     const [movie, setMovie] = useState([]);
@@ -77,13 +86,6 @@ export default function MovieDisplay() {
         postDisplayMovies();
     }, []);
 
-    // On clickaway, close Snackbar Alert
-    const closeSnackbar = (event, reason) => {
-        if (reason === "clickaway") {
-          return;
-        }
-        setOpenSnackBar(false);
-    };
 //-----------------------------------------------------------Display Movies on Home Page-------------------------------------------------------------------------------------------
     function postDisplayMovies() {
         fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=displaymovies",{
@@ -292,11 +294,11 @@ function postSeatBooking() {
                     <div id="moviecontents">
                         <div id ="movie-image">
                         <img 
-                        // style={{borderRadius: 50}}
                         width='300px'
                         height='480px'
                         src={movie.MovieImage}/>
                         </div>
+
                     {/* View Movie Session Button */}
                         <Button
                             onClick={() => {openMovieDisplay(index); postDisplaySession(movie.MovieID);}}
@@ -305,7 +307,7 @@ function postSeatBooking() {
                             className={classes.margin}>
                             View Sessions
                         </Button>
-                    {/* Material UI Dialog that stores and display Movie details */}
+
                     {/* Add Favourite Movie Button */}
                         <Button
                             onClick={() => postAddFavouriteMovie(movie.MovieID)}
@@ -317,7 +319,7 @@ function postSeatBooking() {
                     </div>
                 ))}
 
-                {Object.keys(movie).map((index => (
+                {Object.keys(movie||{}).map((index => (
                     <Dialog
                         // PaperProps={}
                         open={movieDisplay}

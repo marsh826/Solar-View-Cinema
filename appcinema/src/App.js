@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './index.js';
 import Navbar from './components/Navbar';
 import './App.css';
@@ -25,14 +25,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function App() {
-  window.onload = function() {
-    checkLoginStatus();
+window.onload = function() {
     localStorage.setItem('profileImage', 'none');
     localStorage.setItem('backgroundImage', 'none');
     localStorage.setItem('font', 'default');
     localStorage.setItem('backgroundColour', 'default');
-  }
+}
+
+export default function App() {
+  // A React const that is assigned with Material UI Component Style Const
   const classes = useStyles();
 
   // React const set up for Snackbar Alert messages
@@ -46,7 +47,11 @@ export default function App() {
       return;
     }
     setOpenSnackBar(false);
-};
+  };
+
+  useEffect(() => {
+    checkLoginStatus();
+  }, []);
 
   function checkLoginStatus(){
     fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=loginstatus",{
@@ -54,19 +59,19 @@ export default function App() {
       credentials: "include",
     }).then(function(response){
         if(response.status === 202){
-            // setMessage("Welcome back!");
-            // setOpenSnackBar(true);
-            // setSeverity("success");
             console.log('Status: Logged In');
             localStorage.setItem('userStatus', 'logged in');
+            setOpenSnackBar(true);
+            setSeverity("success");
+            setMessage("Welcome back!");
             
         }
         if(response.status === 401) {
-            // setMessage("You are not logged in.");
-            // setOpenSnackBar(true);
-            // setSeverity("warning");
             console.log('Status: Logged Out');
             localStorage.setItem('userStatus', 'logged out');
+            setOpenSnackBar(true);
+            setSeverity("warning");
+            setMessage("You are not logged in.");
         }
     })
   }
@@ -74,7 +79,7 @@ export default function App() {
     <div className = "page-container">
       <div className = "content-wrap">
           <div className={classes.root}>
-            <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={closeSnackbar}>
+            <Snackbar open={openSnackbar} autoHideDuration={4000} onClose={closeSnackbar}>
                 <Alert variant="filled" onClose={closeSnackbar} severity={severity}>
                     {message}
                 </Alert>

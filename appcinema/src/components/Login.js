@@ -31,32 +31,8 @@ export default function Login() {
     // React Router Dom useHistory in a const 
     const history = useHistory();
 
-    // Material UI Alert Snack on Login Success
-    // const [loginSuccess, setLoginSuccess] = React.useState(false);
-    // const handleClickLoginSuccess = () => {
-    //     setLoginSuccess(true);
-    // };
-    // const handleCloseLoginSuccess = (event, reason) => {
-    //     if (reason === 'clickaway') {
-    //         return;
-    //     }
-    //     setLoginSuccess(false);
-    // };
+    
 
-    const [loginSuccess, setLoginSuccess] = React.useState(false);
-
-    // Material UI Alert Snack on Login Failure
-    // const [loginFail, setLoginFail] = React.useState(false);
-    // const handleClickLoginFail = () => {
-    //     setLoginFail(true);
-    // };
-    // const handleCloseLoginFail = (event, reason) => {
-    //     if (reason === 'clickaway') {
-    //         return;
-    //     }
-    //     setLoginFail(false);
-    // };
-    const [loginFail, setLoginFail] = React.useState(false);
 //---------------------------------------------Log user into their account on the web app------------------------------------------------------------------------------------------
     function postLogin() {
         // Prepare a variable that contains given login credentials from the user
@@ -64,7 +40,7 @@ export default function Login() {
             'username': document.getElementById("username").value,
             'password': document.getElementById("password").value
         }
-        fetch("http://localhost/appcinema/src/api/api.php?action=login",{
+        fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=login",{
             method: 'POST',
             body: JSON.stringify(authentication),
             credentials: 'include',
@@ -80,16 +56,8 @@ export default function Login() {
                 // document.getElementById('indexpage').style.display = 'none';
                 localStorage.setItem('userStatus', 'logged in');
                 console.log('Status: Logged In');
+                history.push("/Profile")
                 // document.getElementById('login-form').reset();
-                <Alert
-                    action={
-                        <Button onClick={history.push("/Profile")}color="inherit" size="small">
-                        OK
-                        </Button>
-                    }
-                >
-                    Login Successful!
-                </Alert>
                 return;
             }
             // Send back error into console log

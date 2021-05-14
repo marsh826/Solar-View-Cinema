@@ -57,7 +57,7 @@ class databaseOBJ {
     // Display User Profile by UserID
     function displayProfile() {
         try {
-        $mysql = "SELECT UserID, FirstName, LastName, DateOfBirth, Email, Phone, UserName FROM users 
+        $mysql = "SELECT UserID, FirstName, LastName, DateOfBirth, Email, Phone, Username FROM users 
         WHERE UserID = :userid";
         $stmt = $this->dbconn->prepare($mysql);
         $stmt->bindValue(':userid', $_SESSION['UserID']);
