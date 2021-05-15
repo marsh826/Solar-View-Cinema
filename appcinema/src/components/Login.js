@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
 import '../App.css';
@@ -31,14 +31,17 @@ export default function Login() {
     const history = useHistory();
 
     // React const set up for Snackbar Alert messages
-    const [openSnackbar, setOpenSnackBar] = React.useState(false);
-    const [severity, setSeverity] = React.useState("info");
-    const [message, setMessage] = React.useState("");
+    const [openSnackbar, setOpenSnackBar] = useState(false);
+    const [severity, setSeverity] = useState("info");
+    const [message, setMessage] = useState("");
 
     // On clickaway, close Snackbar Alert
     const closeSnackbar = (event, reason) => {
         if (reason === "clickaway") {
-        return;
+            return;
+        }
+        if (reason === (localStorage.getItem('userStatus')) === 'logged in'){
+            return;
         }
         setOpenSnackBar(false);
     };
@@ -68,10 +71,7 @@ export default function Login() {
                 console.log('success');
                 localStorage.setItem('userStatus', 'logged in');
                 console.log('Status: Logged In');
-                setOpenSnackBar(true);
-                setSeverity("success");
-                setMessage("Login Success!");
-                history.push("/Profile")
+                history.push("/Profile");
                 // document.getElementById('login-form').reset();
                 return;
             }

@@ -11,6 +11,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Backdrop from '@material-ui/core/Backdrop';
 import { useHistory } from 'react-router-dom';
 import '../App.css' 
 
@@ -32,6 +33,10 @@ const useStyles = makeStyles((theme) => ({
     extendedIcon: {
       marginRight: theme.spacing(1),
     },
+    backdrop: {
+        zIndex: theme.zIndex.drawer + 1,
+        color: '#fff',
+    }
 }));
 // Material UI Dialog Animation
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -76,6 +81,9 @@ export default function Profile() {
         setOpenSnackBar(false);
     };
 
+    // Loading Screen
+    const [loading, setLoading] = useState(true);
+
     //React Const Profile set up empty array to store data that is successfully fetched
     const [profile, setProfile] = useState([]);
     
@@ -85,8 +93,6 @@ export default function Profile() {
         postDisplayProfile();
     }, []);
 
-    // if(loading) return <CircularProgress style={{color: 'white'}}/>
-
 //-----------------------------------------------Display profile when Profile page is loaded---------------------------------------------------------------------------------------
     function postDisplayProfile() {
         fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=displayprofile",{
@@ -94,6 +100,7 @@ export default function Profile() {
             credentials: "include"
         })
         .then((res) => {
+            setLoading(false);
             if (res.status === 401) {
                 console.log('forbidden');
                 setProfile("No Profile Selected");
@@ -105,7 +112,7 @@ export default function Profile() {
             if (res.status === 503) {
                 console.log('service unavailable');
                 setProfile("No Profile Selected");
-                setMessage("Error: No profile is found");
+                setMessage("Error: Unable to fetch user profile");
                 setOpenSnackBar(true);
                 setSeverity("error");
             }
@@ -199,18 +206,15 @@ function postLogOut() {
             console.log('success');      
             localStorage.setItem('userStatus', 'logged out');
             console.log('Status: Logged Out');
-            history.push("/Home")
+            history.push("/Home");
             return;
         }
     })
     return false;
 }
-
-
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     return(
-        <div id="profilepage">  
-
+        <div id="profilepage"> 
             <div className={classes.root}>
             <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={closeSnackbar}>
                 <Alert variant="filled" onClose={closeSnackbar} severity={severity}>
@@ -218,6 +222,11 @@ function postLogOut() {
                 </Alert>
             </Snackbar>
             </div>
+            {loading ? (
+                <Backdrop className={classes.backdrop}>
+                    <CircularProgress color="inherit" />
+                </Backdrop>
+                ) : (
 
             <div id="userprofile">
                 <Person id="profile-logo" style={{fontSize: 120}} />
@@ -231,134 +240,137 @@ function postLogOut() {
                             <div><strong>Mobile Phone</strong>: {profile.Phone}</div>
                         </div> 
                         <div className="acc-button-arrangement">
-                        <div className="acc-update-button">
-                            <Button 
-                                onClick={handleClickOpenUpdateAccount}
-                                size="small"
-                                variant="contained" 
-                                color="secondary"
-                                className={classes.margin}>
-                                Update Profile
-                            </Button>  
-                            <Dialog
-                                open={openUpdateAccount}
-                                TransitionComponent={Transition}
-                                keepMounted
-                                onClose={handleCloseUpdateAccount}
-                                aria-labelledby="update-profile"
-                                aria-describedby="update-acc-content"
-                            >
-                                <DialogTitle id="update-profile">{"Update Profile"}</DialogTitle>
-                                <DialogContent>
-                                    <DialogContentText id="update-acc-content">
-                                        <div id="update-account">
-                                            <form id="updateform">
-                                                <div className="formgroup">
-                                                    <label for="firstname">First Name</label>
-                                                    <input type="text" placeholder="First Name" name="firstname" id="FirstNameUpd" value={profile.FirstName}></input>
-                                                </div>
+                            <div className="acc-update-button">
+                                <Button 
+                                    onClick={handleClickOpenUpdateAccount}
+                                    size="small"
+                                    variant="contained" 
+                                    color="secondary"
+                                    className={classes.margin}>
+                                    Update Profile
+                                </Button>  
+                                <Dialog
+                                    open={openUpdateAccount}
+                                    TransitionComponent={Transition}
+                                    keepMounted
+                                    onClose={handleCloseUpdateAccount}
+                                    aria-labelledby="update-profile"
+                                    aria-describedby="update-acc-content"
+                                >
+                                    <DialogTitle id="update-profile">{"Update Profile"}</DialogTitle>
+                                    <DialogContent>
+                                        <DialogContentText id="update-acc-content">
+                                            <div id="update-account">
+                                                <form id="updateform">
+                                                    <div className="formgroup">
+                                                        <label for="firstname">First Name</label>
+                                                        <input type="text" placeholder="First Name" name="firstname" id="FirstNameUpd" defaultValue={profile.FirstName}></input>
+                                                    </div>
 
-                                                <div className="formgroup">
-                                                    <label for="lastname">Last Name</label>
-                                                    <input type="text" placeholder="Last Name" name="lastname" id="LastNameUpd" value={profile.LastName}></input>    
-                                                </div>  
+                                                    <div className="formgroup">
+                                                        <label for="lastname">Last Name</label>
+                                                        <input type="text" placeholder="Last Name" name="lastname" id="LastNameUpd" defaultValue={profile.LastName}></input>    
+                                                    </div>  
 
-                                                <div className="formgroup">
-                                                    <label for="dateofbirth">Last Name</label>
-                                                    <input type="text" placeholder="Date of Birth" name="dateofbirth" id="DateOfBirthUpd" value={profile.DateOfBirth}></input>    
-                                                </div>  
+                                                    <div className="formgroup">
+                                                        <label for="dateofbirth">Last Name</label>
+                                                        <input type="text" placeholder="Date of Birth" name="dateofbirth" id="DateOfBirthUpd" defaultValue={profile.DateOfBirth}></input>    
+                                                    </div>  
 
-                                                <div className="formgroup">
-                                                    <label for="email">Email</label>
-                                                    <input type="text" placeholder="Email" name="email" id="EmailUpd" value={profile.Email}></input>    
-                                                </div>
+                                                    <div className="formgroup">
+                                                        <label for="email">Email</label>
+                                                        <input type="text" placeholder="Email" name="email" id="EmailUpd" defaultValue={profile.Email}></input>    
+                                                    </div>
 
-                                                <div className="formgroup">
-                                                    <label for="Phone">Mobile Phone</label>
-                                                    <input type="text" placeholder="Phone" name="phone" id="PhoneUpd" value={profile.Phone}></input>    
-                                                </div>
+                                                    <div className="formgroup">
+                                                        <label for="Phone">Mobile Phone</label>
+                                                        <input type="text" placeholder="Phone" name="phone" id="PhoneUpd" defaultValue={profile.Phone}></input>    
+                                                    </div>
 
-                                                <div className="formgroup">
-                                                    <label for="username">Username</label>
-                                                    <input type="text" placeholder="Username" name="username" id="UsernameUpd" value={profile.Username}></input>
-                                                </div>
+                                                    <div className="formgroup">
+                                                        <label for="username">Username</label>
+                                                        <input type="text" placeholder="Username" name="username" id="UsernameUpd" defaultValue={profile.Username}></input>
+                                                    </div>
 
-                                                <div className="formgroup">
-                                                    <label for="password">Password</label>
-                                                    <input type="password" placeholder="Password" name="password" id="PasswordUpd" value={profile.Password}></input>    
-                                                </div>
-                                            </form>
-                                        </div>   
-                                    </DialogContentText>
-                                </DialogContent>
+                                                    <div className="formgroup">
+                                                        <label for="password">Password</label>
+                                                        <input type="password" placeholder="Password" name="password" id="PasswordUpd" defaultValue={profile.Password}></input>    
+                                                    </div>
+                                                </form>
+                                            </div>   
+                                        </DialogContentText>
+                                    </DialogContent>
 
-                                <DialogActions>
-                                    <Button
-                                        onclick={postUpdateProfile}
-                                        variant="contained" 
-                                        color="primary"
-                                        className={classes.margin}>
-                                        Update Account Details
-                                    </Button> 
+                                    <DialogActions>
+                                        <Button
+                                            onclick={postUpdateProfile}
+                                            variant="contained" 
+                                            color="primary"
+                                            className={classes.margin}>
+                                            Update Account Details
+                                        </Button> 
 
-                                    <Button onClick={handleCloseUpdateAccount} color="primary">
-                                        Close
-                                    </Button>
-                                </DialogActions>
-                            </Dialog>   
-                        </div>
+                                        <Button onClick={handleCloseUpdateAccount} color="primary">
+                                            Close
+                                        </Button>
+                                    </DialogActions>
+                                </Dialog>   
+                            </div>
+                            
+                            <div className="acc-logout-button">
+                                <Button 
+                                    onClick={postLogOut}
+                                    size="small"
+                                    variant="contained" 
+                                    color="secondary"
+                                    className={classes.margin}>
+                                    Log Out
+                                </Button>
+                            </div>
 
-                            <Button 
-                                onClick={postLogOut}
-                                size="small"
-                                variant="contained" 
-                                color="secondary"
-                                className={classes.margin}>
-                                Log Out
-                            </Button>
+                            <div className="acc-delete-button">
+                                <Button 
+                                    onClick={handleClickOpenDeleteAccount}
+                                    size="small"
+                                    variant="contained" 
+                                    color="secondary"
+                                    className={classes.margin}>
+                                    Closing Account
+                                </Button> 
+                                <Dialog
+                                    open={openDeleteAccount}
+                                    TransitionComponent={Transition}
+                                    keepMounted
+                                    onClose={handleCloseDeleteAccount}
+                                    aria-labelledby="delete-profile"
+                                    aria-describedby="delete-acc-content"
+                                >
+                                    <DialogTitle id="delete-profile">{"Closing Your Solar View Cinema Account"}</DialogTitle>
+                                    <DialogContent>
+                                        <DialogContentText id="delete-acc-content">
+                                            <div id="delete-account">
+                                                <h2>Are you sure you want to close your account?</h2>
+                                                <h3>You will no longer be able to book a movie ticket after this account is closed</h3>
+                                            </div>
+                                        </DialogContentText>
+                                    </DialogContent>
 
-                        <div className="acc-delete-button">
-                            <Button 
-                                onClick={handleClickOpenDeleteAccount}
-                                size="small"
-                                variant="contained" 
-                                color="secondary"
-                                className={classes.margin}>
-                                Closing Account
-                            </Button> 
-                            <Dialog
-                                open={openDeleteAccount}
-                                TransitionComponent={Transition}
-                                keepMounted
-                                onClose={handleCloseDeleteAccount}
-                                aria-labelledby="delete-profile"
-                                aria-describedby="delete-acc-content"
-                            >
-                                <DialogTitle id="delete-profile">{"Closing Your Solar View Cinema Account"}</DialogTitle>
-                                <DialogContent>
-                                    <DialogContentText id="delete-acc-content">
-                                        <div id="delete-account">
-                                            <h2>Are you sure you want to close your account?</h2>
-                                            <h3>You will no longer be able to book a movie ticket after this account is closed</h3>
-                                        </div>
-                                    </DialogContentText>
-                                </DialogContent>
+                                    <DialogActions>
+                                        <Button onClick={() => postDeleteProfile(profile.UserID)} color="primary">
+                                            Yes, Close My Account
+                                        </Button>
 
-                                <DialogActions>
-                                    <Button onClick={() => postDeleteProfile(profile.UserID)} color="primary">
-                                        Yes, Close My Account
-                                    </Button>
-
-                                    <Button onClick={handleCloseDeleteAccount} color="primary">
-                                        No, Not Really
-                                    </Button>
-                                </DialogActions>
-                            </Dialog>    
-                        </div>          
-                    </div>  
-                </div>
+                                        <Button onClick={handleCloseDeleteAccount} color="primary">
+                                            No, Not Really
+                                        </Button>
+                                    </DialogActions>
+                                </Dialog>    
+                            </div>          
+                        </div>  
+                    </div>
                 ))}
             </div>
+            )}
         </div>
     );
 }

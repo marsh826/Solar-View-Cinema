@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
 import '../App.css';
@@ -31,9 +31,9 @@ export default function Register() {
     const history = useHistory();
 
     // React const set up for Snackbar Alert messages
-    const [openSnackbar, setOpenSnackBar] = React.useState(false);
-    const [severity, setSeverity] = React.useState("info");
-    const [message, setMessage] = React.useState("");
+    const [openSnackbar, setOpenSnackBar] = useState(false);
+    const [severity, setSeverity] = useState("info");
+    const [message, setMessage] = useState("");
 
     // On clickaway, close Snackbar Alert
     const closeSnackbar = (event, reason) => {
@@ -153,7 +153,6 @@ export default function Register() {
                     </div>    
                 </form>    
             </div>
-        </Container>
-        
+        </Container>  
     );
 }

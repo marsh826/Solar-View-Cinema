@@ -75,10 +75,10 @@ export default function MovieDisplay() {
     };
 
     // React Const Seat set up empty array to store data that is succesfully fetched 
-    const [seat, setSeat] = React.useState([]);
+    const [seat, setSeat] = useState([]);
 
     // React Const Ticket Type set up empty array to store data that is successfully fetched
-    const [tickettype, setTicketType] = React.useState([]);
+    const [tickettype, setTicketType] = useState([]);
 
     // When the Movie page/component is loaded, useEffect will use a JavaScript Function to display profile in JSON output only once
     useEffect(() => {

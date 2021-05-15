@@ -5,13 +5,14 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Switch from '@material-ui/core/Switch';
 import '../App.css'
+import { useState } from 'react';
 
 export default function SettingOption() {
     const handleChange = (event) => {
         setState({ ...state, [event.target.name]: event.target.checked });
       };
     
-    const [state, setState] = React.useState({
+    const [state, setState] = useState({
     DarkMode: false
     });
 

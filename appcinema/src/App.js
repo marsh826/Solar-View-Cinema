@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './index.js';
 import Navbar from './components/Navbar';
 import './App.css';
@@ -37,9 +37,9 @@ export default function App() {
   const classes = useStyles();
 
   // React const set up for Snackbar Alert messages
-  const [openSnackbar, setOpenSnackBar] = React.useState(false);
-  const [severity, setSeverity] = React.useState("info");
-  const [message, setMessage] = React.useState("");
+  const [openSnackbar, setOpenSnackBar] = useState(false);
+  const [severity, setSeverity] = useState("info");
+  const [message, setMessage] = useState("");
 
   // On clickaway, close Snackbar Alert
   const closeSnackbar = (event, reason) => {

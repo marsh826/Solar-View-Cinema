@@ -213,27 +213,29 @@ h1 {
   margin: auto;
 }
 
-@media all and (min-width: 370px) {
-  .main-footer {
-    color: whitesmoke;
-    background-color: #4F0675;
-    padding-top: 1em;
-    position: relative;
-    bottom: 0;
-    width: 100%;
-    /* margin-right: 30px; */
+@media all and (max-width: 470px) {
+  #userprofile  {
+    width: 80%;
   }
 
-  /* #userprofile  {
-    width: 350px;
-    color: whitesmoke;
-    background-color: #4F0675;
-    display: inline-block;
-    margin: 40px;
-    border-radius: 20px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    overflow: visible;
-  } */
+  .acc-button-arrangement {
+    display: inline-flex;
+    text-align: center;
+    margin-right: -110px;
+  }
+  .acc-update-button {
+    width: 25%;
+  }
+
+  .acc-logout-button {
+    width: 25%;
+  }
+
+  .acc-delete-button {
+    width: 25%;
+  }
+
+
 
   /* #testmovies {
     margin: 70px 30px 80px;
