@@ -16,9 +16,9 @@ export default function Footer() {
                 </div>
                 <hr />
                 <div className="row">
-                    <p className="col-sm">
+                    <h4 className="col-sm">
                         &copy;{new Date().getFullYear()} Solar View Cinema | All rights reserved | Privacy Policy
-                    </p>
+                    </h4>
                 </div>
             </div>
         </div>

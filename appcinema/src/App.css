@@ -213,6 +213,15 @@ h1 {
   margin: auto;
 }
 
+p {
+  color: red;
+}
+
+p::before {
+  display: inline;
+  content: "⚠ ";
+}
+
 @media all and (max-width: 470px) {
   #userprofile  {
     width: 80%;
