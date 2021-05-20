@@ -6,7 +6,7 @@ export default function Footer() {
         <div className="main-footer">
             <div className="container">
                 <div className="row">
-                    <div className="col1">
+                    <div className="footer-content">
                         <ul className="footer-list">
                             <h5>About Us</h5>
                             <h5>Help Document</h5>

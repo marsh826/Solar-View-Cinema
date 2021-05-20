@@ -80,6 +80,7 @@ label {
 }
 
 input {
+  color: black;
   margin-top: 6px;
   min-width: 300px;
   height: 37px;
@@ -181,7 +182,11 @@ h1 {
   position: relative;
   bottom: 0;
   width: 100%;
-  /* margin-right: 30px; */
+  align-items: center;
+}
+
+.footer-content {
+  margin-right: 30px;
 }
 
 #loading-spinner {
@@ -213,13 +218,18 @@ h1 {
   margin: auto;
 }
 
-p {
+.errormssg {
   color: red;
 }
 
-p::before {
+.errormssg::before {
   display: inline;
   content: "⚠ ";
+}
+
+.MuiInputBase-input {
+  background-color: whitesmoke !important;
+  min-width: 320px !important;
 }
 
 @media all and (max-width: 470px) {

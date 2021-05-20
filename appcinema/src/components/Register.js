@@ -6,7 +6,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import {Link, useHistory} from 'react-router-dom';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 // Material UI Component Style Const
 const useStyles = makeStyles((theme) => ({
@@ -49,8 +51,11 @@ export default function Register() {
     const { 
         register, 
         handleSubmit,
-        formState: { errors } 
+        control,
+        formState: { errors }
     } = useForm();
+
+    const [startDate, setStartDate] = useState();
 
 //---------------------------------------------Registering a new accounts when the users entering register details-----------------------------------------------------------------
     function postRegister() {
@@ -116,7 +121,7 @@ export default function Register() {
                             {...register("FirstName", { required: true })}
                         />
                         {/* Error message when the user did not provide username value in the unsername field */}
-                        {errors?.FirstName?.type === "required" && <p>This field is required</p>}
+                        {errors?.FirstName?.type === "required" && <p className="errormssg">This field is required</p>}
                     </div>
 
                     <div className="formgroup">
@@ -126,18 +131,30 @@ export default function Register() {
                             {...register("LastName", { required: true })}
                         />
                         {/* Error message when the user did not provide username value in the unsername field */}
-                        {errors?.LastName?.type === "required" && <p>This field is required</p>}    
+                        {errors?.LastName?.type === "required" && <p className="errormssg">This field is required</p>}    
                     </div>  
 
                     <div className="formgroup">
                         <label for="dateofbirth">Date of Birth</label>
-                    {/* Date of Birth field requires value and must in correct data format in order to proceed with the register process */}
-                        <input type="text" placeholder="Date of Birth" name="dateofbirth" id="DateOfBirthUpd" defaultValue="1990-02-16"
+                        {/* Date of Birth field requires value and must in correct data format in order to proceed with the register process */}
+                        {/* <input type="date" placeholder="Date of Birth" name="dateofbirth" id="DateOfBirthUpd" defaultValue="1990-02-16"
                             {...register("DateOfBirth", { required: true, valueAsDate: true })}
-                        />   
+                        />    */}
+                        <Controller name="DateOfBirth" control={control} defaultValue={null} rules={{required: true}}
+                            render ={
+                                ({onChange, value}) =>
+                                <DatePicker 
+                                    id="DateOfBirth"
+                                    onChange={date => setStartDate(date)} 
+                                    selected={startDate} 
+                                    placeholderText="Date Of Birth"
+                                />
+                            }
+                        />
+                        
                         {/* Error message when the user did not provide password value in the password field */}
-                        {errors?.DateOfBirth?.type === "required" && <p>This field is required</p>} 
-                        {errors?.DateOfBirth?.type === "valueAsDate" && <p>Invalid Date Of Birth</p>}
+                        {errors?.DateOfBirth?.type === "required" && <p className="errormssg">This field is required</p>} 
+
                     </div>  
 
                     <div className="formgroup">
@@ -147,19 +164,19 @@ export default function Register() {
                             {...register("Email", { required: true, pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i })}
                         />    
                         {/* Error message when the user did not provide password value in the password field */}
-                        {errors?.Email?.type === "required" && <p>This field is required</p>}
-                        {errors?.Email?.type === "pattern" && <p>Invalid Email</p>}
+                        {errors?.Email?.type === "required" && <p className="errormssg">This field is required</p>}
+                        {errors?.Email?.type === "pattern" && <p className="errormssg">Invalid Email</p>}
                     </div>
 
                     <div className="formgroup">
                         <label for="phone">Mobile Phone</label>
                     {/* Mobile Phone field requires value and must be in correct data format in order to proceed with the register process */}
                         <input type="text" placeholder="Phone" name="phone" id="PhoneUpd" defaultValue="02132454989"
-                            {...register("MobilePhone", { required: true, maxLength: 12 })}
+                            {...register("MobilePhone", { required: true, maxLength: 11 })}
                         />    
                         {/* Error message when the user did not provide password value in the password field */}
-                        {errors?.MobilePhone?.type === "required" && <p>This field is required</p>}
-                        {errors?.Email?.type === "pattern" && <p>Invalid Mobile Phone Number</p>}
+                        {errors?.MobilePhone?.type === "required" && <p className="errormssg">This field is required</p>}
+                        {errors?.MobilePhone?.type === "maxLength" && <p className="errormssg">Invalid Mobile Phone Number</p>}
                     </div>
 
                     <div className="formgroup">
@@ -169,7 +186,7 @@ export default function Register() {
                             {...register("Username", { required: true })}
                         />
                         {/* Error message when the user did not provide username value in the unsername field */}
-                        {errors?.Username?.type === "required" && <p>This field is required</p>}
+                        {errors?.Username?.type === "required" && <p className="errormssg">This field is required</p>}
                     </div>
 
                     <div className="formgroup">
@@ -179,7 +196,7 @@ export default function Register() {
                             {...register("Password", { required: true })}
                         />    
                         {/* Error message when the user did not provide password value in the password field */}
-                        {errors?.Password?.type === "required" && <p>This field is required</p>}
+                        {errors?.Password?.type === "required" && <p className="errormssg">This field is required</p>}
                     </div>
 
                     <div id="login-button">
