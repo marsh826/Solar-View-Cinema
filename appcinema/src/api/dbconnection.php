@@ -41,15 +41,15 @@ class databaseOBJ {
         $stmt->bindValue(':passwordreg', $hpassword);
         // Form Validation
         // if user did not insert email, stop data insertion into MySQL database
-        if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
-            die;
-            return false;
-        }
-        // if user did not insert phone number, stop data insertion into MySQL database
-        if(!preg_match("/^[0-9]{10}$/", $phone)){
-            die;
-            return false;
-        }
+        // if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+        //     die;
+        //     return false;
+        // }
+        // // if user did not insert phone number, stop data insertion into MySQL database
+        // if(!preg_match("/^[0-9]{11}$/", $phone)){
+        //     die;
+        //     return false;
+        // }
         return $stmt->execute();
     }
     // Display User Profile by UserID

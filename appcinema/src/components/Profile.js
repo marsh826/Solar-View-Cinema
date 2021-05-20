@@ -13,6 +13,7 @@ import Slide from '@material-ui/core/Slide';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Backdrop from '@material-ui/core/Backdrop';
 import { useHistory } from 'react-router-dom';
+import Grid from '@material-ui/core/Grid';
 import '../App.css' 
 
 // Material UI Component Style Const
@@ -26,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
         '& > * + *': {
             marginTop: theme.spacing(2),
         },
+        flexGrow: 1,
     },
     margin: {
       margin: theme.spacing(1),
@@ -222,12 +224,13 @@ function postLogOut() {
                 </Alert>
             </Snackbar>
             </div>
-            {loading ? (
+            {/* {loading ? (
                 <Backdrop className={classes.backdrop}>
                     <CircularProgress color="inherit" />
                 </Backdrop>
-                ) : (
-
+                ) : ( */}
+            <div className={classes.root}>
+            <Grid id="grid">
             <div id="userprofile">
                 <Person id="profile-logo" style={{fontSize: 120}} />
                 {profile.map((profile, index) => (
@@ -370,7 +373,9 @@ function postLogOut() {
                     </div>
                 ))}
             </div>
-            )}
+            </Grid>
+            </div>
+            {/* )} */}
         </div>
     );
 }

@@ -6,9 +6,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import {Link, useHistory} from 'react-router-dom';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
-import { useForm, Controller } from 'react-hook-form';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
+import { useForm } from 'react-hook-form';
+import DateFnsUtils from '@date-io/date-fns';
+import {MuiPickersUtilsProvider, DatePicker} from '@material-ui/pickers';
 
 // Material UI Component Style Const
 const useStyles = makeStyles((theme) => ({
@@ -47,15 +47,23 @@ export default function Register() {
         setOpenSnackBar(false);
     };
 
+    // const defaultValues = {
+    //     DateOfBirth: null
+    // }
+
     // Default React Hook Form const for Login FormValidation
     const { 
         register, 
         handleSubmit,
-        control,
         formState: { errors }
     } = useForm();
 
-    const [startDate, setStartDate] = useState();
+    // React Const for Material UI Date Picker with initial state value of null. 
+    const [selectedDate, setSelectedDate] = useState(null);
+    // React Const sets on empty and awaits for change in date field. Set a new date on change
+    const handleDateChange = (date) => {
+    setSelectedDate(date);
+    };
 
 //---------------------------------------------Registering a new accounts when the users entering register details-----------------------------------------------------------------
     function postRegister() {
@@ -69,6 +77,7 @@ export default function Register() {
             'Email': document.getElementById("Email").value,
             'Phone': document.getElementById("Phone").value
         }
+        console.log(registration);
         fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=register",{
             method: "POST",
             body: JSON.stringify(registration),
@@ -117,7 +126,7 @@ export default function Register() {
                     <div className="formgroup">
                         <label for="firstname">First Name</label>
                         {/* First Name field requires value in order to proceed with the register process */}
-                        <input type="text" placeholder="First Name" name="firstname" id="FirstNameUpd" defaultValue="you"
+                        <input type="text" placeholder="First Name" name="firstname" id="FirstName" defaultValue=""
                             {...register("FirstName", { required: true })}
                         />
                         {/* Error message when the user did not provide username value in the unsername field */}
@@ -127,7 +136,7 @@ export default function Register() {
                     <div className="formgroup">
                         <label for="lastname">Last Name</label>
                         {/* Last Name field requires value in order to proceed with the register process */}
-                        <input type="text" placeholder="Last Name" name="lastname" id="LastNameUpd" defaultValue="me"
+                        <input type="text" placeholder="Last Name" name="lastname" id="LastName" defaultValue=""
                             {...register("LastName", { required: true })}
                         />
                         {/* Error message when the user did not provide username value in the unsername field */}
@@ -137,30 +146,36 @@ export default function Register() {
                     <div className="formgroup">
                         <label for="dateofbirth">Date of Birth</label>
                         {/* Date of Birth field requires value and must in correct data format in order to proceed with the register process */}
-                        {/* <input type="date" placeholder="Date of Birth" name="dateofbirth" id="DateOfBirthUpd" defaultValue="1990-02-16"
-                            {...register("DateOfBirth", { required: true, valueAsDate: true })}
-                        />    */}
-                        <Controller name="DateOfBirth" control={control} defaultValue={null} rules={{required: true}}
-                            render ={
-                                ({onChange, value}) =>
-                                <DatePicker 
-                                    id="DateOfBirth"
-                                    onChange={date => setStartDate(date)} 
-                                    selected={startDate} 
-                                    placeholderText="Date Of Birth"
-                                />
-                            }
-                        />
-                        
-                        {/* Error message when the user did not provide password value in the password field */}
-                        {errors?.DateOfBirth?.type === "required" && <p className="errormssg">This field is required</p>} 
-
+                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                            <DatePicker
+                                animateYearScrolling
+                                disableFuture
+                                minDate="1930-01-01"
+                                clearable
+                                name="dateofbirth"
+                                margin="normal"
+                                id="DateOfBirth"
+                                placeholder="Date Of Birth"
+                                format="yyyy-MM-dd"
+                                value={selectedDate}
+                                onChange={handleDateChange}
+                                KeyboardButtonProps={{
+                                    'aria-label': 'change date',
+                                }}
+                                // {...register("DateOfBirth", { required: true })}
+                                
+                            />
+                            {/* Error message when the user did not provide password value in the password field */}
+                            {errors?.DateOfBirth?.type === "required" && <p className="errormssg">This field is required</p>}
+                        </MuiPickersUtilsProvider>
                     </div>  
 
+                    <br/>
+                    
                     <div className="formgroup">
                         <label for="email">Email</label>
                     {/* Email field requires value and must be in correct data format in order to proceed with the register process */}
-                        <input type="text" placeholder="Email" name="email" id="EmailUpd" defaultValue="A@gmail.com"
+                        <input type="text" placeholder="Email" name="email" id="Email" defaultValue=""
                             {...register("Email", { required: true, pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i })}
                         />    
                         {/* Error message when the user did not provide password value in the password field */}
@@ -171,18 +186,19 @@ export default function Register() {
                     <div className="formgroup">
                         <label for="phone">Mobile Phone</label>
                     {/* Mobile Phone field requires value and must be in correct data format in order to proceed with the register process */}
-                        <input type="text" placeholder="Phone" name="phone" id="PhoneUpd" defaultValue="02132454989"
-                            {...register("MobilePhone", { required: true, maxLength: 11 })}
+                        <input type="text" placeholder="Phone" name="phone" id="Phone" defaultValue=""
+                            {...register("MobilePhone", { required: true, maxLength: 11, pattern: {value: /^\d{11}$/} })}
                         />    
                         {/* Error message when the user did not provide password value in the password field */}
                         {errors?.MobilePhone?.type === "required" && <p className="errormssg">This field is required</p>}
-                        {errors?.MobilePhone?.type === "maxLength" && <p className="errormssg">Invalid Mobile Phone Number</p>}
+                        {errors?.MobilePhone?.type === "maxLength" && <p className="errormssg">Please enter a 10 or 11 digit phone number</p>}
+                        {errors?.MobilePhone?.type === "pattern" && <p className="errormssg">Invalid Mobile Phone Number</p>}
                     </div>
 
                     <div className="formgroup">
                         <label for="username">Username</label>
                         {/* Username field requires value in order to proceed with the register process */}
-                        <input type="text" placeholder="Username" name="username" id="UsernameUpd" defaultValue="whoryou"
+                        <input type="text" placeholder="Username" name="username" id="UsernameReg" defaultValue=""
                             {...register("Username", { required: true })}
                         />
                         {/* Error message when the user did not provide username value in the unsername field */}
@@ -192,7 +208,7 @@ export default function Register() {
                     <div className="formgroup">
                         <label for="password">Password</label>
                         {/* Password field requires value in order to proceed with the register process */}
-                        <input type="password" placeholder="Password" name="password" id="PasswordUpd" defaultValue="Iamu"
+                        <input type="password" placeholder="Password" name="password" id="PasswordUpd" defaultValue=""
                             {...register("Password", { required: true })}
                         />    
                         {/* Error message when the user did not provide password value in the password field */}

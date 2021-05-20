@@ -110,7 +110,7 @@ export default function Login() {
                             {...register("Username", { required: true})}
                         />
                         {/* Error message when the user did not provide username value in the unsername field */}
-                        {errors?.Username?.type === "required" && <p>Please enter your username</p>}
+                        {errors?.Username?.type === "required" && <p className="errormssg">Please enter your username</p>}
                     </div>
 
                     <div className="formgroup">
@@ -120,11 +120,12 @@ export default function Login() {
                             {...register("Password", { required: true})}
                         />
                         {/* Error message when the user did not provide password value in the password field */}
-                        {errors?.Password?.type === "required" && <p>Please enter your password</p>}
+                        {errors?.Password?.type === "required" && <p className="errormssg">Please enter your password</p>}
                     </div>  
 
-                    {/* Submit the login form value of the user */}
+                    
                     <div id="login-register">
+                    {/* Submit the login form value of the user */}    
                         <Button
                             type="submit"
                             variant="contained" 
