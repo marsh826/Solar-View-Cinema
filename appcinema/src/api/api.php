@@ -37,19 +37,13 @@ switch($_GET['action']) {
         $objreg = json_decode(file_get_contents("php://input"), true);
         $usernamelogin = testInput($objreg['username']);
         $passwordlogin = testInput($objreg['password']);
-        // Reject data if the login form is not fully filled
-        if(empty($objreg['username']) && empty($objreg['password'])){
-            http_response_code(406);
-            die;
+        if($db->login($usernamelogin, $passwordlogin)){
+            // When the login attempt is successful
+            echo json_encode($_SESSION["UserID"]);
+            http_response_code(202);
         } else {
-            if($db->login($usernamelogin, $passwordlogin)){
-                // When the login attempt is successful
-                echo json_encode($_SESSION["UserID"]);
-                http_response_code(202);
-            } else {
-                // When the login attempt is unsuccessful
-                http_response_code(403);
-            }
+            // When the login attempt is unsuccessful
+            http_response_code(403);
         }
         break;
 // -------------------------------------------------Checking Log In Status------------------------------
@@ -84,20 +78,12 @@ switch($_GET['action']) {
         $phone = testInput($objreg['Phone']);
         $usernamereg = testInput($objreg['UsernameReg']);
         $passwordreg = testInput($objreg['PasswordReg']);
-        // Reject data if the registration form is not fully filled
-        if(empty($objreg['FirstName']) && empty($objreg['LastName'])
-            && empty($objreg['DateOfBirth']) && empty($objreg['Email']) 
-            && empty($objreg['Phone']) && empty($objreg['UsernameReg']) 
-            && empty($objreg['PasswordReg'])){
-                http_response_code(406);
-                die;
-            // The data will be transfered to the pre-set MySQL query to insert
-            } else {
-                if($db->registration($firstname, $lastname, $dateofbirth, $email, $phone, $usernamereg, $passwordreg)){
-                    http_response_code(202);
-                }
-            }
-            break;
+        if($db->registration($firstname, $lastname, $dateofbirth, $email, $phone, $usernamereg, $passwordreg)){
+            http_response_code(202);
+        } else {
+            http_response_code(406);
+        }
+        break;
 // ------------------------------------Display Profile----------------------------------------------------------
     case 'displayprofile':
         // A super global variable which is used to display data from REQUEST METHOD that is GET 
@@ -181,20 +167,6 @@ switch($_GET['action']) {
         echo json_encode($result);
     }  
     break;
-// // ----------------------------------------Display Movie by ID--------------------------
-//     case 'displaymoviebyID':
-//     // A super global variable which is used to display data from REQUEST METHOD that is GET
-//     $_SERVER['REQUEST_METHOD'] == "GET";
-//     $objreg = json_decode(file_get_contents("php://input"), true);
-//     $movieID = testInput($objreg["movieid"]);
-//     $result = $db->displayMovieByID($movieID);
-//     if($result == true){
-//         http_response_code(201);
-//         echo json_encode($result);
-//     } else {
-//         http_response_code(204);
-//     }
-//     break;
 // -----------------------------------------Add Movie to Favourite List-----------------
     case 'addfavouritemovie':
     // A super global variable which is used to collect data from REQUEST METHOD that is POST
@@ -226,9 +198,9 @@ switch($_GET['action']) {
             http_response_code(204);
         }    
     } else {
-        http_response_code(404);
+        // If the user is not logged in
+        http_response_code(401);
     }
-    
     break;
 // -----------------------------------------Remove Favourite Movie-----------------------
     case 'removefavouritemovie':
@@ -236,12 +208,17 @@ switch($_GET['action']) {
     $_SERVER['REQUEST_METHOD'] == 'POST';
     $objreg = json_decode(file_get_contents("php://input"), true);
     $favouritemoviedelete = testInput(($objreg['favouritelist']));
-    if($db->removefromFavouriteList($favouritemoviedelete)){
-        // Removing movie from favourite list
-        http_response_code(202);
+    if($_SESSION['session']->logged_in_check()){
+        if($db->removefromFavouriteList($favouritemoviedelete)){
+            // Removing movie from favourite list
+            http_response_code(202);
+        } else {
+            // Failed to remove movie from favourite list
+            http_response_code(501);
+        }
     } else {
-        // Failed to remove movie from favourite list
-        http_response_code(501);
+        // If the user is not logged in
+        http_response_code(401);
     }
     break;
 // ------------------------------------------Display Movie Session---------------------------
@@ -296,12 +273,17 @@ switch($_GET['action']) {
     $objreg = json_decode(file_get_contents("php://input"), true);
     $seatID = testInput($objreg['seatbysessionid']);
     $tickettypeID = testInput($objreg['tickettypeid']);
-    if($db->seatReservation($seatID, $tickettypeID)){
-        // Successfully booked a seat
-        http_response_code(202);
+    if($_SESSION['session']->logged_in_check()){
+        if($db->seatReservation($seatID, $tickettypeID)){
+            // Successfully booked a seat
+            http_response_code(202);
+        } else {
+            // Unsuccessfully booked a seat
+            http_response_code(406);
+        }
     } else {
-        // Unsuccessfully booked a seat
-        http_response_code(406);
+        // If the user is not logged in
+        http_response_code(401);
     }
     break;
 // -------------------------------------------Display Booked Ticket-----------------------------
@@ -382,10 +364,15 @@ switch($_GET['action']) {
     $_SERVER['REQUEST_METHOD'] == 'POST';
     $objreg = json_decode(file_get_contents("php://input"), true);
     $ticketDelete = testInput($objreg['ticketid']);
-    if($db->deleteTicket($ticketDelete)) {
-        http_response_code(202);
+    if($_SESSION['session']->logged_in_check()){
+        if($db->deleteTicket($ticketDelete)) {
+            http_response_code(202);
+        } else {
+            http_response_code(501);
+        }
     } else {
-        http_response_code(501);
+        // If the user is not logged in
+        http_response_code(401);
     }
     break;    
 }

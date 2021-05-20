@@ -89,14 +89,12 @@ export default function Register() {
                 console.log('unaccepted');
                 setOpenSnackBar(true);
                 setSeverity("error");
-                setMessage("Error: Register details are either not valid or fully provided.");
+                setMessage("Error: Unable to register. Please try again");
                 return;
             }
             if(response.status === 202) {
             // If the form was fully filled in and data was successfully inserted
                 console.log('success');
-                setOpenSnackBar(true);
-                setSeverity("success");
                 history.push("/Profile");
                 return;
             }
@@ -171,7 +169,7 @@ export default function Register() {
                     </div>  
 
                     <br/>
-                    
+
                     <div className="formgroup">
                         <label for="email">Email</label>
                     {/* Email field requires value and must be in correct data format in order to proceed with the register process */}
