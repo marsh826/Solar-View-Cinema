@@ -1,10 +1,17 @@
-import React from 'react';
-// import PeninsulaIMG from '../img/peninsula.jpg';
-// import knymgIMG from '../img/KNYMT.jpg';
-// import fitwIMG from '../img/FITW.jpg';
+import React, { useEffect, useState } from 'react';
 import Button from '@material-ui/core/Button'
 import { makeStyles } from '@material-ui/core/styles';
-import '../App.css'
+import { Link } from 'react-router-dom';
+import '../App.css';
+import Slide from '@material-ui/core/Slide';
+import EventSeat from '@material-ui/icons/EventSeat'
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/lab/Alert';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -15,63 +22,157 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+// React consts set up for Dialog Animation
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
+
 export default function HomePage() {
-  const classes = useStyles();
+    const classes = useStyles();
+
+    // React const set up for Snackbar Alert messages
+    const [openSnackbar, setOpenSnackBar] = useState(false);
+    const [severity, setSeverity] = useState("info");
+    const [message, setMessage] = useState("");
+
+    // On clickaway, close Snackbar Alert
+    const closeSnackbar = (event, reason) => {
+        if (reason === "clickaway") {
+            return;
+        }
+        setOpenSnackBar(false);
+    };
+
+    const [latestMovie, setLatestMovie] = useState([]);
+    const [selectedMovie, setSelectedMovie] = useState([]);
+
+    // React consts set up for Dialog
+    const [movieDialog, setMovieDialog] = useState(false);
+    function openMovieDialog(latestmovie) {
+        setMovieDialog(true);
+        setSelectedMovie(latestmovie);
+        console.log(latestmovie);
+    };
+    function closeMovieDialog() {
+        setMovieDialog(false);
+    };
+
+    useEffect(() => {
+        postDisplayLatestMovies();
+    }, []);
+
+//--------------------------------------Display 3 Latest Movies on Home page-------------------------------------------------------------------------------------------------------   
+    function postDisplayLatestMovies() {
+        fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=displaylatestmovies",{
+            method: "GET",
+            redirect: "error",
+            credentials: 'include'
+        }).then((res) => {
+            if (res.status === 204) {
+                console.log('no content');
+                setLatestMovie("No Movie Available");
+                setMessage("Error: Unable to fetch");
+                setOpenSnackBar(true);
+                setSeverity("error");
+            }
+            
+            if (res.status === 201) {
+                console.log('created');
+                res.json().then((data) => {
+                    setLatestMovie(data);
+                    console.log(data);
+                })
+            }
+        })   
+    }  
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     return(
-        <div id = "new-movie">
-          <h1>Newly Released Movie</h1>
-          {/* <div className = "backgroundcover2">
-                <div className = "movietitle">
-                    <h2>Peninsula</h2>
-                </div>
-                <img
-                    className = "movieimg" 
-                    src = {PeninsulaIMG}/>   
-                <Button 
-                    size = "small" 
-                    variant = "contained" 
-                    color = "secondary"
-                    className = {classes.margin}>
-                    Book A Ticket
-                </Button> 
+        <div id="new-movie">
+            <div className={classes.root}>
+                <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={closeSnackbar}>
+                    <Alert variant="filled" onClose={closeSnackbar} severity={severity}>
+                        {message}
+                    </Alert>
+                </Snackbar>
             </div>
 
-            <div className = "backgroundcover2">
-                <div className = "movietitle">
-                    <h2>KNY: Mugen Train</h2>
+            <h1>Newly Released Movies</h1>
+            <div id="moviedisplay">
+            {latestMovie.map((latestMovie, index) => (
+                <div id="moviecontents">
+                    <div id ="movie-image">
+                    <img 
+                    width='300px'
+                    height='480px'
+                    src={latestMovie.MovieImage}
+                    />
+                    {/* View Movie Session Button */}
+                    <Button
+                        onClick={() => {openMovieDialog([latestMovie])}}
+                        variant="contained" 
+                        color="primary"
+                        className={classes.margin}>
+                        Description
+                    </Button>
+                    {/* Set the currently selected movie when the Material UI Dialog is open */}
+                    {selectedMovie.map((selectedMovie, index) => (
+                        <Dialog
+                            open={movieDialog}
+                            TransitionComponent={Transition}
+                            keepMounted
+                            onClose={closeMovieDialog}
+                            aria-labelledby="alert-dialog-slide-title"
+                            aria-describedby="alert-dialog-slide-description"
+                        >
+                        <DialogTitle id="alert-dialog-slide-title">{selectedMovie.MovieName}</DialogTitle>
+                            <DialogContent>
+                            <DialogContentText id="alert-dialog-slide-description">
+                                <div id="display-movie">
+                                    <div id="imgMovieDisplay">
+                                        <img 
+                                            style={{borderRadius: 50}}
+                                            width='300px'
+                                            height='480px'
+                                            src={selectedMovie.MovieImage}
+                                        />
+                                    </div>
+                                    
+                                    {/* Render Movie Details in Material UI Dialog */}
+                                    <div id="movie-details">
+                                        <div>{selectedMovie.MovieDescription}</div><br></br>
+                                        <div><strong>Genre:</strong> {selectedMovie.Genre}</div>
+                                        <div><strong>Release Date:</strong> {selectedMovie.ReleaseDate}</div>
+                                        <br></br>
+                                    </div>
+                                </div>
+                            </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={() => {closeMovieDialog()}} color="primary">
+                                    Close
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
+                    ))}
+    
+                    {/* Redirect the user to Movie Page to see more movie details */}
+                    <Link className="routelinkreact" to="/Movies">
+                        <Button 
+                            variant="contained" 
+                            color="primary"
+                            className={classes.margin}>
+                            Book Now
+                        </Button>    
+                    </Link>
+                    </div>
                 </div>
-                <img
-                    className = "movieimg" 
-                    src = {knymgIMG}/> 
-                <Button 
-                    size = "small" 
-                    variant = "contained" 
-                    color = "secondary"
-                    className = {classes.margin}>
-                    Book A Ticket
-                </Button> 
-            </div>
-
-            <div className = "backgroundcover2">
-                <div className = "movietitle">
-                    <h2>Fighter In The Wind</h2>
-                </div>
-                <img
-                    className = "movieimg" 
-                    src = {fitwIMG}/> 
-                <Button 
-                    size = "small" 
-                    variant = "contained" 
-                    color = "secondary"
-                    className = {classes.margin}>
-                    Book A Ticket
-                </Button>   
+               ))}
             </div>
           
-          <div className = "welcome-message">
-            <h2>Welcome to Solar View Cinema</h2>
+            <div className = "welcome-message">
+                <h2>Welcome to Solar View Cinema</h2>
                 <h4>We are the newly established cinema in Brisbane. We are aiming to bring you top quality cinema experiene for your entertainment</h4>  
-          </div> */}
+            </div> 
         </div>
     );
 }

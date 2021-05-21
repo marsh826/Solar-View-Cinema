@@ -83,8 +83,8 @@ export default function FavouriteMovies() {
         }).then((res) => {
             if (res.status === 204) {
                 console.log('no content');
-                setMovie("No Movie Available");
-                setMessage("Error: Unable to fetch user's favourite movie list");
+                setMovie([]);
+                setMessage("No movie is found in your favourite list");
                 setOpenSnackBar(true);
                 setSeverity("warning");
             }
@@ -163,7 +163,7 @@ export default function FavouriteMovies() {
                         </Button>
     
 
-                    {/* Add Favourite Movie Button */}
+                    {/* Remove Favourite Movie Button */}
                         <Button
                             onClick={() => postRemoveFavourite(movie.MovieID)}
                             variant="contained" 

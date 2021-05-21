@@ -14,6 +14,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Prices from './Prices';
+import Radio from '@material-ui/core/Radio';
 
 // React const that sets up style customisation for Material UI components
 const useStyles = makeStyles((theme) => ({
@@ -99,7 +100,7 @@ export default function MovieDisplay() {
                 setMovie("No Movie Available");
                 setMessage("Error: No movie is found");
                 setOpenSnackBar(true);
-                setSeverity("warning");
+                setSeverity("Error");
             }
             
             if (res.status === 201) {
@@ -190,14 +191,14 @@ function transferTicketID(id) {
     document.getElementById("ticket-id").value = TicketIDValue;
 }
 //-------------------------------------------------------Open and Close Seat Display-----------------------------------------------------------------------------------------------
-// function closeSeatDisplay() {
-//     document.getElementById("display-movie").display = "block";
-//     document.getElementById("seat-display").display = "none";
-// }
-// function openSeatDisplay() {
-//     document.getElementById("display-movie").display = "none";
-//     document.getElementById("seat-display").display = "block";
-// }
+function closeSeatDisplay() {
+    document.getElementById("display-movie").display = "block";
+    document.getElementById("seat-display").display = "none";
+}
+function openSeatDisplay() {
+    document.getElementById("display-movie").display = "none";
+    document.getElementById("seat-display").display = "block";
+}
 //---------------------------------------------------------Displaying Ticket Type--------------------------------------------------------------------------------------------------
 function postTicketTypes() {
     fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=displaytickettype",{
@@ -356,9 +357,7 @@ function postSeatBooking() {
                                             <div>{movieSession.TimeStart}</div>
                                             <Button
                                                 endIcon={<EventSeat />}
-                                                // onClick={() => openSeatDisplay()}
-                                                    // postDisplaySeats(movieSession.MovieID);
-                                                    // postTicketTypes();}}
+                                                onClick={() => {openSeatDisplay(); postDisplaySeats(currentMovie.MovieID); postTicketTypes();}}
                                                 variant="contained" 
                                                 color="primary"
                                                 className={classes.margin}>
@@ -370,7 +369,7 @@ function postSeatBooking() {
                             </div>
                             
                             {/* Render Seats in Material UI Dialog */}
-                                {/* <div id="seat-display" style={{display: "none"}}>
+                                <div id="seat-display" style={{display: "none"}}>
                                     <h3>Available Seats</h3>
                                     {seat.map((seat, index) =>
                                         <div>
@@ -382,16 +381,24 @@ function postSeatBooking() {
                                             </div> 
                                         </div>
                                     )}
-                                    {/* <h3>Ticket Types</h3>
-                                    {tickettype.map((tickettype, index) => 
+                                    <h3>Ticket Types</h3>
+                                    {/* {tickettype.map((tickettype, index) => 
                                         <div>
-
+                                            <FormControl component="fieldset">
+      <FormLabel component="legend">Gender</FormLabel>
+      <RadioGroup aria-label="gender" name="gender1" value={value} onChange={handleChange}>
+        <FormControlLabel value="female" control={<Radio />} label="Female" />
+        <FormControlLabel value="male" control={<Radio />} label="Male" />
+        <FormControlLabel value="other" control={<Radio />} label="Other" />
+        <FormControlLabel value="disabled" disabled control={<Radio />} label="(Disabled option)" />
+      </RadioGroup>
+    </FormControl>
                                         </div>
-                                    )} */}
-                                    {/* <input id="seat-id" value="" readOnly></input>
+                                    )}  */}
+                                    <input id="seat-id" value="" readOnly></input>
                                     <input id="ticket-type" value="" readOnly></input>
                                     <Prices />
-                                </div> */} 
+                                </div> 
                             </div>
                         </DialogContentText>
                         </DialogContent>

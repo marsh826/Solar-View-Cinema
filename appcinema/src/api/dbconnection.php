@@ -117,21 +117,20 @@ class databaseOBJ {
             throw $ex;
         }
     }
-    // Display Movies By ID
-    // function displayMovieByID($movieID) {
-    //     try{
-    //         $mysql = "SELECT * FROM movie WHERE MovieID = :movieid";
-    //         $stmt = $this->dbconn->prepare($mysql);
-    //         $stmt->bindValue(':movieid', $movieID);
-    //         $stmt->execute();
-    //         $result = $stmt->fetchAll();
-    //         return $result;
-    //         return true;
-    //     }
-    //     catch (PDOException $ex) {
-    //         throw $ex;
-    //     }
-    // }
+    // Display 3 Latest Movies
+    function displayLatestMovies() {
+        try{
+            $mysql = "SELECT * FROM movie ORDER BY MovieID DESC LIMIT 3";
+            $stmt = $this->dbconn->prepare($mysql);
+            $stmt->execute();
+            $result = $stmt->fetchAll();
+            return $result;
+            return true;
+        }
+        catch (PDOException $ex) {
+            throw $ex;
+        }
+    }
     // Add Movie to Favourite list
     function addFavouriteMovie($movieid) {
         $sql = "INSERT into favouritemovie(MovieID, UserID) VALUES(:movieid, :userid)";
@@ -171,9 +170,9 @@ class databaseOBJ {
     }
     // Remove movie from favourite list
     function removefromFavouritelist($favouritemoviedelete) {
-        $sql = "DELETE from favouritemovie WHERE FavouriteMovieID = :favouritemovie";
+        $sql = "DELETE from favouritemovie WHERE MovieID = :movieid";
         $stmt = $this->dbconn->prepare($sql);
-        $stmt->bindValue(':favouritemovie', $favouritemoviedelete);
+        $stmt->bindValue(':movieid', $favouritemoviedelete);
         return $stmt->execute();
     }
     // Display movie session

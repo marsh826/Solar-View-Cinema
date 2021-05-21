@@ -159,15 +159,28 @@ switch($_GET['action']) {
     $_SERVER['REQUEST_METHOD'] == "GET";   
     $result = $db->displayMovies();
     if($result == false) {
-    // Failed fetch all Movies from the database
-    http_response_code(204);
+        // Failed fetch all Movies from the database
+        http_response_code(204);
     } else {
         // Return as JSON output after successful fetchAll Movies  from the database
         http_response_code(201);
         echo json_encode($result);
     }  
     break;
-// -----------------------------------------Add Movie to Favourite List-----------------
+//-----------------------------------------Display 3 latest movies--------------------------
+    case 'displaylatestmovies':
+    // A super global variable which is used to display data from REQUEST METHOD that is GET 
+    $_SERVER['REQUEST_METHOD'] == "GET";
+    $result = $db->displayLatestMovies();
+    if($result == false) {
+        // Failed fetch 3 latest movies from the database
+        http_response_code(204);
+    } else {
+        http_response_code(201);
+        echo json_encode($result);
+    }
+    break;
+//--------------------------------------------Add Movie to Favourite List------------------
     case 'addfavouritemovie':
     // A super global variable which is used to collect data from REQUEST METHOD that is POST
     $_SERVER['REQUEST_METHOD'] == "POST";

@@ -49,17 +49,19 @@ export default function SwipeableTemporaryDrawer() {
 
 //Material UI Navbar Item 
   const navitems = ['Home', 'Login', 'Settings'];
-  const navitems2 = ['Movies', 'Reservations', 'Favourites'];
+  const navitems2 = ['Movies'];
 
 // If the user is logged in, menu item 'Login' will be replaced with 'Profile'
 if(localStorage.getItem('userStatus') == 'logged in') {
   navitems.splice('Login');
   navitems.push('Home', 'Profile', 'Settings');
+  navitems2.push('Reservations', 'Favourites');
 }
 
 // If the user is logged out, menu item 'Profile' will be replaced with 'Login'
 if(localStorage.getItem('userStatus') == 'logged out') {
   navitems.splice('Profile');
+  navitems2.splice('Reservations', 'Favourites');
   navitems.push('Home', 'Login', 'Settings');
 }
 
