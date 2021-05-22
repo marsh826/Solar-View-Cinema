@@ -11,6 +11,7 @@ import Register from './components/Register';
 import Favourite from './components/Favourite';
 import Profile from './components/Profile';
 import Confirm from './components/BookingConfirm';
+import Reservations from './components/Reservations';
 import Footer from './components/Footer';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
@@ -96,7 +97,7 @@ export default function App() {
             <Route exact path = "/Settings" render = {props => <SettingOption {...props} />} />
             <Route exact path = "/Favourites" render = {props => <Favourite {...props} />} />
             <Route exact path = "/Profile" render = {props => <Profile {...props} />} />
-            <Route exact path = "/BookingConfirm" render = {props => <Confirm {...props} />} />
+            <Route exact path = "/Reservations" render = {props => <Reservations {...props} />} />
           </Switch>
         </Router>  
       </div>

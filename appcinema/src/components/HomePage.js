@@ -70,7 +70,7 @@ export default function HomePage() {
         }).then((res) => {
             if (res.status === 204) {
                 console.log('no content');
-                setLatestMovie("No Movie Available");
+                setLatestMovie([]);
                 setMessage("Error: Unable to fetch");
                 setOpenSnackBar(true);
                 setSeverity("error");

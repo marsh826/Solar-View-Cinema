@@ -42,15 +42,6 @@ body {
   overflow: auto;
 }
 
-/* .moviedisplay {
-  display: inline-block;
-  margin: auto;
-} */
-
-/* .movietitle {
-  margin-bottom: -20px;
-} */
-
 #loginform {
   color: white;
   margin-top: 80px;
@@ -129,14 +120,6 @@ h1 {
   color: whitesmoke;
 }
 
-.displaycinema {
-  width: 260px;
-  height: 220px;
-  background-color: whitesmoke;
-  display: inline-block;
-  border-radius: 10px;
-}
-
 .displayprices {
   width: 380px;
   height: 380px;
@@ -159,10 +142,6 @@ h1 {
   border-radius: 20px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   overflow: visible;
-}
-
-#grid {
-  width: 100%;
 }
 
 #profilecontent {
@@ -202,14 +181,6 @@ h1 {
   margin-top: 200px;
 }
 
-/* #testmovies {
-  margin: 60px 220px 80px;
-  width: 1000px;
-  height: 500px;
-  background-color: white;
-  overflow: auto;
-} */
-
 #moviecontents {
   width: 330px; 
   height: 565px; 
@@ -236,7 +207,44 @@ h1 {
   min-width: 320px !important;
 }
 
-/* @media all and (max-width: 470px) {
+.MuiDialogContent-root {
+  flex: 1 1 auto;
+  padding: 8px 10px !important;
+  overflow-y: auto;
+}
+
+#seat-items-container {
+  display: flex;
+  flex-flow: row wrap;
+  position: relative;
+  width: 300px;
+  margin: auto;
+}
+
+#seats {
+  margin: 4px;
+  flex: 0 1 calc(20% - 8px);
+}
+
+.movie-img-cover {
+  border-radius: 50px;
+  width: 300px;
+  height: 480px;
+  margin-left: 15%;
+}
+
+/* #seat-id {
+  color: white;
+  background-color: white;
+}
+
+#ticket-type {
+  color: white;
+  background-color: white;
+} */
+
+
+/* @media all and (max-width: 360px) {
   #userprofile  {
     width: 80%;
   }
