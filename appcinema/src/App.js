@@ -15,7 +15,7 @@ import Reservations from './components/Reservations';
 import Footer from './components/Footer';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -27,15 +27,25 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 window.onload = function() {
-    localStorage.setItem('profileImage', 'none');
+    localStorage.setItem('darkMode', '')
     localStorage.setItem('backgroundImage', 'none');
     localStorage.setItem('font', 'default');
     localStorage.setItem('backgroundColour', 'default');
+
 }
 
 export default function App() {
   // A React const that is assigned with Material UI Component Style Const
   const classes = useStyles();
+
+  // Dark Mode
+  const theme2 = createMuiTheme({
+    palette: {
+      type: "dark",
+    }
+  })
+  
+  const [darkMode, setDarkMode] = useState(false)
 
   // React const set up for Snackbar Alert messages
   const [openSnackbar, setOpenSnackBar] = useState(false);
@@ -77,6 +87,7 @@ export default function App() {
     })
   }
   return (
+    <ThemeProvider theme={theme2}>
     <div className = "page-container">
       <div className = "content-wrap">
           <div className={classes.root}>
@@ -103,6 +114,7 @@ export default function App() {
       </div>
       <Footer />
     </div> 
+    </ThemeProvider>
   );
 }
 

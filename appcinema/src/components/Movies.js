@@ -433,16 +433,21 @@ function postSeatBooking() {
                                         <div id="seat-items-container">
                                         {/* Rendering a list of data from seat const in Material UI Dialog */}
                                             {seat.map((seat, index) =>
-                                                {if(seat.ReservationStatus = 1){
+                                                {if(seat[seat.ReservationStatus] = 1){
                                                     return(
-                                                        <IconButton 
-                                                            disabled
-                                                            classes={{label: classes.iconButtonLabel}}
-                                                            style={{color: "red"}}
-                                                        >
-                                                            <EventSeat />
-                                                            <div>{seat.SeatNumber}</div>
-                                                        </IconButton>
+                                                        <div className={classes.iconButton}>
+                                                            <div id="seats">
+                                                                <IconButton 
+                                                                    disabled
+                                                                    classes={{label: classes.iconButtonLabel}}
+                                                                    style={{color: "red"}}
+                                                                >
+                                                                    <EventSeat />
+                                                                    <div>{seat.SeatNumber}</div>
+                                                                    <div>{seat.ReservationStatus}</div>
+                                                                </IconButton>
+                                                            </div>                                           
+                                                        </div>
                                                     )
                                                 } else {
                                                     return(
@@ -456,8 +461,7 @@ function postSeatBooking() {
                                                             </IconButton>
                                                         </div>                                           
                                                     </div>
-                                                    )  
-                                                    }
+                                                    )}   
                                                 }                                                
                                             )}    
                                         </div>
