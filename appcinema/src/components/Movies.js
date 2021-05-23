@@ -349,7 +349,7 @@ function postSeatBooking() {
                         </Button> 
                     </div>
                 ))}
-                
+
                 {/* Rendering a list of data from currentMovie const in Material UI Dialog */}
                 {currentMovie.map((currentMovie, index) => (
                     <Dialog
@@ -365,10 +365,13 @@ function postSeatBooking() {
                         <DialogContentText id="alert-dialog-slide-description">
                             <div id="display-movie">
                                 <div id="imgMovieDisplay">
-                                    <img          
-                                        className="movie-img-cover"                                  
-                                        src={currentMovie.MovieImage}
-                                    />    
+                                    <Grid id="grid-MovieIMG">
+                                        <img          
+                                            className="movie-img-cover" 
+                                            height="480px"                                 
+                                            src={currentMovie.MovieImage}
+                                        />    
+                                    </Grid>
                                 </div>    
                                 
                                 <Divider />
