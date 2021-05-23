@@ -232,14 +232,15 @@ h1 {
 .movie-img-cover {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   border-radius: 50px;
-  /* width: 300px; */
-  /* height: 480px; */
-  margin-left: 130px;
-  display: inline-block;
+  margin-left: 8%;
+  width: 85%;
+  height: 50%;
+  /* display: inline-block; */
 }
 
 #grid-MovieIMG {
-  width: 100%;
+  /* width: 100%; */
+  height: auto;
 }
 
 /* #seat-id {

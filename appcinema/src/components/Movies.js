@@ -367,8 +367,7 @@ function postSeatBooking() {
                                 <div id="imgMovieDisplay">
                                     <Grid id="grid-MovieIMG">
                                         <img          
-                                            className="movie-img-cover" 
-                                            height="480px"                                 
+                                            className="movie-img-cover"                                 
                                             src={currentMovie.MovieImage}
                                         />    
                                     </Grid>
