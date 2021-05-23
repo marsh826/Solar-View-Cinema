@@ -3,7 +3,7 @@ import '../App.css'
 import { makeStyles } from '@material-ui/core/styles';
 import Slide from '@material-ui/core/Slide';
 import Button from '@material-ui/core/Button';
-import EventSeat from '@material-ui/icons/EventSeat'
+import { EventSeat, Check } from '@material-ui/icons'
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import Dialog from '@material-ui/core/Dialog';
@@ -15,9 +15,12 @@ import IconButton from '@material-ui/core/IconButton';
 import Divider from '@material-ui/core/Divider';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Prices from './Prices';
-import Radio from '@material-ui/core/Radio';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
 
 // React const that sets up style customisation for Material UI components
 const useStyles = makeStyles((theme) => ({
@@ -103,6 +106,8 @@ export default function MovieDisplay() {
     const [radioValue, setRadioValue] = useState([]);
     const handleRadioChange = (event) => {
         setRadioValue(event.target.value);
+        transferTicketTypeValue(event.target.value);
+        console.log(event.target.value);
     };
 
     // When the Movie page/component is loaded, useEffect will use a JavaScript Function to display profile in JSON output only once
@@ -257,7 +262,7 @@ function postSeatBooking() {
         'seatbysessionid': document.getElementById("seat-id").value,
         'tickettypeid': document.getElementById("ticket-type").value
     }
-    fetch('api.php?action=seatreserve',{
+    fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=seatreserve",{
         method: "POST",
         body: JSON.stringify(seatbookinginfo),
         credentials: "include"
@@ -266,17 +271,23 @@ function postSeatBooking() {
         // If the seat booking process was successful
         if(response.status == 202) {
             console.log('success');
+            setMessage("Ticket Booked Successfully!");
+            setOpenSnackBar(true);
+            setSeverity("success");
             return;    
         }
         // If the seat booking process was unsuccessful
         if(response.status == 406) {
             console.log('unaccepted');
+            setMessage("Error: Booking Failed.");
+            setOpenSnackBar(true);
+            setSeverity("error");
             return;
         }
         // Send back error into console log
-        response.text().then((text) => {
-            console.log(text);
-        })
+        // response.text().then((text) => {
+        //     console.log(text);
+        // })
     })
     return false;
 }
@@ -360,9 +371,14 @@ function postSeatBooking() {
                         aria-labelledby="alert-dialog-slide-title"
                         aria-describedby="alert-dialog-slide-description"
                     >
-                    <DialogTitle id="alert-dialog-slide-title">{currentMovie.MovieName}</DialogTitle>
+                    <DialogTitle 
+                        id="alert-dialog-slide-title">
+                            {currentMovie.MovieName}
+                    </DialogTitle>
                         <DialogContent>
-                        <DialogContentText id="alert-dialog-slide-description">
+                        <DialogContentText 
+                            id="alert-dialog-slide-description"
+                        >
                             <div id="display-movie">
                                 <div id="imgMovieDisplay">
                                     <Grid id="grid-MovieIMG">
@@ -377,10 +393,16 @@ function postSeatBooking() {
                                 
                                 {/* Render Movie Details in Material UI Dialog */}
                                 <div id="movie-details">
-                                    <div>{currentMovie.MovieDescription}</div>
+                                    <div>
+                                        {currentMovie.MovieDescription}
+                                    </div>
                                     <Divider />
-                                    <div><strong>Genre:</strong> {currentMovie.Genre}</div>
-                                    <div><strong>Release Date:</strong> {currentMovie.ReleaseDate}</div>
+                                    <div>
+                                        <strong>Genre:</strong> {currentMovie.Genre}
+                                    </div>
+                                    <div>
+                                        <strong>Release Date:</strong> {currentMovie.ReleaseDate}
+                                    </div>
 
                                     <Divider />
 
@@ -411,16 +433,32 @@ function postSeatBooking() {
                                         <div id="seat-items-container">
                                         {/* Rendering a list of data from seat const in Material UI Dialog */}
                                             {seat.map((seat, index) =>
-                                                <div className={classes.iconButton}>
-                                                    <div id="seats">
+                                                {if(seat.ReservationStatus = 1){
+                                                    return(
                                                         <IconButton 
+                                                            disabled
                                                             classes={{label: classes.iconButtonLabel}}
-                                                            onClick={() => transferSeatValue(seat.SeatBySessionID)}>
+                                                            style={{color: "red"}}
+                                                        >
                                                             <EventSeat />
                                                             <div>{seat.SeatNumber}</div>
                                                         </IconButton>
-                                                    </div>                                           
-                                                </div>                                                     
+                                                    )
+                                                } else {
+                                                    return(
+                                                    <div className={classes.iconButton}>
+                                                        <div id="seats">
+                                                            <IconButton 
+                                                                classes={{label: classes.iconButtonLabel}}
+                                                                onClick={() => transferSeatValue(seat.SeatBySessionID)}>
+                                                                <EventSeat />
+                                                                <div>{seat.SeatNumber}</div>
+                                                            </IconButton>
+                                                        </div>                                           
+                                                    </div>
+                                                    )  
+                                                    }
+                                                }                                                
                                             )}    
                                         </div>
 
@@ -428,15 +466,42 @@ function postSeatBooking() {
 
                                     <h4>Ticket Types</h4>
                                     {/* Rendering a list of data from ticketType const in Material UI Dialog */}
-                                        
-                                        <div>
-                                            {/* {ticketType.map((ticketType, index) =>
-                                                
-                                            )}     */}
-                                        </div>
-                                        
-                                    <input id="seat-id" value="" readOnly></input>
-                                    <input id="ticket-type" value="" readOnly></input>
+                                    <FormControl component="fieldset">
+                                    <RadioGroup 
+                                        aria-label="tickettype" 
+                                        name="tickettype1" 
+                                        value={radioValue} 
+                                        onChange={handleRadioChange}
+                                    >
+                                        {ticketType.map((ticketType, index) =>
+                                            <div>
+                                            <FormControlLabel 
+                                                value={ticketType.TicketTypeID} 
+                                                control={<Radio />} 
+                                                label={ticketType.Name}
+                                            /> 
+                                            <div>${ticketType.Price}</div>     
+                                            </div>   
+                                        )}    
+                                    </RadioGroup>
+                                    </FormControl>
+                                            
+                                            
+                                    <form id="seat-booking">
+                                        <input id="seat-id" value="" readOnly />
+                                        <input id="ticket-type" value="" readOnly />    
+                                    </form>
+                                    <Button
+                                        endIcon={<Check />}
+                                        type="button"
+                                        variant="contained" 
+                                        color="primary"
+                                        className={classes.margin}
+                                        onClick={postSeatBooking}
+                                    >
+                                        Reserve
+                                    </Button>
+                                    
                                 </div> 
                             </div>
                         </DialogContentText>
