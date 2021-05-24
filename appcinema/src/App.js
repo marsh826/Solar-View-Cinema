@@ -87,7 +87,6 @@ export default function App() {
     })
   }
   return (
-    <ThemeProvider theme={theme2}>
     <div className = "page-container">
       <div className = "content-wrap">
           <div className={classes.root}>
@@ -113,8 +112,7 @@ export default function App() {
         </Router>  
       </div>
       <Footer />
-    </div> 
-    </ThemeProvider>
+    </div>
   );
 }
 

@@ -187,10 +187,10 @@ switch($_GET['action']) {
     $objreg = json_decode(file_get_contents("php://input"), true);
     $movieid = testInput($objreg["movieid"]);
     if($db->addFavouriteMovie($movieid) == true){
-        // Successfully adding DVD to the user favourite movie list
+        // Successfully adding movie to the user favourite movie list
         http_response_code(202);
     } else {
-        // Unsuccessfully adding DVD to the user favourite movie list
+        // Unsuccessfully adding movie to the user favourite movie list
         if($db->addFavouriteMovie($movieid) == false){
         http_response_code(501);
         }
@@ -297,6 +297,22 @@ switch($_GET['action']) {
     } else {
         // If the user is not logged in
         http_response_code(401);
+    }
+    break;
+// -------------------------------Fetch booked seats for Seat Reservation Status----------------
+    case 'seatstatuscheck':
+    // A super global variable which is used to collect data from REQUEST METHOD that is POST
+    $_SERVER['REQUEST_METHOD'] = 'POST';
+    $objreg = json_decode(file_get_contents("php://input"), true);
+    $movieSessionID = testInput($objreg["movieSessionID"]);
+    $result = $db->getBookedSeats($movieSessionID);
+    if($result == false) {
+        // Failed fetch all booked tickets from the database 
+        http_response_code(404);
+    } else {
+        // Successfully fetching all booked tickets from the database
+        http_response_code(201);
+        echo json_encode($result);
     }
     break;
 // -------------------------------------------Display Booked Ticket-----------------------------

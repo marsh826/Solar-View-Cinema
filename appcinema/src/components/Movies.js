@@ -110,6 +110,9 @@ export default function MovieDisplay() {
         console.log(event.target.value);
     };
 
+    // React COnst Seat Reservation Status set up empty array to store data that is successfully fetched
+    const [seatStatus, setSeatStatus] = useState([]);
+
     // When the Movie page/component is loaded, useEffect will use a JavaScript Function to display profile in JSON output only once
     useEffect(() => {
         // showLoading();
@@ -250,6 +253,34 @@ function postTicketTypes() {
             console.log('created');
             res.json().then((data) => {
                 setTicketType(data);
+                console.log(data);
+            })
+        }
+    })
+    return false;
+}
+//-----------------------------------------------------Check for a Seat's Reservation Status---------------------------------------------------------------------------------------
+function postSeatReserveStatus(id) {
+    var movieSessionID = {
+        'movieSessionID': id 
+    }
+    fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=seatstatuscheck", {
+        method: "POST",
+        body: JSON.stringify(movieSessionID),
+        credentials: "include"
+    })
+    .then((res) => {
+        if (res.status === 501) {
+            console.log('not implemented');
+            setSeatStatus([]);
+            setMessage("Unable to check for seat reservation status");
+            setOpenSnackBar(true);
+            setSeverity("Error");    
+        }
+        if (res.status === 201) {
+            console.log('created');
+            res.json().then((data) => {
+                setSeatStatus(data);
                 console.log(data);
             })
         }
@@ -414,9 +445,10 @@ function postSeatBooking() {
                                             <div>
                                                 <div>{movieSession.SessionDate}</div>
                                                 <div>{movieSession.TimeStart}</div>
+                                                <div>{movieSession.MovieSessionID}</div>
                                                 <Button
                                                     endIcon={<EventSeat />}
-                                                    onClick={() => {postDisplaySeats(currentMovie.MovieID); postTicketTypes();}}
+                                                    onClick={() => {postDisplaySeats(movieSession.MovieSessionID); postTicketTypes(); postSeatReserveStatus(movieSession.MovieSessionID);}}
                                                     variant="contained" 
                                                     color="primary"
                                                     className={classes.margin}>
@@ -433,24 +465,24 @@ function postSeatBooking() {
                                         <div id="seat-items-container">
                                         {/* Rendering a list of data from seat const in Material UI Dialog */}
                                             {seat.map((seat, index) =>
-                                                {if(seat[seat.ReservationStatus] = 1){
-                                                    return(
-                                                        <div className={classes.iconButton}>
-                                                            <div id="seats">
-                                                                <IconButton 
-                                                                    disabled
-                                                                    classes={{label: classes.iconButtonLabel}}
-                                                                    style={{color: "red"}}
-                                                                >
-                                                                    <EventSeat />
-                                                                    <div>{seat.SeatNumber}</div>
-                                                                    <div>{seat.ReservationStatus}</div>
-                                                                </IconButton>
-                                                            </div>                                           
-                                                        </div>
-                                                    )
-                                                } else {
-                                                    return(
+                                                // {if(seat[seat.ReservationStatus] = 1){
+                                                //     return(
+                                                //         <div className={classes.iconButton}>
+                                                //             <div id="seats">
+                                                //                 <IconButton 
+                                                //                     disabled
+                                                //                     classes={{label: classes.iconButtonLabel}}
+                                                //                     style={{color: "red"}}
+                                                //                 >
+                                                //                     <EventSeat />
+                                                //                     <div>{seat.SeatNumber}</div>
+                                                //                     <div>{seat.ReservationStatus}</div>
+                                                //                 </IconButton>
+                                                //             </div>                                           
+                                                //         </div>
+                                                //     )
+                                                // } else {
+                                                //     return(
                                                     <div className={classes.iconButton}>
                                                         <div id="seats">
                                                             <IconButton 
@@ -458,12 +490,13 @@ function postSeatBooking() {
                                                                 onClick={() => transferSeatValue(seat.SeatBySessionID)}>
                                                                 <EventSeat />
                                                                 <div>{seat.SeatNumber}</div>
+                                                                <div>{seat.ReservationStatus}</div>
                                                             </IconButton>
                                                         </div>                                           
                                                     </div>
-                                                    )}   
-                                                }                                                
-                                            )}    
+                                                //     )}   
+                                                // }                                                
+                                            )} 
                                         </div>
 
                                     <Divider />

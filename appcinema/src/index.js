@@ -20,9 +20,9 @@ const theme = createMuiTheme({
 
 ReactDOM.render(
   <React.StrictMode>
-    {/* <ThemeProvider theme = {theme}> */}
+    <ThemeProvider theme = {theme}>
       <App />
-    {/* </ThemeProvider> */}
+    </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

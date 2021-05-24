@@ -222,6 +222,24 @@ class databaseOBJ {
             throw $ex;
         }
     }
+    // Get Booked Seats for Reservation Status Check
+    function getBookedSeats($movieSessionID) {
+        try {
+            $mysql = "SELECT seat.SeatNumber, seatbysession.SeatBySessionID, seatbysession.ReservationStatus, 
+            moviesession.MovieSessionID FROM seatbysession 
+            INNER JOIN moviesession on seatbysession.MovieSessionID = moviesession.MovieSessionID 
+            INNER JOIN seat on seatbysession.SeatID = seat.SeatID 
+            WHERE seatbysession.MovieSessionID = :moviesessionid AND ReservationStatus = true";
+            $stmt = $this->dbconn->prepare($mysql);
+            $stmt->bindValue(':moviesessionid', $movieSessionID);
+            $stmt->execute();
+            $result = $stmt->fetchAll();
+            return $result;
+        }
+        catch (PDOException $ex) {
+            throw $ex;
+        }
+    }
     // Seat Booking 
     function seatReservation($seatID, $tickettypeID) {
         $sql = "INSERT INTO ticket(SeatBySessionID, TicketTypeID, UserID)
