@@ -26,13 +26,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-window.onload = function() {
-    localStorage.setItem('darkMode', '')
-    localStorage.setItem('backgroundImage', 'none');
-    localStorage.setItem('font', 'default');
-    localStorage.setItem('backgroundColour', 'default');
+// window.onload = function() {
+//     localStorage.setItem('darkMode', '')
+//     localStorage.setItem('backgroundImage', 'none');
+//     localStorage.setItem('font', 'default');
+//     localStorage.setItem('backgroundColour', 'default');
 
-}
+// }
 
 export default function App() {
   // A React const that is assigned with Material UI Component Style Const

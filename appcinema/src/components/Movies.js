@@ -14,7 +14,6 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import Divider from '@material-ui/core/Divider';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Prices from './Prices';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Radio from '@material-ui/core/Radio';
@@ -445,7 +444,6 @@ function postSeatBooking() {
                                             <div>
                                                 <div>{movieSession.SessionDate}</div>
                                                 <div>{movieSession.TimeStart}</div>
-                                                <div>{movieSession.MovieSessionID}</div>
                                                 <Button
                                                     endIcon={<EventSeat />}
                                                     onClick={() => {postDisplaySeats(movieSession.MovieSessionID); postTicketTypes(); postSeatReserveStatus(movieSession.MovieSessionID);}}
@@ -519,7 +517,8 @@ function postSeatBooking() {
                                             /> 
                                             <div>${ticketType.Price}</div>     
                                             </div>   
-                                        )}    
+                                        )} 
+                                        <p>If you are paying for the 'Student' price, you are required to present your Student ID before entering the cinema room.</p>   
                                     </RadioGroup>
                                     </FormControl>
                                             

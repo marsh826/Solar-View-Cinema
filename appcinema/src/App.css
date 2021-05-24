@@ -10,6 +10,10 @@
   flex: 1;
 }
 
+.darkmode{
+  background-color: #292C35;
+}
+
 body {
   background-color: #610C8D;
 }

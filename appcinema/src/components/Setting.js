@@ -5,30 +5,23 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Switch from '@material-ui/core/Switch';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
 import '../App.css'
 import { useState } from 'react';
+import IconButton from '@material-ui/core/IconButton';
+import { Brightness7, Brightness4 } from '@material-ui/icons'
 
 export default function SettingOptions() {
-    // const handleChange = (event) => {
-    //     setState({ ...state, [event.target.name]: event.target.checked });
-    // };
+    const handleChange = (event) => {
+        setDarkModeSwitch(event.target.checked);
+    };
+
+    const [darkModeSwitch, setDarkModeSwitch] = useState(false);
+
+    const [darkState, setDarkState] = useState("");
+
     
-    // const [state, setState] = useState({
-    // DarkMode: false
-    // });
-
-    function turnOnDarkMode() {
-        localStorage.setItem("darkMode", "active");
-    }
-
-    function turnOffDarkMode() {
-        localStorage.setItem("darkMode", "null");
-    }
-
-    const [darkMode, setDarkMode] = useState(false);
-
     return(
+        // <ThemeProvider theme={theme}>
         <FormControl component="fieldset">
             <FormGroup aria-label="position" row> 
                 <div id = "setting-list">
@@ -55,18 +48,17 @@ export default function SettingOptions() {
                     />
                     <FormControlLabel
                         style={{color: 'whitesmoke'}}
-                        control={<Switch
-                            // color = 'primary'
-                            style={{
-                                color: '#00FFFF'}}
-                            checked={darkMode}
-                            onChange={() => setDarkMode(!darkMode)}
-                        />}
-                        label = "Dark Mode"
+                        control={
+                            <IconButton style={{color: "whitesmoke"}}>
+                                <Brightness7 />
+                            </IconButton>
+                        }
+                        label="Dark Mode"
                         labelPlacement="end"
                     />
                 </div>
             </FormGroup>
         </FormControl>
+        // </ThemeProvider>
     );
 }
