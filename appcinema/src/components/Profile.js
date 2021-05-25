@@ -186,11 +186,11 @@ function postDeleteProfile(id) {
         if(response.status === 202) {
             // if success, local storage items will be removed and user will be sent back to the index page
             console.log('success');
-            localStorage.setItem('loginStatus', 'logged out');
-            localStorage.removeItem('profileImage');
-            localStorage.removeItem('backgroundImage');
-            localStorage.removeItem('font');
-            localStorage.removeItem('backgroundColour');  
+            localStorage.setItem('LoginStatus', 'Logged Out');
+            localStorage.removeItem('ProfileImage');
+            localStorage.removeItem('BackgroundImage');
+            localStorage.removeItem('Font');
+            localStorage.removeItem('BackgroundColour');  
             history.push("/Home")        
             return;
         }
@@ -206,7 +206,7 @@ function postLogOut() {
     .then(function(response){    
         if(response.status === 202) {
             console.log('success');      
-            localStorage.setItem('userStatus', 'logged out');
+            localStorage.setItem('UserStatus', 'Logged Out');
             console.log('Status: Logged Out');
             history.push("/Home");
             return;

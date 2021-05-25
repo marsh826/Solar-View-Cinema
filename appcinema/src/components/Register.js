@@ -95,6 +95,11 @@ export default function Register() {
             if(response.status === 202) {
             // If the form was fully filled in and data was successfully inserted
                 console.log('success');
+                localStorage.setItem('LoginStatus', 'Logged In');
+                localStorage.setItem('ProfileImage');
+                localStorage.setItem('BackgroundImage');
+                localStorage.setItem('Font');
+                localStorage.setItem('BackgroundColour'); 
                 history.push("/Profile");
                 return;
             }

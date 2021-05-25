@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import '../App.css';
 
 export default function Footer() {
     return(
-        <div className="footer">
+        <div id="footer">
             <div className="container">
                 <div className="row">
                     <div className="footer-content">

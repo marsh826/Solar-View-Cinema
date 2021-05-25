@@ -374,7 +374,7 @@ function postSeatBooking() {
                         <Button
                             onClick={() => {openMovieDisplay([movie]); postDisplaySession(movie.MovieID);}}
                             variant="contained" 
-                            // color="primary"
+                            color="primary"
                             className={classes.margin}>
                             View Sessions
                         </Button>
@@ -384,7 +384,7 @@ function postSeatBooking() {
                         <Button
                             onClick={() => postAddFavouriteMovie(movie.MovieID)}
                             variant="contained" 
-                            // color="primary"
+                            color="primary"
                             className={classes.margin}>
                             Add Favourite
                         </Button> 
@@ -441,14 +441,14 @@ function postSeatBooking() {
                                         <h3>Available Sessions</h3>
                                         {/* Rendering a list of data from movieSession const in Material UI Dialog */}
                                         {movieSession.map((movieSession, index) =>
-                                            <div>
+                                            <div id="movie-session-content">
                                                 <div>{movieSession.SessionDate}</div>
                                                 <div>{movieSession.TimeStart}</div>
                                                 <Button
                                                     endIcon={<EventSeat />}
                                                     onClick={() => {postDisplaySeats(movieSession.MovieSessionID); postTicketTypes(); postSeatReserveStatus(movieSession.MovieSessionID);}}
                                                     variant="contained" 
-                                                    // color="primary"
+                                                    color="primary"
                                                     className={classes.margin}>
                                                     View Seats
                                                 </Button>
@@ -531,7 +531,7 @@ function postSeatBooking() {
                                         endIcon={<Check />}
                                         type="button"
                                         variant="contained" 
-                                        // color="primary"
+                                        color="primary"
                                         className={classes.margin}
                                         onClick={postSeatBooking}
                                     >
@@ -545,7 +545,7 @@ function postSeatBooking() {
                         <DialogActions>
                             <Button 
                                 onClick={() => {closeMovieDisplay()}} 
-                                // color="primary"
+                                color="primary"
                             >
                                 Close
                             </Button>

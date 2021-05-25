@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
@@ -39,7 +39,7 @@ export default function SwipeableTemporaryDrawer() {
     top: false
   });
 
-// Material UI Navbar open & close event
+  // Material UI Navbar open & close event
   const toggleDrawer = (anchor, open) => (event) => {
     if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
@@ -47,25 +47,41 @@ export default function SwipeableTemporaryDrawer() {
     setState({ ...state, [anchor]: open });
   };
 
-//Material UI Navbar Item 
+  // // Set the Component to Dark Mode by checking for Dark Mode status
+  // function DarkModeCheck() {
+  //   if(localStorage.getItem("DarkMode") === 'Enabled') {
+  //     document.getElementById("swipenavbar").classList.add("darkmodePrimary");
+  //     document.body.classList.add("darkmodeSecondary");
+  //   } else {
+  //     document.getElementById("swipenavbar").classList.remove("darkmodePrimary");
+  //     document.body.classList.remove("darkmodeSecondary");
+  //   }
+  // }
+
+  // // When Navbar Component load, DarkModeCheck function will be called
+  // useEffect(() => {
+  //   DarkModeCheck();
+  // }, []);
+
+  // Material UI Navbar Item 
   const navitems = ['Home', 'Login', 'Settings'];
   const navitems2 = ['Movies'];
 
-// If the user is logged in, menu item 'Login' will be replaced with 'Profile'
-if(localStorage.getItem('userStatus') == 'logged in') {
-  navitems.splice('Login');
-  navitems.push('Home', 'Profile', 'Settings');
-  navitems2.push('Reservations', 'Favourites');
-}
+  // If the user is logged in, menu item 'Login' will be replaced with 'Profile'
+  if(localStorage.getItem('UserStatus') == 'Logged In') {
+    navitems.splice('Login');
+    navitems.push('Home', 'Profile', 'Settings');
+    navitems2.push('Reservations', 'Favourites');
+  }
 
-// If the user is logged out, menu item 'Profile' will be replaced with 'Login'
-if(localStorage.getItem('userStatus') == 'logged out') {
-  navitems.splice('Profile');
-  navitems2.splice('Reservations', 'Favourites');
-  navitems.push('Home', 'Login', 'Settings');
-}
+  // If the user is logged out, menu item 'Profile' will be replaced with 'Login'
+  if(localStorage.getItem('UserStatus') == 'Logged Out') {
+    navitems.splice('Profile');
+    navitems2.splice('Reservations', 'Favourites');
+    navitems.push('Home', 'Login', 'Settings');
+  }
 
-// Menu Items being displayed in Material UI Navbar 
+  // Menu Items being displayed in Material UI Navbar 
   const list = (anchor) => (
     <div
       className={clsx(classes.list, {
@@ -112,9 +128,10 @@ if(localStorage.getItem('userStatus') == 'logged out') {
     </List>
     </div>
   );
+
   return (
-// Render Material UI Navbar
-    <div className = "swipenavbar">
+  // Render Material UI Navbar
+    <div id="swipenavbar">
       {['top'].map((anchor) => (
         <React.Fragment key={anchor}>
           <Button onClick={toggleDrawer(anchor, true)}>

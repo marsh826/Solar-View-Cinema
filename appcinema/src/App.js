@@ -26,14 +26,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// window.onload = function() {
-//     localStorage.setItem('darkMode', '')
-//     localStorage.setItem('backgroundImage', 'none');
-//     localStorage.setItem('font', 'default');
-//     localStorage.setItem('backgroundColour', 'default');
-
-// }
-
 export default function App () {
   // A React const that is assigned with Material UI Component Style Const
   const classes = useStyles();
@@ -45,29 +37,20 @@ export default function App () {
   //   }
   // })
   
-  const [themeMode, setThemeMode] = useState("disabled");
-
-  // const theme = createMuiTheme({
-  //   palette:{
-  //     type: themeMode,
-  //     primary: {
-  //       main: themeMode === "disabled" ? '#4F0675' : '#111'
-  //     },
-  //     secondary: {
-  //       main: themeMode === "disabled" ? '#610C8D' : '#292C35'
-  //     }
-  //   }
-  // })
-
-  const disableDarkMode = () => {
-    document.body.classList.remove('darkmode');
-    setThemeMode("disabled");
-  }
-
-  const enableDarkMode = () => {
-    document.body.classList.add('darkmode');
-    setThemeMode("enabled");
-  }
+  // Set the Component to Dark Mode by checking for Dark Mode status
+  function DarkModeCheck() {
+    if(localStorage.getItem("DarkMode") === 'Enabled') {
+        document.getElementById("swipenavbar").classList.add("darkmodePrimary");
+        document.body.classList.add("darkmodeSecondary");
+        document.getElementById("footer").classList.add("darkmodePrimary");
+        document.getElementById("userprofile").classList.add("darkmodePrimary");
+    } else {
+        document.getElementById("swipenavbar").classList.remove("darkmodePrimary");
+        document.body.classList.remove("darkmodeSecondary");
+        document.getElementById("footer").classList.remove("darkmodePrimary");
+        document.getElementById("userprofile").classList.remove("darkmodePrimary");
+    }
+}
 
   // React const set up for Snackbar Alert messages
   const [openSnackbar, setOpenSnackBar] = useState(false);
@@ -84,6 +67,7 @@ export default function App () {
 
   useEffect(() => {
     checkLoginStatus();
+    DarkModeCheck();
   }, []);
 
   function checkLoginStatus(){
@@ -119,11 +103,7 @@ export default function App () {
             </Snackbar>
           </div>
         <Router>  
-          <Navbar 
-            themeMode={themeMode} 
-            DarkTheme={enableDarkMode}
-            NormalTheme={disableDarkMode}
-          />
+          <Navbar />
           <Switch>
             <Route exact from = "/" render = {props => <HomePage {...props} />} />
             <Route exact path = "/Home" render = {props => <HomePage {...props} />} />

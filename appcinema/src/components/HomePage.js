@@ -100,7 +100,7 @@ export default function HomePage() {
             <div id="moviedisplay">
             {latestMovie.map((latestMovie, index) => (
                 <div id="moviecontents">
-                    <div id ="movie-image">
+                    <div className ="movie-image">
                     <img 
                     width='300px'
                     height='480px'
@@ -110,7 +110,7 @@ export default function HomePage() {
                     <Button
                         onClick={() => {openMovieDialog([latestMovie])}}
                         variant="contained" 
-                        // color="primary"
+                        color="primary"
                         className={classes.margin}>
                         Description
                     </Button>
@@ -127,8 +127,8 @@ export default function HomePage() {
                         <DialogTitle id="alert-dialog-slide-title">{selectedMovie.MovieName}</DialogTitle>
                             <DialogContent>
                             <DialogContentText id="alert-dialog-slide-description">
-                                <div id="display-movie">
-                                    <div id="imgMovieDisplay">
+                                <div className="display-movie">
+                                    <div className="imgMovieDisplay">
                                         <img 
                                             style={{borderRadius: 50}}
                                             width='300px'
@@ -150,7 +150,7 @@ export default function HomePage() {
                             <DialogActions>
                                 <Button 
                                     onClick={() => {closeMovieDialog()}} 
-                                    // color="primary"
+                                    color="primary"
                                 >
                                     Close
                                 </Button>
@@ -162,7 +162,7 @@ export default function HomePage() {
                     <Link className="routelinkreact" to="/Movies">
                         <Button 
                             variant="contained" 
-                            // color="primary"
+                            color="primary"
                             className={classes.margin}>
                             Book Now
                         </Button>    

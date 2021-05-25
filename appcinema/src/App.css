@@ -11,24 +11,24 @@
 }
 
 .darkmodePrimary{
-  background-color: black;
+  background-color: #24262e !important;
 }
 
 .darkmodeSecondary{
-  background-color: #292C35;
+  background-color: #2a2d38 !important;
 }
 
 body {
   background-color: #610C8D;
 }
 
-.swipenavbar {
+#swipenavbar {
   background-color: #4F0675;
   height: 65px;
   position: relative;
 }
 
-.footer {
+#footer {
   color: whitesmoke;
   background-color: #4F0675;
   padding-top: 1em;
@@ -42,6 +42,11 @@ body {
   margin-right: 30px;
 }
 
+#loopalumpa {
+  width: 400px;
+  height: 400px;
+  background-color: blue;
+}
 
 #moviedisplay div {
   display: inline-block;
@@ -201,7 +206,7 @@ h1 {
   overflow: visible;
 }
 
-#movie-image {
+.movie-image {
   margin: auto;
 }
 

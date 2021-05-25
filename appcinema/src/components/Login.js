@@ -75,7 +75,7 @@ export default function Login() {
             // When the user login successfully, redirect to Profile page
             if(response.status === 202) {
                 console.log('success');
-                localStorage.setItem('userStatus', 'logged in');
+                localStorage.setItem('UserStatus', 'Logged In');
                 console.log('Status: Logged In');
                 history.push("/Profile");
                 // document.getElementById('loginform').reset();
