@@ -10,7 +10,11 @@
   flex: 1;
 }
 
-.darkmode{
+.darkmodePrimary{
+  background-color: black;
+}
+
+.darkmodeSecondary{
   background-color: #292C35;
 }
 
@@ -23,6 +27,21 @@ body {
   height: 65px;
   position: relative;
 }
+
+.footer {
+  color: whitesmoke;
+  background-color: #4F0675;
+  padding-top: 1em;
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  align-items: center;
+}
+
+.footer-content {
+  margin-right: 30px;
+}
+
 
 #moviedisplay div {
   display: inline-block;
@@ -163,20 +182,6 @@ h1 {
 .acc-button-arrangement {
   display: inline-flex;
   margin-bottom: 12px;
-}
-
-.main-footer {
-  color: whitesmoke;
-  background-color: #4F0675;
-  padding-top: 1em;
-  position: relative;
-  bottom: 0;
-  width: 100%;
-  align-items: center;
-}
-
-.footer-content {
-  margin-right: 30px;
 }
 
 #loading-spinner {

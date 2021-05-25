@@ -17,14 +17,14 @@ export default function BookingSuccess() {
     return(
         <div>
             <h1>Your booking was a success. Thank you for choosing Solar View Cinema</h1>
-            <Link className = "routelinkreact" to = "/Movies">
+            {/* <Link className = "routelinkreact" to = "/Movies">
                 <Button 
                     variant = "contained" 
                     color = "primary"
                     className = {classes.margin}>
                     OK
                 </Button>    
-            </Link>    
+            </Link>     */}
         </div>
     ); 
 }

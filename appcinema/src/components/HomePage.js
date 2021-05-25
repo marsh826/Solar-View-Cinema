@@ -110,7 +110,7 @@ export default function HomePage() {
                     <Button
                         onClick={() => {openMovieDialog([latestMovie])}}
                         variant="contained" 
-                        color="primary"
+                        // color="primary"
                         className={classes.margin}>
                         Description
                     </Button>
@@ -148,7 +148,10 @@ export default function HomePage() {
                             </DialogContentText>
                             </DialogContent>
                             <DialogActions>
-                                <Button onClick={() => {closeMovieDialog()}} color="primary">
+                                <Button 
+                                    onClick={() => {closeMovieDialog()}} 
+                                    // color="primary"
+                                >
                                     Close
                                 </Button>
                             </DialogActions>
@@ -159,7 +162,7 @@ export default function HomePage() {
                     <Link className="routelinkreact" to="/Movies">
                         <Button 
                             variant="contained" 
-                            color="primary"
+                            // color="primary"
                             className={classes.margin}>
                             Book Now
                         </Button>    

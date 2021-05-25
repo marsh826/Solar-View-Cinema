@@ -3,7 +3,7 @@ import '../App.css';
 
 export default function Footer() {
     return(
-        <div className="main-footer">
+        <div className="footer">
             <div className="container">
                 <div className="row">
                     <div className="footer-content">

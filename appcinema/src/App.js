@@ -34,18 +34,40 @@ const useStyles = makeStyles((theme) => ({
 
 // }
 
-export default function App() {
+export default function App () {
   // A React const that is assigned with Material UI Component Style Const
   const classes = useStyles();
 
-  // Dark Mode
-  const theme2 = createMuiTheme({
-    palette: {
-      type: "dark",
-    }
-  })
+  // // Dark Mode
+  // const theme2 = createMuiTheme({
+  //   palette: {
+  //     type: "dark",
+  //   }
+  // })
   
-  const [darkMode, setDarkMode] = useState(false)
+  const [themeMode, setThemeMode] = useState("disabled");
+
+  // const theme = createMuiTheme({
+  //   palette:{
+  //     type: themeMode,
+  //     primary: {
+  //       main: themeMode === "disabled" ? '#4F0675' : '#111'
+  //     },
+  //     secondary: {
+  //       main: themeMode === "disabled" ? '#610C8D' : '#292C35'
+  //     }
+  //   }
+  // })
+
+  const disableDarkMode = () => {
+    document.body.classList.remove('darkmode');
+    setThemeMode("disabled");
+  }
+
+  const enableDarkMode = () => {
+    document.body.classList.add('darkmode');
+    setThemeMode("enabled");
+  }
 
   // React const set up for Snackbar Alert messages
   const [openSnackbar, setOpenSnackBar] = useState(false);
@@ -97,7 +119,11 @@ export default function App() {
             </Snackbar>
           </div>
         <Router>  
-          <Navbar />
+          <Navbar 
+            themeMode={themeMode} 
+            DarkTheme={enableDarkMode}
+            NormalTheme={disableDarkMode}
+          />
           <Switch>
             <Route exact from = "/" render = {props => <HomePage {...props} />} />
             <Route exact path = "/Home" render = {props => <HomePage {...props} />} />

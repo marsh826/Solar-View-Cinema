@@ -11,13 +11,17 @@ import IconButton from '@material-ui/core/IconButton';
 import { Brightness7, Brightness4 } from '@material-ui/icons'
 
 export default function SettingOptions() {
-    const handleChange = (event) => {
+
+    const handleDarkMode = (event) => {
         setDarkModeSwitch(event.target.checked);
+        if(darkModeSwitch === false) {
+            document.body.classList.add('darkmodeSecondary');
+        } else {
+            document.body.classList.remove('darkmodeSecondary');
+        }
     };
 
-    const [darkModeSwitch, setDarkModeSwitch] = useState(false);
-
-    const [darkState, setDarkState] = useState("");
+    const [darkModeSwitch, setDarkModeSwitch] = useState([]);
 
     
     return(
@@ -48,10 +52,10 @@ export default function SettingOptions() {
                     />
                     <FormControlLabel
                         style={{color: 'whitesmoke'}}
-                        control={
-                            <IconButton style={{color: "whitesmoke"}}>
-                                <Brightness7 />
-                            </IconButton>
+                        control={<Switch 
+                            checked={darkModeSwitch} 
+                            onChange={handleDarkMode} 
+                            name="darkModeSwitch"/>
                         }
                         label="Dark Mode"
                         labelPlacement="end"
