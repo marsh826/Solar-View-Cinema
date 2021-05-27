@@ -21,13 +21,13 @@ const useStyles = makeStyles({
   fullList: {
     width: 'auto',
   },
-  root: {
-    display: 'flex',
-    width: '100%',
-    height: '100%',
-    minWidth: '100%',
-    minHeight: '100%',
-  },
+  // root: {
+  //   display: 'flex',
+  //   width: '100%',
+  //   height: '100%',
+  //   minWidth: '100%',
+  //   minHeight: '100%',
+  // },
 });
 
 export default function SwipeableTemporaryDrawer() {
@@ -83,7 +83,7 @@ export default function SwipeableTemporaryDrawer() {
 
   // Menu Items being displayed in Material UI Navbar 
   const list = (anchor) => (
-    <div
+    <div id="navDrawer"
       className={clsx(classes.list, {
         [classes.fullList]: anchor === 'top',
       })}
@@ -140,14 +140,16 @@ export default function SwipeableTemporaryDrawer() {
               height = '50px'
               src = {logo} />
           </Button>
-          <SwipeableDrawer
-            anchor="top"
-            open={state[anchor]}
-            onClose={toggleDrawer(anchor, false)}
-            onOpen={toggleDrawer(anchor, true)}
-          >
-            {list(anchor)}
-          </SwipeableDrawer>
+          {/* <div id="navDrawer"> */}
+            <SwipeableDrawer
+              anchor="top"
+              open={state[anchor]}
+              onClose={toggleDrawer(anchor, false)}
+              onOpen={toggleDrawer(anchor, true)}
+            >
+              {list(anchor)}
+            </SwipeableDrawer>
+          {/* </div> */}
         </React.Fragment>
       ))}
     </div>

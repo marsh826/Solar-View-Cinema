@@ -22,29 +22,32 @@ export default function SettingOptions() {
             document.getElementById("swipenavbar").classList.add("darkmodePrimary");
             document.body.classList.add('darkmodeSecondary');
             document.getElementById("footer").classList.add("darkmodePrimary");
-            document.getElementById("userprofile").classList.add("darkmodePrimary");
+            document.getElementById("navDrawer").classList.add("darkmodeSecondary");
+            // document.getElementById("userprofile").classList.add("darkmodePrimary");
+            // document.getElementById("moviecontents").classList.add("darkmodeSecondary");
+            
         } else {
             localStorage.setItem('DarkMode', 'Disabled');
             document.getElementById("swipenavbar").classList.remove("darkmodePrimary");
             document.body.classList.remove('darkmodeSecondary');
             document.getElementById("footer").classList.remove("darkmodePrimary");
-            document.getElementById("userprofile").classList.remove("darkmodePrimary");
+            document.getElementById("navDrawer").classList.remove("darkmodeSecondary");
+            // document.getElementById("userprofile").classList.remove("darkmodePrimary");
+            // document.getElementById("moviecontents").classList.remove("darkmodeSecondary");
         }
     };
 
-    // Set the Component to Dark Mode by checking for Dark Mode status
-    function DarkModeCheck() {
+    // Set the Dark Mode Switch state based on Dark Mode status
+    function DarkModeSwitchCheck() {
         if(localStorage.getItem("DarkMode") === 'Enabled') {
-            document.body.classList.add("darkmodeSecondary");
             setDarkModeSwitch(true);
         } else {
             setDarkModeSwitch(false);
-            document.body.classList.remove("darkmodeSecondary");
         }
     }
 
     useEffect(() => {
-        DarkModeCheck();
+        DarkModeSwitchCheck();
     }, [])
 
     return(
@@ -63,13 +66,6 @@ export default function SettingOptions() {
                         value="end"
                         control={<Checkbox style = {{color: 'white'}} />}
                         label="Change Text Font"
-                        labelPlacement="end"
-                    />
-                    <FormControlLabel
-                        style = {{color: 'whitesmoke'}}
-                        value="end"
-                        control={<Checkbox style = {{color: 'white'}} />}
-                        label="Change Text Color"
                         labelPlacement="end"
                     />
                     <FormControlLabel

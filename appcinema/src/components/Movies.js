@@ -109,7 +109,7 @@ export default function MovieDisplay() {
         console.log(event.target.value);
     };
 
-    // React COnst Seat Reservation Status set up empty array to store data that is successfully fetched
+    // React Const Seat Reservation Status set up empty array to store data that is successfully fetched
     const [seatStatus, setSeatStatus] = useState([]);
 
     // When the Movie page/component is loaded, useEffect will use a JavaScript Function to display profile in JSON output only once
@@ -171,156 +171,160 @@ export default function MovieDisplay() {
         return false;
 }
 //-------------------------------------------------------Display All Seats Available-----------------------------------------------------------------------------------------------
-function postDisplaySeats(id) {
-    var moviesession = {
-        'moviesessionid' : id
+    function postDisplaySeats(id) {
+        var moviesession = {
+            'moviesessionid' : id
+        }
+        fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=displayseats",{
+            method: "POST",
+            body: JSON.stringify(moviesession),
+            credentials: 'include'
+        })
+        .then((res) => {
+            openSeatDisplay();
+            if (res.status === 204) {
+                console.log('no content');
+                setSeat([]);
+                setMessage("Error: Unable to display seats for this movie session");
+                setOpenSnackBar(true);
+                setSeverity("Error");    
+            }
+            if (res.status === 201) {
+                console.log('created');
+                res.json().then((data) => {
+                    setSeat(data);
+                    console.log(data);
+                })
+            }
+        })
     }
-    fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=displayseats",{
-        method: "POST",
-        body: JSON.stringify(moviesession),
-        credentials: 'include'
-    })
-    .then((res) => {
-        openSeatDisplay();
-        if (res.status === 204) {
-            console.log('no content');
-            setSeat([]);
-            setMessage("Error: Unable to display seats for this movie session");
-            setOpenSnackBar(true);
-            setSeverity("Error");    
-        }
-        if (res.status === 201) {
-            console.log('created');
-            res.json().then((data) => {
-                setSeat(data);
-                console.log(data);
-            })
-        }
-    })
-}
+// -----------------------------------------------------------Select Seat Change Color---------------------------------------------------------------------------------------------
+    function selectedSeatColor() {
+        
+    }
 // --------------------------------------Storing Ticket Values into Hidden Input Form for Ticket Reservation-----------------------------------------------------------------------
-function transferTicketTypeValue(id) {
-    var TicketTypeValue = document.getElementById("ticket-type").value;
-    TicketTypeValue = id;
-    document.getElementById("ticket-type").value = TicketTypeValue;
-}
-function transferSeatValue(id) {
-    var SeatValue = document.getElementById("seat-id").value;
-    SeatValue = id;
-    document.getElementById("seat-id").value = SeatValue;
-}
+    function transferTicketTypeValue(id) {
+        var TicketTypeValue = document.getElementById("ticket-type").value;
+        TicketTypeValue = id;
+        document.getElementById("ticket-type").value = TicketTypeValue;
+    }
+    function transferSeatValue(id) {
+        var SeatValue = document.getElementById("seat-id").value;
+        SeatValue = id;
+        document.getElementById("seat-id").value = SeatValue;
+    }
 // --------------------------------------Storing Ticket Values into Hidden Input Form for Ticket Update----------------------------------------------------------------------------
-function transferSeatValueUpdt(id) {
-    var SeatValueUpdt = document.getElementById("seat-id-update").value;
-    SeatValueUpdt = id;
-    document.getElementById("seat-id-update").value = SeatValueUpdt;
-}
+    function transferSeatValueUpdt(id) {
+        var SeatValueUpdt = document.getElementById("seat-id-update").value;
+        SeatValueUpdt = id;
+        document.getElementById("seat-id-update").value = SeatValueUpdt;
+    }
 
-function transferTicketID(id) {
-    var TicketIDValue = document.getElementById("ticket-id").value;
-    TicketIDValue = id;
-    document.getElementById("ticket-id").value = TicketIDValue;
-}
+    function transferTicketID(id) {
+        var TicketIDValue = document.getElementById("ticket-id").value;
+        TicketIDValue = id;
+        document.getElementById("ticket-id").value = TicketIDValue;
+    }
 //-------------------------------------------------------Open and Close Seat Display-----------------------------------------------------------------------------------------------
-function closeSeatDisplay() {
-    document.getElementById("movie-details").style.display = "block";
-    document.getElementById("sessiondisplay").style.display = "block";
-    document.getElementById("imgMovieDisplay").style.display = "block";
-    document.getElementById("seat-display").style.display = "none";
-}
-function openSeatDisplay() {
-    document.getElementById("movie-details").style.display = "none";
-    document.getElementById("sessiondisplay").style.display = "none";
-    document.getElementById("imgMovieDisplay").style.display = "none";
-    document.getElementById("seat-display").style.display = "block";
-}
+    function closeSeatDisplay() {
+        document.getElementById("movie-details").style.display = "block";
+        document.getElementById("sessiondisplay").style.display = "block";
+        document.getElementById("imgMovieDisplay").style.display = "block";
+        document.getElementById("seat-display").style.display = "none";
+    }
+    function openSeatDisplay() {
+        document.getElementById("movie-details").style.display = "none";
+        document.getElementById("sessiondisplay").style.display = "none";
+        document.getElementById("imgMovieDisplay").style.display = "none";
+        document.getElementById("seat-display").style.display = "block";
+    }
 //---------------------------------------------------------Displaying Ticket Type--------------------------------------------------------------------------------------------------
-function postTicketTypes() {
-    fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=displaytickettype",{
-        method: "GET",
-        credentials: "include"
-    })
-    .then((res) => {
-        if (res.status === 204) {
-            console.log('no content');
-            setMovieSession("No Seat Available");
-            setMessage("Error: Movie sessions are unavailable for this movie");
-            setOpenSnackBar(true);
-            setSeverity("Error");    
-        }
-        if (res.status === 201) {
-            console.log('created');
-            res.json().then((data) => {
-                setTicketType(data);
-                console.log(data);
-            })
-        }
-    })
-    return false;
-}
-//-----------------------------------------------------Check for a Seat's Reservation Status---------------------------------------------------------------------------------------
-function postSeatReserveStatus(id) {
-    var movieSessionID = {
-        'movieSessionID': id 
+    function postTicketTypes() {
+        fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=displaytickettype",{
+            method: "GET",
+            credentials: "include"
+        })
+        .then((res) => {
+            if (res.status === 204) {
+                console.log('no content');
+                setMovieSession("No Seat Available");
+                setMessage("Error: Movie sessions are unavailable for this movie");
+                setOpenSnackBar(true);
+                setSeverity("Error");    
+            }
+            if (res.status === 201) {
+                console.log('created');
+                res.json().then((data) => {
+                    setTicketType(data);
+                    console.log(data);
+                })
+            }
+        })
+        return false;
     }
-    fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=seatstatuscheck", {
-        method: "POST",
-        body: JSON.stringify(movieSessionID),
-        credentials: "include"
-    })
-    .then((res) => {
-        if (res.status === 501) {
-            console.log('not implemented');
-            setSeatStatus([]);
-            setMessage("Unable to check for seat reservation status");
-            setOpenSnackBar(true);
-            setSeverity("Error");    
-        }
-        if (res.status === 201) {
-            console.log('created');
-            res.json().then((data) => {
-                setSeatStatus(data);
-                console.log(data);
-            })
-        }
-    })
-    return false;
-}
+// //-----------------------------------------------------Check for a Seat's Reservation Status---------------------------------------------------------------------------------------
+// function postSeatReserveStatus(id) {
+//     var movieSessionID = {
+//         'movieSessionID': id 
+//     }
+//     fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=seatstatuscheck", {
+//         method: "POST",
+//         body: JSON.stringify(movieSessionID),
+//         credentials: "include"
+//     })
+//     .then((res) => {
+//         if (res.status === 501) {
+//             console.log('not implemented');
+//             setSeatStatus([]);
+//             setMessage("Unable to check for seat reservation status");
+//             setOpenSnackBar(true);
+//             setSeverity("Error");    
+//         }
+//         if (res.status === 201) {
+//             console.log('created');
+//             res.json().then((data) => {
+//                 setSeatStatus(data);
+//                 console.log(data);
+//             })
+//         }
+//     })
+//     return false;
+// }
 //------------------------------------------------------------Reserve Seat on Submit-----------------------------------------------------------------------------------------------
-function postSeatBooking() {
-    var seatbookinginfo = {
-        'seatbysessionid': document.getElementById("seat-id").value,
-        'tickettypeid': document.getElementById("ticket-type").value
+    function postSeatBooking() {
+        var seatbookinginfo = {
+            'seatbysessionid': document.getElementById("seat-id").value,
+            'tickettypeid': document.getElementById("ticket-type").value
+        }
+        fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=seatreserve",{
+            method: "POST",
+            body: JSON.stringify(seatbookinginfo),
+            credentials: "include"
+        })
+        .then(function(response) {
+            // If the seat booking process was successful
+            if(response.status == 202) {
+                console.log('success');
+                setMessage("Ticket Booked Successfully!");
+                setOpenSnackBar(true);
+                setSeverity("success");
+                return;    
+            }
+            // If the seat booking process was unsuccessful
+            if(response.status == 406) {
+                console.log('unaccepted');
+                setMessage("Error: Booking Failed.");
+                setOpenSnackBar(true);
+                setSeverity("error");
+                return;
+            }
+            // Send back error into console log
+            // response.text().then((text) => {
+            //     console.log(text);
+            // })
+        })
+        return false;
     }
-    fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=seatreserve",{
-        method: "POST",
-        body: JSON.stringify(seatbookinginfo),
-        credentials: "include"
-    })
-    .then(function(response) {
-        // If the seat booking process was successful
-        if(response.status == 202) {
-            console.log('success');
-            setMessage("Ticket Booked Successfully!");
-            setOpenSnackBar(true);
-            setSeverity("success");
-            return;    
-        }
-        // If the seat booking process was unsuccessful
-        if(response.status == 406) {
-            console.log('unaccepted');
-            setMessage("Error: Booking Failed.");
-            setOpenSnackBar(true);
-            setSeverity("error");
-            return;
-        }
-        // Send back error into console log
-        // response.text().then((text) => {
-        //     console.log(text);
-        // })
-    })
-    return false;
-}
 //-------------------------------------------------------Add Selected Movies to Favourite------------------------------------------------------------------------------------------
     function postAddFavouriteMovie(id) {
         var favouritemovie = {
@@ -347,7 +351,7 @@ function postSeatBooking() {
             }
         })
         return false;
-}
+    }   
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     return (
         <div id="moviepage">
@@ -441,18 +445,38 @@ function postSeatBooking() {
                                         <h3>Available Sessions</h3>
                                         {/* Rendering a list of data from movieSession const in Material UI Dialog */}
                                         {movieSession.map((movieSession, index) =>
-                                            <div id="movie-session-content">
-                                                <div>{movieSession.SessionDate}</div>
-                                                <div>{movieSession.TimeStart}</div>
-                                                <Button
-                                                    endIcon={<EventSeat />}
-                                                    onClick={() => {postDisplaySeats(movieSession.MovieSessionID); postTicketTypes(); postSeatReserveStatus(movieSession.MovieSessionID);}}
-                                                    variant="contained" 
-                                                    color="primary"
-                                                    className={classes.margin}>
-                                                    View Seats
-                                                </Button>
-                                            </div>
+                                            // The View Movie Seats button will be disabled if the user is not logged in
+                                            {if(localStorage.getItem('UserStatus') === "Logged Out"){
+                                                return(
+                                                    <div id="movie-session-content">
+                                                        <div>{movieSession.SessionDate}</div>
+                                                        <div>{movieSession.TimeStart}</div>
+                                                        <Button
+                                                            disabled
+                                                            endIcon={<EventSeat />}
+                                                            variant="contained" 
+                                                            color="primary"
+                                                            className={classes.margin}>
+                                                            Please log in to book a seat
+                                                        </Button>
+                                                    </div>
+                                                )
+                                            } else {
+                                                return(
+                                                    <div id="movie-session-content">
+                                                        <div>{movieSession.SessionDate}</div>
+                                                        <div>{movieSession.TimeStart}</div>
+                                                        <Button
+                                                            endIcon={<EventSeat />}
+                                                            onClick={() => {postDisplaySeats(movieSession.MovieSessionID); postTicketTypes(); selectedSeatColor();}}
+                                                            variant="contained" 
+                                                            color="primary"
+                                                            className={classes.margin}>
+                                                            View Seats
+                                                        </Button>
+                                                    </div>    
+                                                )}
+                                            }
                                         )}
                                     </div>
                                 </div>
@@ -483,12 +507,12 @@ function postSeatBooking() {
                                                 //     return(
                                                     <div className={classes.iconButton}>
                                                         <div id="seats">
-                                                            <IconButton 
+                                                            <IconButton
+                                                                disabled={seat.ReservationStatus}
                                                                 classes={{label: classes.iconButtonLabel}}
                                                                 onClick={() => transferSeatValue(seat.SeatBySessionID)}>
                                                                 <EventSeat />
                                                                 <div>{seat.SeatNumber}</div>
-                                                                <div>{seat.ReservationStatus}</div>
                                                             </IconButton>
                                                         </div>                                           
                                                     </div>
@@ -510,7 +534,7 @@ function postSeatBooking() {
                                     >
                                         {ticketType.map((ticketType, index) =>
                                             <div>
-                                            <FormControlLabel 
+                                            <FormControlLabel
                                                 value={ticketType.TicketTypeID} 
                                                 control={<Radio />} 
                                                 label={ticketType.Name}
@@ -521,8 +545,14 @@ function postSeatBooking() {
                                         <p>If you are paying for the 'Student' price, you are required to present your Student ID before entering the cinema room.</p>   
                                     </RadioGroup>
                                     </FormControl>
+
+                                    {ticketType.map((ticketType, index) =>
+                                        <div>
                                             
+                                        </div>   
+                                    )}
                                             
+                                     {/* Hidden Form that allow seatID and ticketTypeID to be filled and prepare for reservation */}
                                     <form id="seat-booking">
                                         <input id="seat-id" value="" readOnly />
                                         <input id="ticket-type" value="" readOnly />    

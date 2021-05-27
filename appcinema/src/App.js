@@ -29,13 +29,6 @@ const useStyles = makeStyles((theme) => ({
 export default function App () {
   // A React const that is assigned with Material UI Component Style Const
   const classes = useStyles();
-
-  // // Dark Mode
-  // const theme2 = createMuiTheme({
-  //   palette: {
-  //     type: "dark",
-  //   }
-  // })
   
   // Set the Component to Dark Mode by checking for Dark Mode status
   function DarkModeCheck() {
@@ -43,12 +36,12 @@ export default function App () {
         document.getElementById("swipenavbar").classList.add("darkmodePrimary");
         document.body.classList.add("darkmodeSecondary");
         document.getElementById("footer").classList.add("darkmodePrimary");
-        document.getElementById("userprofile").classList.add("darkmodePrimary");
+        // document.getElementById("userprofile").classList.add("darkmodePrimary");
     } else {
         document.getElementById("swipenavbar").classList.remove("darkmodePrimary");
         document.body.classList.remove("darkmodeSecondary");
         document.getElementById("footer").classList.remove("darkmodePrimary");
-        document.getElementById("userprofile").classList.remove("darkmodePrimary");
+        // document.getElementById("userprofile").classList.remove("darkmodePrimary");
     }
 }
 
@@ -77,7 +70,7 @@ export default function App () {
     }).then(function(response){
         if(response.status === 202){
             console.log('Status: Logged In');
-            localStorage.setItem('userStatus', 'logged in');
+            localStorage.setItem('UserStatus', 'Logged In');
             setOpenSnackBar(true);
             setSeverity("success");
             setMessage("Welcome back!");
@@ -85,7 +78,7 @@ export default function App () {
         }
         if(response.status === 401) {
             console.log('Status: Logged Out');
-            localStorage.setItem('userStatus', 'logged out');
+            localStorage.setItem('UserStatus', 'Logged Out');
             setOpenSnackBar(true);
             setSeverity("warning");
             setMessage("You are not logged in.");

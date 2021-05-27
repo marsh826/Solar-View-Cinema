@@ -84,7 +84,7 @@ export default function FavouriteMovies() {
             if (res.status === 204) {
                 console.log('no content');
                 setMovie([]);
-                setMessage("No movie is found in your favourite list");
+                setMessage("Your favourite list is empty");
                 setOpenSnackBar(true);
                 setSeverity("warning");
             }
