@@ -109,9 +109,6 @@ export default function MovieDisplay() {
         console.log(event.target.value);
     };
 
-    // React Const Seat Reservation Status set up empty array to store data that is successfully fetched
-    const [seatStatus, setSeatStatus] = useState([]);
-
     // When the Movie page/component is loaded, useEffect will use a JavaScript Function to display profile in JSON output only once
     useEffect(() => {
         // showLoading();
@@ -213,18 +210,6 @@ export default function MovieDisplay() {
         SeatValue = id;
         document.getElementById("seat-id").value = SeatValue;
     }
-// --------------------------------------Storing Ticket Values into Hidden Input Form for Ticket Update----------------------------------------------------------------------------
-    function transferSeatValueUpdt(id) {
-        var SeatValueUpdt = document.getElementById("seat-id-update").value;
-        SeatValueUpdt = id;
-        document.getElementById("seat-id-update").value = SeatValueUpdt;
-    }
-
-    function transferTicketID(id) {
-        var TicketIDValue = document.getElementById("ticket-id").value;
-        TicketIDValue = id;
-        document.getElementById("ticket-id").value = TicketIDValue;
-    }
 //-------------------------------------------------------Open and Close Seat Display-----------------------------------------------------------------------------------------------
     function closeSeatDisplay() {
         document.getElementById("movie-details").style.display = "block";
@@ -247,7 +232,7 @@ export default function MovieDisplay() {
         .then((res) => {
             if (res.status === 204) {
                 console.log('no content');
-                setMovieSession("No Seat Available");
+                setMovieSession([]);
                 setMessage("Error: Movie sessions are unavailable for this movie");
                 setOpenSnackBar(true);
                 setSeverity("Error");    
@@ -318,10 +303,6 @@ export default function MovieDisplay() {
                 setSeverity("error");
                 return;
             }
-            // Send back error into console log
-            // response.text().then((text) => {
-            //     console.log(text);
-            // })
         })
         return false;
     }
@@ -468,7 +449,7 @@ export default function MovieDisplay() {
                                                         <div>{movieSession.TimeStart}</div>
                                                         <Button
                                                             endIcon={<EventSeat />}
-                                                            onClick={() => {postDisplaySeats(movieSession.MovieSessionID); postTicketTypes(); selectedSeatColor();}}
+                                                            onClick={() => {postDisplaySeats(movieSession.MovieSessionID); postTicketTypes();}}
                                                             variant="contained" 
                                                             color="primary"
                                                             className={classes.margin}>
@@ -487,38 +468,26 @@ export default function MovieDisplay() {
                                         <div id="seat-items-container">
                                         {/* Rendering a list of data from seat const in Material UI Dialog */}
                                             {seat.map((seat, index) =>
-                                                // {if(seat[seat.ReservationStatus] = 1){
-                                                //     return(
-                                                //         <div className={classes.iconButton}>
-                                                //             <div id="seats">
-                                                //                 <IconButton 
-                                                //                     disabled
-                                                //                     classes={{label: classes.iconButtonLabel}}
-                                                //                     style={{color: "red"}}
-                                                //                 >
-                                                //                     <EventSeat />
-                                                //                     <div>{seat.SeatNumber}</div>
-                                                //                     <div>{seat.ReservationStatus}</div>
-                                                //                 </IconButton>
-                                                //             </div>                                           
-                                                //         </div>
-                                                //     )
-                                                // } else {
-                                                //     return(
-                                                    <div className={classes.iconButton}>
-                                                        <div id="seats">
-                                                            <IconButton
-                                                                disabled={seat.ReservationStatus}
-                                                                classes={{label: classes.iconButtonLabel}}
-                                                                onClick={() => transferSeatValue(seat.SeatBySessionID)}>
-                                                                <EventSeat />
-                                                                <div>{seat.SeatNumber}</div>
-                                                            </IconButton>
-                                                        </div>                                           
-                                                    </div>
-                                                //     )}   
-                                                // }                                                
+                                                <div className={classes.iconButton}>
+                                                    <div id="seats">
+                                                        <IconButton
+                                                            disabled={seat.ReservationStatus}
+                                                            classes={{label: classes.iconButtonLabel}}
+                                                            onClick={() => {transferSeatValue(seat.SeatBySessionID); selectedSeatColor();}}>
+                                                            <EventSeat />
+                                                            <div>{seat.SeatNumber}</div>
+                                                        </IconButton>
+                                                    </div>                                           
+                                                </div>                                     
                                             )} 
+                                        </div>
+                                        
+                                        {/* Seat Colour Indicator */}
+                                        <div className="colour-indicator">
+                                            <h4>Colour Indicator</h4>
+                                            <p>Grey: Available</p>
+                                            <p style={{color: "green" }}>Green: Selected</p>
+                                            <p style={{color: "red" }}>Red: Booked</p>
                                         </div>
 
                                     <Divider />
@@ -545,12 +514,6 @@ export default function MovieDisplay() {
                                         <p>If you are paying for the 'Student' price, you are required to present your Student ID before entering the cinema room.</p>   
                                     </RadioGroup>
                                     </FormControl>
-
-                                    {ticketType.map((ticketType, index) =>
-                                        <div>
-                                            
-                                        </div>   
-                                    )}
                                             
                                      {/* Hidden Form that allow seatID and ticketTypeID to be filled and prepare for reservation */}
                                     <form id="seat-booking">
@@ -563,7 +526,7 @@ export default function MovieDisplay() {
                                         variant="contained" 
                                         color="primary"
                                         className={classes.margin}
-                                        onClick={postSeatBooking}
+                                        onClick={() => { postSeatBooking(); closeMovieDisplay();}}
                                     >
                                         Reserve
                                     </Button>

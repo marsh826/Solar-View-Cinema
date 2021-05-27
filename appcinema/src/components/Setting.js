@@ -25,6 +25,7 @@ export default function SettingOptions() {
             document.getElementById("navDrawer").classList.add("darkmodeSecondary");
             // document.getElementById("userprofile").classList.add("darkmodePrimary");
             // document.getElementById("moviecontents").classList.add("darkmodeSecondary");
+            document.getElementById("ticket-display-container").classList.add("darkmodePrimary");
             
         } else {
             localStorage.setItem('DarkMode', 'Disabled');
@@ -34,6 +35,7 @@ export default function SettingOptions() {
             document.getElementById("navDrawer").classList.remove("darkmodeSecondary");
             // document.getElementById("userprofile").classList.remove("darkmodePrimary");
             // document.getElementById("moviecontents").classList.remove("darkmodeSecondary");
+            document.getElementById("ticket-display-container").classList.remove("darkmodePrimary");
         }
     };
 
