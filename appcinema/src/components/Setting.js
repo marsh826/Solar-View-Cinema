@@ -8,7 +8,6 @@ import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import '../App.css'
 import { useState } from 'react';
 import IconButton from '@material-ui/core/IconButton';
-import { Brightness7, Brightness4 } from '@material-ui/icons'
 
 export default function SettingOptions() {
     // React Const for Dark Mode Switch State 
@@ -50,11 +49,7 @@ export default function SettingOptions() {
     useEffect(() => {
         DarkModeSwitchCheck();
     }, []);
-
-    // useEffect(() => {
-
-    // })
-
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     return(
         <FormControl component="fieldset">
             <FormGroup aria-label="position" row> 
@@ -73,6 +68,15 @@ export default function SettingOptions() {
                         label="Change Text Font"
                         labelPlacement="end"
                     />
+
+                    <FormControlLabel
+                        style = {{color: 'whitesmoke'}}
+                        value="end"
+                        control={<Checkbox style = {{color: 'white'}} />}
+                        label="Change Text Font"
+                        labelPlacement="end"
+                    />
+
                     <FormControlLabel
                         style={{color: 'whitesmoke'}}
                         control={<Switch 

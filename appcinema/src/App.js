@@ -31,19 +31,19 @@ export default function App () {
   const classes = useStyles();
   
   // Set the Component to Dark Mode by checking for Dark Mode status
-  function DarkModeCheck() {
-    if(localStorage.getItem("DarkMode") === 'Enabled') {
-        document.getElementById("swipenavbar").classList.add("darkmodePrimary");
-        document.body.classList.add("darkmodeSecondary");
-        document.getElementById("footer").classList.add("darkmodePrimary");
-        // document.getElementById("userprofile").classList.add("darkmodePrimary");
-    } else {
-        document.getElementById("swipenavbar").classList.remove("darkmodePrimary");
-        document.body.classList.remove("darkmodeSecondary");
-        document.getElementById("footer").classList.remove("darkmodePrimary");
-        // document.getElementById("userprofile").classList.remove("darkmodePrimary");
-    }
-}
+  // function DarkModeCheck() {
+  //   if(localStorage.getItem("DarkMode") === 'Enabled') {
+  //       document.getElementById("swipenavbar").classList.add("darkmodePrimary");
+  //       document.body.classList.add("darkmodeSecondary");
+  //       document.getElementById("footer").classList.add("darkmodePrimary");
+  //       // document.getElementById("userprofile").classList.add("darkmodePrimary");
+  //   } else {
+  //       document.getElementById("swipenavbar").classList.remove("darkmodePrimary");
+  //       document.body.classList.remove("darkmodeSecondary");
+  //       document.getElementById("footer").classList.remove("darkmodePrimary");
+  //       // document.getElementById("userprofile").classList.remove("darkmodePrimary");
+  //   }
+  // }
 
   // React const set up for Snackbar Alert messages
   const [openSnackbar, setOpenSnackBar] = useState(false);
@@ -60,7 +60,7 @@ export default function App () {
 
   useEffect(() => {
     checkLoginStatus();
-    DarkModeCheck();
+    // DarkModeCheck();
   }, []);
 
   function checkLoginStatus(){

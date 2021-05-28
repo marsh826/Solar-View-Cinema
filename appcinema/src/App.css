@@ -304,6 +304,11 @@ h1 {
   height: auto;
 }
 
+#movie-session-content{
+  margin-bottom: 15px;
+}
+
+
 /* #seat-id {
   color: white;
   background-color: white;

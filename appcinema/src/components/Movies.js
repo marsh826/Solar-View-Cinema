@@ -475,7 +475,6 @@ export default function MovieDisplay() {
                                         {ticketType.map((ticketType, index) =>
                                             <div>
                                             <FormControlLabel
-                                                 
                                                 control={<Radio
                                                     value={ticketType.TicketTypeID.toString()} />} 
                                                 label={ticketType.Name}
