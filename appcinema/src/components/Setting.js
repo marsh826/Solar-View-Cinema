@@ -12,7 +12,7 @@ import { Brightness7, Brightness4 } from '@material-ui/icons'
 
 export default function SettingOptions() {
     // React Const for Dark Mode Switch State 
-    const [darkModeSwitch, setDarkModeSwitch] = useState([]);
+    const [darkModeSwitch, setDarkModeSwitch] = useState();
 
     // React Const for Dark Mode Switch State and functionalities
     const handleDarkMode = (event) => {
@@ -22,20 +22,19 @@ export default function SettingOptions() {
             document.getElementById("swipenavbar").classList.add("darkmodePrimary");
             document.body.classList.add('darkmodeSecondary');
             document.getElementById("footer").classList.add("darkmodePrimary");
-            document.getElementById("navDrawer").classList.add("darkmodeSecondary");
+            // document.getElementById("navDrawer").classList.add("darkmodeSecondary");
             // document.getElementById("userprofile").classList.add("darkmodePrimary");
             // document.getElementById("moviecontents").classList.add("darkmodeSecondary");
-            document.getElementById("ticket-display-container").classList.add("darkmodePrimary");
-            
+            // document.getElementById("ticket-display-container").classList.add("darkmodePrimary");
         } else {
             localStorage.setItem('DarkMode', 'Disabled');
             document.getElementById("swipenavbar").classList.remove("darkmodePrimary");
             document.body.classList.remove('darkmodeSecondary');
             document.getElementById("footer").classList.remove("darkmodePrimary");
-            document.getElementById("navDrawer").classList.remove("darkmodeSecondary");
+            // document.getElementById("navDrawer").classList.remove("darkmodeSecondary");
             // document.getElementById("userprofile").classList.remove("darkmodePrimary");
             // document.getElementById("moviecontents").classList.remove("darkmodeSecondary");
-            document.getElementById("ticket-display-container").classList.remove("darkmodePrimary");
+            // document.getElementById("ticket-display-container").classList.remove("darkmodePrimary");
         }
     };
 
@@ -50,7 +49,11 @@ export default function SettingOptions() {
 
     useEffect(() => {
         DarkModeSwitchCheck();
-    }, [])
+    }, []);
+
+    // useEffect(() => {
+
+    // })
 
     return(
         <FormControl component="fieldset">

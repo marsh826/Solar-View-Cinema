@@ -299,22 +299,6 @@ switch($_GET['action']) {
         http_response_code(401);
     }
     break;
-// -------------------------------Fetch booked seats for Seat Reservation Status----------------
-    case 'seatstatuscheck':
-    // A super global variable which is used to collect data from REQUEST METHOD that is POST
-    $_SERVER['REQUEST_METHOD'] = 'POST';
-    $objreg = json_decode(file_get_contents("php://input"), true);
-    $movieSessionID = testInput($objreg["movieSessionID"]);
-    $result = $db->getBookedSeats($movieSessionID);
-    if($result == false) {
-        // Failed fetch all booked tickets from the database 
-        http_response_code(404);
-    } else {
-        // Successfully fetching all booked tickets from the database
-        http_response_code(201);
-        echo json_encode($result);
-    }
-    break;
 // -------------------------------------------Display Booked Ticket-----------------------------
     case 'displayticket':
     // A super global variable which is used to display data from REQUEST METHOD that is GET
@@ -343,18 +327,16 @@ switch($_GET['action']) {
         echo json_encode($result);
     }
     break;
-// -----------------------------------------Display Sessions for Ticket Update------------------
-    case 'displaymoviesessionupdt':
-    // A super global variable which is used to collect data from REQUEST METHOD that is POST
-    $_SERVER['REQUEST_METHOD'] == 'POST';
-    $objreg = json_decode(file_get_contents("php://input"), true);
-    $movie = testInput($objreg['movieid']);
-    $result = $db->displayMovieSession($movie);
+// -------------------------------------Display Movie Sessions for Ticket Update------------------
+    case 'displayallsessions':
+    // A super global variable which is used to display data from REQUEST METHOD that is GET
+    $_SERVER['REQUEST_METHOD'] == 'GET';
+    $result = $db->displayAllSessions();
     if($result == false) {
-        // Fail fetch all Movie Sessions from the database
+        // Failed fetch all Movies from the database
         http_response_code(204);
     } else {
-        // Return as JSON output after successful fetchAll Movie Sessions  from the database
+        // Return as JSON output after successful fetchAll Movies  from the database
         http_response_code(201);
         echo json_encode($result);
     }
@@ -380,8 +362,8 @@ switch($_GET['action']) {
     $_SERVER['REQUEST_METHOD'] == 'POST';
     $objreg = json_decode(file_get_contents("php://input"), true);
     $seatUPDT = testInput($objreg['seatinfoUPDT']);
-    $ticketID = testInput($objreg['ticketid']);
-    if($db->updateTicket($seatUPDT, $ticketID)) {
+    $ticketTypeID = testInput($objreg['ticketid']);
+    if($db->updateTicket($seatUPDT, $ticketTypeID)) {
         http_response_code(202);
     } else {
         http_response_code(406);
@@ -395,8 +377,10 @@ switch($_GET['action']) {
     $ticketDelete = testInput($objreg['ticketid']);
     if($_SESSION['session']->logged_in_check()){
         if($db->deleteTicket($ticketDelete)) {
+            // Successfully delete booked ticket from database
             http_response_code(202);
         } else {
+            // Unsuccessfully delete booked ticket from database
             http_response_code(501);
         }
     } else {

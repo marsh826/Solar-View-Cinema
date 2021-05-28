@@ -14,7 +14,6 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import Divider from '@material-ui/core/Divider';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
@@ -105,7 +104,7 @@ export default function MovieDisplay() {
     const [radioValue, setRadioValue] = useState([]);
     const handleRadioChange = (event) => {
         setRadioValue(event.target.value);
-        transferTicketTypeValue(event.target.value);
+        transferTicketTypeValue(parseInt(event.target.value));
         console.log(event.target.value);
     };
 
@@ -247,34 +246,6 @@ export default function MovieDisplay() {
         })
         return false;
     }
-// //-----------------------------------------------------Check for a Seat's Reservation Status---------------------------------------------------------------------------------------
-// function postSeatReserveStatus(id) {
-//     var movieSessionID = {
-//         'movieSessionID': id 
-//     }
-//     fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=seatstatuscheck", {
-//         method: "POST",
-//         body: JSON.stringify(movieSessionID),
-//         credentials: "include"
-//     })
-//     .then((res) => {
-//         if (res.status === 501) {
-//             console.log('not implemented');
-//             setSeatStatus([]);
-//             setMessage("Unable to check for seat reservation status");
-//             setOpenSnackBar(true);
-//             setSeverity("Error");    
-//         }
-//         if (res.status === 201) {
-//             console.log('created');
-//             res.json().then((data) => {
-//                 setSeatStatus(data);
-//                 console.log(data);
-//             })
-//         }
-//     })
-//     return false;
-// }
 //------------------------------------------------------------Reserve Seat on Submit-----------------------------------------------------------------------------------------------
     function postSeatBooking() {
         var seatbookinginfo = {
@@ -504,8 +475,9 @@ export default function MovieDisplay() {
                                         {ticketType.map((ticketType, index) =>
                                             <div>
                                             <FormControlLabel
-                                                value={ticketType.TicketTypeID} 
-                                                control={<Radio />} 
+                                                 
+                                                control={<Radio
+                                                    value={ticketType.TicketTypeID.toString()} />} 
                                                 label={ticketType.Name}
                                             /> 
                                             <div>${ticketType.Price}</div>     
@@ -518,7 +490,7 @@ export default function MovieDisplay() {
                                      {/* Hidden Form that allow seatID and ticketTypeID to be filled and prepare for reservation */}
                                     <form id="seat-booking">
                                         <input id="seat-id" value="" readOnly />
-                                        <input id="ticket-type" value="" readOnly />    
+                                        <input id="ticket-type" value={radioValue} readOnly />    
                                     </form>
                                     <Button
                                         endIcon={<Check />}
@@ -530,7 +502,6 @@ export default function MovieDisplay() {
                                     >
                                         Reserve
                                     </Button>
-                                    
                                 </div> 
                             </div>
                         </DialogContentText>
