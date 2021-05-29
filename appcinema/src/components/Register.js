@@ -47,10 +47,6 @@ export default function Register() {
         setOpenSnackBar(false);
     };
 
-    // const defaultValues = {
-    //     DateOfBirth: null
-    // }
-
     // Default React Hook Form const for Login FormValidation
     const { 
         register, 
@@ -165,11 +161,7 @@ export default function Register() {
                                 KeyboardButtonProps={{
                                     'aria-label': 'change date',
                                 }}
-                                // {...register("dateofbirth", { required: true })}
-                                
                             />
-                            {/* Error message when the user did not provide password value in the password field */}
-                            {/* {errors?.dateofbirth?.type === "required" && <p className="errormssg">This field is required</p>} */}
                         </MuiPickersUtilsProvider>
                     </div>  
 
@@ -177,7 +169,7 @@ export default function Register() {
 
                     <div className="formgroup">
                         <label for="email">Email</label>
-                    {/* Email field requires value and must be in correct data format in order to proceed with the register process */}
+                        {/* Email field requires value and must be in correct data format in order to proceed with the register process */}
                         <input type="text" placeholder="Email" name="email" id="Email" defaultValue=""
                             {...register("email", { required: true, pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i })}
                         />    
@@ -188,7 +180,7 @@ export default function Register() {
 
                     <div className="formgroup">
                         <label for="phone">Mobile Phone</label>
-                    {/* Mobile Phone field requires value and must be in correct data format in order to proceed with the register process */}
+                        {/* Mobile Phone field requires value and must be in correct data format in order to proceed with the register process */}
                         <input type="text" placeholder="Phone" name="phone" id="Phone" defaultValue=""
                             {...register("phone", { required: true, maxLength: 11, pattern: {value: /^\d{11}$/} })}
                         />    

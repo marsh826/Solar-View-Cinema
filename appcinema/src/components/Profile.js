@@ -14,6 +14,9 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Backdrop from '@material-ui/core/Backdrop';
 import { useHistory } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
+import {MuiPickersUtilsProvider, DatePicker} from '@material-ui/pickers';
+import { useForm } from 'react-hook-form';
+import DateFnsUtils from '@date-io/date-fns';
 import '../App.css' 
 
 // Material UI Component Style Const
@@ -88,6 +91,20 @@ export default function Profile() {
 
     //React Const Profile set up empty array to store data that is successfully fetched
     const [profile, setProfile] = useState([]);
+
+    // Default React Hook Form const for Login FormValidation
+    const { 
+        register, 
+        handleSubmit,
+        formState: { errors }
+    } = useForm();
+
+    // React Const for Material UI Date Picker with initial state value of null. 
+    const [selectedDate, setSelectedDate] = useState(null);
+    // React Const sets on empty and awaits for change in date field. Set a new date on change
+    const handleDateChange = (date) => {
+        setSelectedDate(date);
+    };
     
     // When the Profile page/component is loaded, useEffect will use a JavaScript Function to display profile in JSON output only once
     useEffect(() => {
@@ -264,40 +281,93 @@ function postLogOut() {
                                         <DialogContent>
                                             <DialogContentText id="update-acc-content">
                                                 <div id="update-account">
-                                                    <form id="updateform">
+                                                    <form id="updateform" onSubmit={handleSubmit(postUpdateProfile)}>
                                                         <div className="formgroup">
                                                             <label for="firstname">First Name</label>
-                                                            <input type="text" placeholder="First Name" name="firstname" id="FirstNameUpd" defaultValue={profile.FirstName}></input>
+                                                            {/* First Name field requires value in order to proceed with the register process */}
+                                                            <input type="text" placeholder="First Name" name="firstname" id="FirstNameUpd" defaultValue={profile.FirstName}
+                                                                {...register("FirstName", { required: true })}
+                                                            />
+                                                            {/* Error message when the user did not provide username value in the unsername field */}
+                                                            {errors?.FirstName?.type === "required" && <p className="errormssg">This field is required</p>}
                                                         </div>
 
                                                         <div className="formgroup">
                                                             <label for="lastname">Last Name</label>
-                                                            <input type="text" placeholder="Last Name" name="lastname" id="LastNameUpd" defaultValue={profile.LastName}></input>    
+                                                            <input type="text" placeholder="Last Name" name="lastname" id="LastNameUpd" defaultValue={profile.LastName}
+                                                                {...register("LastName", { required: true })}    
+                                                            />
+                                                            {/* Error message when the user did not provide username value in the unsername field */}
+                                                            {errors?.LastName?.type === "required" && <p className="errormssg">This field is required</p>}
                                                         </div>  
 
                                                         <div className="formgroup">
-                                                            <label for="dateofbirth">Last Name</label>
-                                                            <input type="text" placeholder="Date of Birth" name="dateofbirth" id="DateOfBirthUpd" defaultValue={profile.DateOfBirth}></input>    
+                                                            <label for="dateofbirth">Date of Birth</label>
+                                                            {/* Date of Birth field requires value and must in correct data format in order to proceed with the register process */}
+                                                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                                                <DatePicker
+                                                                    animateYearScrolling
+                                                                    disableFuture
+                                                                    initialFocusedDate={profile.DateOfBirth}
+                                                                    minDate="1930-01-01"
+                                                                    clearable
+                                                                    name="dateofbirth"
+                                                                    margin="normal"
+                                                                    id="DateOfBirth"
+                                                                    placeholder="Date Of Birth"
+                                                                    format="yyyy-MM-dd"
+                                                                    value={selectedDate}
+                                                                    onChange={handleDateChange}
+                                                                    KeyboardButtonProps={{
+                                                                        'aria-label': 'change date',
+                                                                    }}
+                                                                />
+                                                            </MuiPickersUtilsProvider>
                                                         </div>  
+
+                                                        <br/>  
 
                                                         <div className="formgroup">
                                                             <label for="email">Email</label>
-                                                            <input type="text" placeholder="Email" name="email" id="EmailUpd" defaultValue={profile.Email}></input>    
+                                                            {/* Email field requires value and must be in correct data format in order to proceed with the register process */}
+                                                            <input type="text" placeholder="Email" name="email" id="EmailUpd" defaultValue={profile.Email}
+                                                                {...register("email", { required: true, pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i })}
+                                                            />
+                                                            {/* Error message when the user did not provide password value in the password field */}
+                                                            {errors?.email?.type === "required" && <p className="errormssg">This field is required</p>}
+                                                            {errors?.email?.type === "pattern" && <p className="errormssg">Invalid Email</p>}
                                                         </div>
 
                                                         <div className="formgroup">
                                                             <label for="Phone">Mobile Phone</label>
-                                                            <input type="text" placeholder="Phone" name="phone" id="PhoneUpd" defaultValue={profile.Phone}></input>    
+                                                            {/* Mobile Phone field requires value and must be in correct data format in order to proceed with the register process */}
+                                                            <input type="text" placeholder="Phone" name="phone" id="PhoneUpd" defaultValue={profile.Phone}
+                                                                {...register("phone", { required: true, maxLength: 11, pattern: {value: /^\d{11}$/} })}
+                                                            />  
+                                                            {/* Error message when the user did not provide password value in the password field */}
+                                                            {errors?.phone?.type === "required" && <p className="errormssg">This field is required</p>}
+                                                            {errors?.phone?.type === "maxLength" && <p className="errormssg">Please enter a 10 or 11 digit phone number</p>}
+                                                            {errors?.phone?.type === "pattern" && <p className="errormssg">Invalid Mobile Phone Number</p>}  
                                                         </div>
 
                                                         <div className="formgroup">
                                                             <label for="username">Username</label>
-                                                            <input type="text" placeholder="Username" name="username" id="UsernameUpd" defaultValue={profile.Username}></input>
+                                                            {/* Username field requires value in order to proceed with the register process */}
+                                                            <input type="text" placeholder="Username" name="username" id="UsernameUpd" defaultValue={profile.Username}
+                                                                {...register("username", { required: true })}
+                                                            />
+                                                            {/* Error message when the user did not provide username value in the unsername field */}
+                                                            {errors?.username?.type === "required" && <p className="errormssg">This field is required</p>}
                                                         </div>
 
                                                         <div className="formgroup">
                                                             <label for="password">Password</label>
-                                                            <input type="password" placeholder="Password" name="password" id="PasswordUpd" defaultValue={profile.Password}></input>    
+                                                            {/* Password field requires value in order to proceed with the register process */}
+                                                            <input type="password" placeholder="Password" name="password" id="PasswordUpd" defaultValue={profile.Password}
+                                                                {...register("password", { required: true })}
+                                                            />   
+                                                            {/* Error message when the user did not provide password value in the password field */}
+                                                            {errors?.password?.type === "required" && <p className="errormssg">This field is required</p>}
                                                         </div>
                                                     </form>
                                                 </div>   
@@ -306,7 +376,7 @@ function postLogOut() {
 
                                         <DialogActions>
                                             <Button
-                                                onclick={postUpdateProfile}
+                                                type="submit"
                                                 variant="contained" 
                                                 color="primary"
                                                 className={classes.margin}>

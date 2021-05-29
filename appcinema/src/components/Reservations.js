@@ -55,18 +55,6 @@ export default function Reservations() {
     // React Const Booked Ticket set up empty array to store data that is successfully fetched
     const [ticket, setTicket] = useState([]);
 
-    // React const and functions set up for Dialog
-    // const [movieDisplay, setMovieDisplay] = useState(false);
-    // function openMovieDisplay(movie) {
-    //     setMovieDisplay(true);
-    //     setCurrentMovie(movie);
-    //     console.log(movie);
-    // };
-    // function closeMovieDisplay() {
-    //     setMovieDisplay(false);
-    //     closeSeatDisplay();
-    // };
-
     // React const and functions set up for Dialog when user is updating booked ticket
     const [updateTicket, setUpdateTicket] = useState(false);
     function openDialogUpdate() {
@@ -74,6 +62,11 @@ export default function Reservations() {
     };
     function closeDialogUpdate() {
         setUpdateTicket(false);
+        // Upon closing Ticket Update Dialog, reset all states used for ticket update form
+        setRadioValue([]);
+        setSeatSelected([]);
+        setTicketSelected([]);
+        closeSeatDisplay();
     };
 
     // React const and functions set up for Dialog Alert when user is deleting booked ticket
@@ -95,11 +88,16 @@ export default function Reservations() {
     // React Const Ticket Type set up empty array to store data that is successfully fetched
     const [ticketType, setTicketType] = useState([]);
 
+    // React Const for Selected Seat Field
+    const [seatSelected, setSeatSelected] = useState([]);
+
+    // React Const for Selected Ticket Field
+    const [ticketSelected, setTicketSelected] = useState([])
+
     // React Const for Material UI Radio button that is used for Ticket Type Field
     const [radioValue, setRadioValue] = useState([]);
     const handleRadioChange = (event) => {
         setRadioValue(event.target.value);
-        transferTicketID(parseInt(event.target.value));
         console.log(event.target.value);
     };
 
@@ -109,15 +107,11 @@ export default function Reservations() {
 
 // --------------------------------------Storing Ticket Values into Hidden Input Form for Ticket Update----------------------------------------------------------------------------
     function transferSeatValueUpdt(id) {
-        var SeatValueUpdt = document.getElementById("seat-id-update").value;
-        SeatValueUpdt = id;
-        document.getElementById("seat-id-update").value = SeatValueUpdt;
+        setSeatSelected(id);
     }
 
     function transferTicketID(id) {
-        var TicketValueUpdt = document.getElementById("ticket-type-update").value;
-        TicketValueUpdt = id;
-        document.getElementById("ticket-type-update").value = TicketValueUpdt;
+        setTicketSelected(id);
     }
 //-------------------------------------------------------Open and Close Seat Display-----------------------------------------------------------------------------------------------
     function closeSeatDisplay() {
@@ -214,9 +208,9 @@ function postDisplaySeats(id) {
             if (res.status === 204) {
                 console.log('no content');
                 setMovieSession([]);
-                setMessage("Error: Movie sessions are unavailable for this movie");
+                setMessage("Error: Unable to fetch ticket types");
                 setOpenSnackBar(true);
-                setSeverity("Error");    
+                setSeverity("error");    
             }
             if (res.status === 201) {
                 console.log('created');
@@ -232,9 +226,10 @@ function postDisplaySeats(id) {
     function postUpdateTicket() {
         var ticketupdateinfo = {
             'seatinfoUPDT': document.getElementById("seat-id-update").value,
+            'tickettypeUPDT': document.getElementById("ticket-type-update").value,
             'ticketid': document.getElementById("ticket-id").value
         }
-        fetch('api.php?action=updateticket',{
+        fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=updateticket",{
             method: "POST",
             body: JSON.stringify(ticketupdateinfo),
             credentials: "include"
@@ -243,12 +238,18 @@ function postDisplaySeats(id) {
             // If the seat booking process was successful
             if(response.status == 202) {
                 console.log('success');
+                setMessage("Your ticket has been updated successfully.");
+                setOpenSnackBar(true);
+                setSeverity("success");
                 postDisplayTicket();
                 return;    
             }
             // If the seat booking process was unsuccessful
             if(response.status == 406) {
                 console.log('unaccepted');
+                setMessage("Error: Unable to update this ticket.");
+                setOpenSnackBar(true);
+                setSeverity("error");
                 return;
             }
             // Send back error into console log
@@ -264,19 +265,26 @@ function postDisplaySeats(id) {
             'ticketid' : id
         }
         fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=deleteticket",{
-            method: 'POST',
+            method: "POST",
             body: JSON.stringify(IDticket),
             credentials: "include"
-        }).then(function(response) {
+        }).
+        then(function(response) {
             // Successfully delete booked ticket from user's reservation list
-            if(response.status == 202) {
+            if(response.status === 202) {
                 console.log('success');
+                setMessage("Ticket Removed.");
+                setOpenSnackBar(true);
+                setSeverity("success");
                 postDisplayTicket();
                 return;
             } 
             // Unsuccessfully delete booked ticket from user's reservation list
-            if(response.status == 501) {
+            if(response.status === 501) {
                 console.log('not implemented');
+                setMessage("Error: Failed to delete this ticket.");
+                setOpenSnackBar(true);
+                setSeverity("error");
                 return;
             }
         })
@@ -321,7 +329,7 @@ function postDisplaySeats(id) {
                                         variant="contained" 
                                         color="primary"
                                         className={classes.margin}
-                                        onClick={() => {openDialogUpdate(); postDisplayAllSessions();}}
+                                        onClick={() => {openDialogUpdate(); postDisplayAllSessions(); transferTicketID(ticket.TicketID); }}
                                     >
                                         Update Ticket
                                     </Button>
@@ -412,8 +420,9 @@ function postDisplaySeats(id) {
                                             
                                      {/* Hidden Form that allow seatID and ticketTypeID to be filled and prepare for reservation */}
                                     <form id="seat-booking">
-                                        <input id="seat-id-update" value="" readOnly />
-                                        <input id="ticket-type-update" value={radioValue} readOnly />    
+                                        <input id="seat-id-update" value={seatSelected} readOnly />
+                                        <input id="ticket-type-update" value={radioValue} readOnly />   
+                                        <input id="ticket-id" value={ticketSelected} readOnly />
                                     </form>
                                     <Button
                                         endIcon={<Check />}
@@ -459,7 +468,10 @@ function postDisplaySeats(id) {
                                         </DialogContentText>
                                         </DialogContent>
                                         <DialogActions>
-                                        <Button onClick={() => {postDeleteTicket(ticket.TicketID); closeDialogDelete();}} color="primary">
+                                        <Button 
+                                            onClick={() => {postDeleteTicket(ticket.TicketID); closeDialogDelete();}} 
+                                            color="primary"
+                                        >
                                             Yes
                                         </Button>
                                         <Button onClick={closeDialogDelete} color="primary">

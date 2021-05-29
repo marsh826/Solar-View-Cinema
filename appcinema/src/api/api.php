@@ -51,8 +51,10 @@ switch($_GET['action']) {
         // A super global variable which is used to collect data from REQUEST METHOD that is POST
         $_SERVER['REQUEST_METHOD'] == 'GET';
         if($_SESSION['session']->logged_in_check()){
+            // If the user is still logged in
             http_response_code(202);
         } else {
+            // If the user is not logged in
             http_response_code(401);
         }
         break;
@@ -134,22 +136,16 @@ switch($_GET['action']) {
             $DateOfBirthUPD = testInput($objreg["DateOfBirthUpd"]);
             $PhoneUPD = testInput($objreg["PhoneUpd"]);
             $EmailUPD = testInput($objreg["EmailUpd"]);
-            // Reject data insert if the form is not fully filled
-            if(empty($objreg["FirstNameUpd"]) && empty($objreg["LastNameUpd"]) 
-                && empty($objreg["DateOfBirthUpd"]) && empty($objreg["EmailUpd"]) 
-                && empty($objreg["PhoneUpd"]) && empty($objreg["UsernameUpd"]) 
-                && empty($objreg["PasswordUpd"])){
-                    http_response_code(406);
-                    die;
-                } else {
             if($db->updateProfile($FirstNameUPD, $LastNameUPD, $DateOfBirthUPD, $EmailUPD, 
                 $PhoneUPD, $UsernameUPD, $PasswordUPD)){
-                // If the user fully filled in the form
+                // Successfully updated the form
                 http_response_code(202); 
-                } 
-            }    
-            // If the user is not logged in   
+            } else {
+                // Unsuccessfully updated the form
+                http_response_code(406);
+            }  
         } else {
+            // If the user is not logged in 
             http_response_code(401);
         }
     break;
@@ -176,6 +172,7 @@ switch($_GET['action']) {
         // Failed fetch 3 latest movies from the database
         http_response_code(204);
     } else {
+        // Successfully fetch 3 latest movies from the database 
         http_response_code(201);
         echo json_encode($result);
     }
@@ -186,14 +183,19 @@ switch($_GET['action']) {
     $_SERVER['REQUEST_METHOD'] == "POST";
     $objreg = json_decode(file_get_contents("php://input"), true);
     $movieid = testInput($objreg["movieid"]);
-    if($db->addFavouriteMovie($movieid) == true){
-        // Successfully adding movie to the user favourite movie list
-        http_response_code(202);
-    } else {
-        // Unsuccessfully adding movie to the user favourite movie list
-        if($db->addFavouriteMovie($movieid) == false){
-        http_response_code(501);
+    if($_SESSION['session']->logged_in_check()) {
+        if($db->addFavouriteMovie($movieid) == true){
+            // Successfully adding movie to the user favourite movie list
+            http_response_code(202);
+        } else {
+            // Unsuccessfully adding movie to the user favourite movie list
+            if($db->addFavouriteMovie($movieid) == false){
+            http_response_code(501);
+            }
         }
+    } else {
+        // If the user is not logged in
+        http_response_code(401);
     }
     break;
 // ----------------------------------------Display Favourite Movie List-----------------
@@ -261,6 +263,7 @@ switch($_GET['action']) {
         // Failed fetch all seats from the database
         http_response_code(204);
     } else {
+        // Successfully fetch all seats from the database
         http_response_code(201);
         echo json_encode($result);
     }
@@ -304,27 +307,18 @@ switch($_GET['action']) {
     // A super global variable which is used to display data from REQUEST METHOD that is GET
     $_SERVER['REQUEST_METHOD'] = 'GET';
     $result = $db->displayBookedTicket();
-    if($result == false) {
-        // Failed fetch all ticket from the database
-        http_response_code(404);
+    if($_SESSION['session']->logged_in_check()) {
+        if($result == false) {
+            // Failed fetch all ticket from the database
+            http_response_code(404);
+        } else {
+            // Successfully fetching all ticket from the database
+            http_response_code(201);
+            echo json_encode($result);
+        }
     } else {
-        // Successfully fetching all ticket from the database
-        http_response_code(201);
-        echo json_encode($result);
-    }
-    break;
-// ------------------------------------------Display Movies for Ticket Update-------------------
-    case 'displaymoviesupdt':
-    // A super global variable which is used to display data from REQUEST METHOD that is GET 
-    $_SERVER['REQUEST_METHOD'] = 'GET';
-    $result = $db->displayMovies();
-    if($result == false) {
-        // Failed fetch all Movies from the database
-        http_response_code(204);
-    } else {
-        // Return as JSON output after successful fetchAll Movies  from the database
-        http_response_code(201);
-        echo json_encode($result);
+        // If the user is not logged in
+        http_response_code(401);
     }
     break;
 // -------------------------------------Display Movie Sessions for Ticket Update------------------
@@ -332,28 +326,18 @@ switch($_GET['action']) {
     // A super global variable which is used to display data from REQUEST METHOD that is GET
     $_SERVER['REQUEST_METHOD'] == 'GET';
     $result = $db->displayAllSessions();
-    if($result == false) {
-        // Failed fetch all Movies from the database
-        http_response_code(204);
+    if($_SESSION['session']->logged_in_check()) {
+        if($result == false) {
+            // Failed fetch all Movies from the database
+            http_response_code(204);
+        } else {
+            // Return as JSON output after successful fetchAll Movies  from the database
+            http_response_code(201);
+            echo json_encode($result);
+        }
     } else {
-        // Return as JSON output after successful fetchAll Movies  from the database
-        http_response_code(201);
-        echo json_encode($result);
-    }
-    break;
-// ----------------------------------------Display Seats for Ticket Update----------------------
-    case 'displayseatsupdt':
-    // A super global variable which is used to collect data from REQUEST METHOD that is POST
-    $_SERVER['REQUEST_METHOD'] == 'POST';
-    $objreg = json_decode(file_get_contents("php://input"), true);
-    $moviesession = testInput($objreg['moviesessionid']);
-    $result = $db->displaySeats($moviesession);
-    if($result == false) {
-        // Failed fetch all seats from the database
-        http_response_code(204);
-    } else {
-        http_response_code(201);
-        echo json_encode($result);
+        // If the user is not logged in
+        http_response_code(401);
     }
     break;
 //-----------------------------------------Update Movie Ticket----------------------------------
@@ -362,11 +346,19 @@ switch($_GET['action']) {
     $_SERVER['REQUEST_METHOD'] == 'POST';
     $objreg = json_decode(file_get_contents("php://input"), true);
     $seatUPDT = testInput($objreg['seatinfoUPDT']);
-    $ticketTypeID = testInput($objreg['ticketid']);
-    if($db->updateTicket($seatUPDT, $ticketTypeID)) {
-        http_response_code(202);
+    $tickettypeUPDT = testInput($objreg['tickettypeUPDT']);
+    $ticketID = testInput($objreg['ticketid']);
+    if($_SESSION['session']->logged_in_check()){
+        if($db->updateTicket($seatUPDT, $tickettypeUPDT, $ticketID)) {
+            // Successfully updated ticket
+            http_response_code(202);
+        } else {
+            // Unsuccessfully updated ticket
+            http_response_code(406);
+        }  
     } else {
-        http_response_code(406);
+        // If the user is not logged in
+        http_response_code(401);
     }
     break;
 // ----------------------------------------Delete Movie Ticket----------------------------------
@@ -374,7 +366,7 @@ switch($_GET['action']) {
     // A super global variable which is used to collect data from REQUEST METHOD that is POST
     $_SERVER['REQUEST_METHOD'] == 'POST';
     $objreg = json_decode(file_get_contents("php://input"), true);
-    $ticketDelete = testInput($objreg['ticketid']);
+    $ticketDelete = testInput(($objreg['ticketid']));
     if($_SESSION['session']->logged_in_check()){
         if($db->deleteTicket($ticketDelete)) {
             // Successfully delete booked ticket from database

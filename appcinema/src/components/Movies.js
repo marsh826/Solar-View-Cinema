@@ -90,7 +90,10 @@ export default function MovieDisplay() {
         console.log(movie);
     };
     function closeMovieDisplay() {
+        // Upon closing the Movie Dialog, reset seat booking fields
         setMovieDisplay(false);
+        setSeatSelected([]);
+        setRadioValue([]);
         closeSeatDisplay();
     };
 
@@ -100,11 +103,13 @@ export default function MovieDisplay() {
     // React Const Ticket Type set up empty array to store data that is successfully fetched
     const [ticketType, setTicketType] = useState([]);
 
+    // React Const for Selected Seat Field
+    const [seatSelected, setSeatSelected] = useState([]);
+
     // React Const for Material UI Radio button that is used for Ticket Type Field
     const [radioValue, setRadioValue] = useState([]);
     const handleRadioChange = (event) => {
         setRadioValue(event.target.value);
-        transferTicketTypeValue(parseInt(event.target.value));
         console.log(event.target.value);
     };
 
@@ -199,15 +204,8 @@ export default function MovieDisplay() {
         
     }
 // --------------------------------------Storing Ticket Values into Hidden Input Form for Ticket Reservation-----------------------------------------------------------------------
-    function transferTicketTypeValue(id) {
-        var TicketTypeValue = document.getElementById("ticket-type").value;
-        TicketTypeValue = id;
-        document.getElementById("ticket-type").value = TicketTypeValue;
-    }
     function transferSeatValue(id) {
-        var SeatValue = document.getElementById("seat-id").value;
-        SeatValue = id;
-        document.getElementById("seat-id").value = SeatValue;
+        setSeatSelected(id);
     }
 //-------------------------------------------------------Open and Close Seat Display-----------------------------------------------------------------------------------------------
     function closeSeatDisplay() {
@@ -232,9 +230,9 @@ export default function MovieDisplay() {
             if (res.status === 204) {
                 console.log('no content');
                 setMovieSession([]);
-                setMessage("Error: Movie sessions are unavailable for this movie");
+                setMessage("Error: Unable to fetch ticket type");
                 setOpenSnackBar(true);
-                setSeverity("Error");    
+                setSeverity("error");    
             }
             if (res.status === 201) {
                 console.log('created');
@@ -488,7 +486,7 @@ export default function MovieDisplay() {
                                             
                                      {/* Hidden Form that allow seatID and ticketTypeID to be filled and prepare for reservation */}
                                     <form id="seat-booking">
-                                        <input id="seat-id" value="" readOnly />
+                                        <input id="seat-id" value={seatSelected} readOnly />
                                         <input id="ticket-type" value={radioValue} readOnly />    
                                     </form>
                                     <Button

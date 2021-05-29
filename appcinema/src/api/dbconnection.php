@@ -39,17 +39,6 @@ class databaseOBJ {
         $stmt->bindValue(':usernamereg', $usernamereg);
         $hpassword = password_hash($passwordreg, PASSWORD_DEFAULT); 
         $stmt->bindValue(':passwordreg', $hpassword);
-        // Form Validation
-        // if user did not insert email, stop data insertion into MySQL database
-        // if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
-        //     die;
-        //     return false;
-        // }
-        // // if user did not insert phone number, stop data insertion into MySQL database
-        // if(!preg_match("/^[0-9]{11}$/", $phone)){
-        //     die;
-        //     return false;
-        // }
         return $stmt->execute();
     }
     // Display User Profile by UserID
@@ -90,17 +79,6 @@ class databaseOBJ {
         $stmt->bindValue(':usernameupdt', $UsernameUPD);
         $HpasswordUPD = password_hash($PasswordUPD, PASSWORD_DEFAULT);
         $stmt->bindValue(':passwordupdt', $HpasswordUPD);
-        // Form Validation
-        // if user did not insert email, stop data insertion into MySQL database
-        if(!filter_var($EmailUPD, FILTER_VALIDATE_EMAIL)){
-            die;
-            return false;
-        }
-        // if user did not insert phone number, stop data insertion into MySQL database
-        if(!preg_match("/^[0-9]{10}$/", $PhoneUPD)){
-            die;
-            return false;
-        }
         return $stmt->execute();
     }
     // Display Movies 
@@ -153,7 +131,7 @@ class databaseOBJ {
     function displayfavouritelist() {
         try{
             $mysql = "SELECT movie.MovieID, movie.MovieName, movie.ReleaseDate, movie.MovieDescription, 
-            movie.genre, movie.MovieImage, favouritemovie.FavouriteMovieID 
+            movie.Genre, movie.MovieImage, favouritemovie.FavouriteMovieID 
             FROM favouritemovie
             INNER JOIN movie on favouritemovie.MovieID = movie.MovieID 
             INNER JOIN users on favouritemovie.userID = users.UserID 
@@ -271,16 +249,17 @@ class databaseOBJ {
             throw $ex;
         }
     }
-    // Update Ticket
-    function updateTicket($seatUPDT, $ticketID) {
-        $sql = "UPDATE ticket SET SeatBySessionID = :seatid
+    // Update Booked Ticket
+    function updateTicket($seatUPDT, $tickettypeUPDT, $ticketID) {
+        $sql = "UPDATE ticket SET SeatBySessionID = :seatid, TicketTypeID = :tickettypeid
         WHERE TicketID = :ticketid";
         $stmt = $this->dbconn->prepare($sql);
         $stmt->bindValue(':seatid', $seatUPDT);
+        $stmt->bindValue(':tickettypeid', $tickettypeUPDT);
         $stmt->bindValue(':ticketid', $ticketID);
         return $stmt->execute();
     }
-    // Delete Ticket
+    // Delete Booked Ticket from Reservation List
     function deleteTicket($ticketDelete) {
         $mysql = "DELETE FROM ticket WHERE TicketID = :ticketid";
         $stmt = $this->dbconn->prepare($mysql);
