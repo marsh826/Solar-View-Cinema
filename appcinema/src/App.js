@@ -6,7 +6,7 @@ import HomePage from './components/HomePage';
 import MovieDisplay from './components/Movies';
 import Login from './components/Login';
 import SettingOption from './components/Setting';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';  
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';  
 import Register from './components/Register';
 import Favourite from './components/Favourite';
 import Profile from './components/Profile';
@@ -14,8 +14,7 @@ import Reservations from './components/Reservations';
 import Footer from './components/Footer';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
-import { makeStyles, ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import { BackgroundSyncPlugin } from 'workbox-background-sync';
+import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -116,7 +115,8 @@ export default function App () {
         <Router>  
           <Navbar />
           <Switch>
-            <Route exact from = "/" render = {props => <HomePage {...props} />} />
+            {/* <Route exact from = "/" render = {props => <HomePage {...props} />} /> */}
+            <Redirect exact from = "/" to="/Home" />
             <Route exact path = "/Home" render = {props => <HomePage {...props} />} />
             <Route exact path = "/Movies" render = {props => <MovieDisplay {...props} />} />
             <Route exact path = "/Login" render = {props => <Login {...props} />} />

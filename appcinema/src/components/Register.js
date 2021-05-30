@@ -26,6 +26,14 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+// Preset Customised DateFnUtils for coverting Material UI datepicker date 
+// into a more suitable date format for MySQL data insertion
+class LocalisedUtils extends DateFnsUtils {
+    getDatePickerHeaderText(date) {
+      return format(date, "yyyy-MM-dd", { locale: this.locale });
+    }
+}
+
 // Register Functional Component with export default
 export default function Register() {
     // A React const that is assigned with Material UI Component Style Const
@@ -145,7 +153,7 @@ export default function Register() {
                     <div className="formgroup">
                         <label for="dateofbirth">Date of Birth</label>
                         {/* Date of Birth field requires value and must in correct data format in order to proceed with the register process */}
-                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <MuiPickersUtilsProvider utils={LocalisedUtils}>
                             <DatePicker
                                 animateYearScrolling
                                 disableFuture
