@@ -265,6 +265,7 @@ class databaseOBJ {
         $stmt = $this->dbconn->prepare($mysql);
         $stmt->bindValue(':ticketid', $ticketDelete);
         return $stmt->execute();
+        return true;
     }
 }
 ?>

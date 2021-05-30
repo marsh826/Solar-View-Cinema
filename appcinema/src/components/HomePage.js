@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 import '../App.css';
 import Slide from '@material-ui/core/Slide';
-import EventSeat from '@material-ui/icons/EventSeat'
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import Dialog from '@material-ui/core/Dialog';
@@ -12,6 +11,8 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Backdrop from '@material-ui/core/Backdrop';
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -20,6 +21,10 @@ const useStyles = makeStyles((theme) => ({
   extendedIcon: {
     marginRight: theme.spacing(1),
   },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
+  }
 }));
 
 // React consts set up for Dialog Animation
@@ -43,7 +48,11 @@ export default function HomePage() {
         setOpenSnackBar(false);
     };
 
+    // React Const Latest Movie set up empty array to store data that is successfully fetched
     const [latestMovie, setLatestMovie] = useState([]);
+
+    // React Const Selected Movie set up empty array to 
+    // store data of a specific movie selected to display in dialog
     const [selectedMovie, setSelectedMovie] = useState([]);
 
     // React consts set up for Dialog
@@ -57,7 +66,11 @@ export default function HomePage() {
         setMovieDialog(false);
     };
 
+    // React Const for loading screen before rendering
+    const [loading, setLoading] = useState(false);
+
     useEffect(() => {
+        setLoading(true);
         postDisplayLatestMovies();
     }, []);
 
@@ -68,6 +81,7 @@ export default function HomePage() {
             redirect: "error",
             credentials: 'include'
         }).then((res) => {
+            setLoading(false);
             if (res.status === 204) {
                 console.log('no content');
                 setLatestMovie([]);
@@ -88,6 +102,9 @@ export default function HomePage() {
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     return(
         <div id="new-movie">
+        {/* Render Latest Movies that are fetched from the database through API  */}
+
+            {/* Snack Bar Alert that will display messages when user perform certain actions*/}
             <div className={classes.root}>
                 <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={closeSnackbar}>
                     <Alert variant="filled" onClose={closeSnackbar} severity={severity}>
@@ -97,8 +114,14 @@ export default function HomePage() {
             </div>
 
             <h1>Newly Released Movies</h1>
+            {/* Material UI loading Screen before page render */}
+            {loading ? (
+                <Backdrop className={classes.backdrop} open>
+                    <CircularProgress color="inherit" />
+                </Backdrop>
+            ) : (
             <div id="moviedisplay">
-            {latestMovie.map((latestMovie, index) => (
+                {latestMovie.map((latestMovie, index) => (
                 <div id="moviecontents">
                     <div className ="movie-image">
                     <img 
@@ -171,7 +194,7 @@ export default function HomePage() {
                 </div>
                ))}
             </div>
-          
+            )}
             <div className = "welcome-message">
                 <h2>Welcome to Solar View Cinema</h2>
                 <h4>We are the newly established cinema in Brisbane. We are aiming to bring you top quality cinema experiene for your entertainment</h4>  

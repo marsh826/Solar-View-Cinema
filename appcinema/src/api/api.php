@@ -222,7 +222,7 @@ switch($_GET['action']) {
     // A super global variable which is used to collect data from REQUEST METHOD that is POST
     $_SERVER['REQUEST_METHOD'] == 'POST';
     $objreg = json_decode(file_get_contents("php://input"), true);
-    $favouritemoviedelete = testInput(($objreg['favouritelist']));
+    $favouritemoviedelete = testInput($objreg['favouritelist']);
     if($_SESSION['session']->logged_in_check()){
         if($db->removefromFavouriteList($favouritemoviedelete)){
             // Removing movie from favourite list
@@ -366,7 +366,7 @@ switch($_GET['action']) {
     // A super global variable which is used to collect data from REQUEST METHOD that is POST
     $_SERVER['REQUEST_METHOD'] == 'POST';
     $objreg = json_decode(file_get_contents("php://input"), true);
-    $ticketDelete = testInput(($objreg['ticketid']));
+    $ticketDelete = testInput($objreg['ticketid']);
     if($_SESSION['session']->logged_in_check()){
         if($db->deleteTicket($ticketDelete)) {
             // Successfully delete booked ticket from database

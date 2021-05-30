@@ -13,6 +13,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import Divider from '@material-ui/core/Divider';
+import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
 import Radio from '@material-ui/core/Radio';
@@ -49,6 +50,10 @@ const useStyles = makeStyles((theme) => ({
     },
     grid: {
         flexGrow: 1
+    },
+    backdrop: {
+        zIndex: theme.zIndex.drawer + 1,
+        color: '#fff',
     }
 }));
 
@@ -80,6 +85,9 @@ export default function MovieDisplay() {
 
     // React Const Movie Session set up empty array to store data that is successfully fetched
     const [movieSession, setMovieSession] = useState([]);
+    
+    // React Const Selected Movie set up empty array to 
+    // store data of a specific movie selected to display in dialog
     const [currentMovie, setCurrentMovie] = useState([]);
 
     // React consts set up for Dialog
@@ -113,9 +121,12 @@ export default function MovieDisplay() {
         console.log(event.target.value);
     };
 
+    // React Const for loading screen before rendering
+    const [loading, setLoading] = useState(false);
+
     // When the Movie page/component is loaded, useEffect will use a JavaScript Function to display profile in JSON output only once
     useEffect(() => {
-        // showLoading();
+        setLoading(true);
         postDisplayMovies();
     }, []);
      
@@ -126,6 +137,7 @@ export default function MovieDisplay() {
             redirect: "error",
             credentials: 'include'
         }).then((res) => {
+            setLoading(false)
             if (res.status === 204) {
                 console.log('no content');
                 setMovie([]);
@@ -305,6 +317,9 @@ export default function MovieDisplay() {
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     return (
         <div id="moviepage">
+        {/* Render Movies that are fetched from the database through API  */}
+
+            {/* Snack Bar Alert that will display messages when user perform certain actions*/}
             <div className={classes.root}>
             <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={closeSnackbar}>
                 <Alert variant="filled" onClose={closeSnackbar} severity={severity}>
@@ -313,7 +328,12 @@ export default function MovieDisplay() {
             </Snackbar>
             </div>
 
-            {/* Render Movies that are fetched from the database through API  */}
+            {/* Material UI loading Screen before page render */}
+            {loading ? (
+                <Backdrop className={classes.backdrop} open>
+                    <CircularProgress color="inherit" />
+                </Backdrop>
+            ) : (
             <div id="moviedisplay">
                 {movie.map((movie, index) => (
                     <div id="moviecontents">
@@ -514,6 +534,7 @@ export default function MovieDisplay() {
                     </Dialog>
                 ))}
             </div>
+            )}
         </div>
     );
 }

@@ -10,6 +10,8 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Backdrop from '@material-ui/core/Backdrop';
 
 // React const that sets up style customisation for Material UI components
 const useStyles = makeStyles((theme) => ({
@@ -27,6 +29,10 @@ const useStyles = makeStyles((theme) => ({
         '& > *': {
           margin: theme.spacing(1),
         }
+    },
+    backdrop: {
+        zIndex: theme.zIndex.drawer + 1,
+        color: '#fff',
     }
 }));
 
@@ -69,9 +75,12 @@ export default function FavouriteMovies() {
         setMovieDisplay(false);
     };
 
+    // React Const for loading screen before rendering
+    const [loading, setLoading] = useState(false);
+
     // When the Favourite page/component is loaded, useEffect will use a JavaScript Function to display profile in JSON output only once
     useEffect(() => {
-        // showLoading();
+        setLoading(true);
         postDisplayFavouriteMovie();
     }, []);
 
@@ -81,6 +90,7 @@ export default function FavouriteMovies() {
             method: "GET",
             credentials: 'include'
         }).then((res) => {
+            setLoading(false);
             if (res.status === 204) {
                 console.log('no content');
                 setMovie([]);
@@ -132,8 +142,10 @@ export default function FavouriteMovies() {
 // --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     return(
         <div id="favourite">
+        {/* Render Favourite Movies that are fetched from the database through API  */}
             <h1>Favourite Movie List</h1>
 
+            {/* Render User's Profile that is fetched from the database through API  */}
             <div className={classes.root}>
             <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={closeSnackbar}>
                 <Alert variant="filled" onClose={closeSnackbar} severity={severity}>
@@ -142,7 +154,12 @@ export default function FavouriteMovies() {
             </Snackbar>
             </div>
 
-            {/* Render Movies that are fetched from the database through API  */}
+            {/* Material UI loading Screen before page render */}
+            {loading ? (
+                <Backdrop className={classes.backdrop} open>
+                    <CircularProgress color="inherit" />
+                </Backdrop>
+            ) : (
             <div id="moviedisplay">
                 {movie.map((movie, index) => (
                     <div id="moviecontents">
@@ -213,6 +230,7 @@ export default function FavouriteMovies() {
                     </Dialog>
                 ))}
             </div>
+            )}
         </div>
     )
 }

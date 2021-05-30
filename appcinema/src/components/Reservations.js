@@ -18,6 +18,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import IconButton from '@material-ui/core/IconButton';
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -33,12 +35,19 @@ const useStyles = makeStyles((theme) => ({
     },
     grid: {
         flexGrow: 1
+    },
+    backdrop: {
+        zIndex: theme.zIndex.drawer + 1,
+        color: '#fff',
     }
 }));
 
 export default function Reservations() {
     // A React const that is assigned with Material UI Component Style Const
     const classes = useStyles();
+
+    // React Const for loading screen before rendering
+    const [loading, setLoading] = useState(false);
 
     // React const set up for Snackbar Alert messages
     const [openSnackbar, setOpenSnackBar] = useState(false);
@@ -102,8 +111,9 @@ export default function Reservations() {
     };
 
     useEffect(() => {
+        setLoading(true);
         postDisplayTicket();
-    },[])
+    }, [])
 
 // --------------------------------------Storing Ticket Values into Hidden Input Form for Ticket Update----------------------------------------------------------------------------
     function transferSeatValueUpdt(id) {
@@ -129,6 +139,7 @@ export default function Reservations() {
             credentials: "include"
         })
         .then((res) => {
+            setLoading(false);
             if (res.status === 204) {
                 console.log('no content');
                 setTicket([]);
@@ -293,6 +304,9 @@ function postDisplaySeats(id) {
 // --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     return(
         <div id="reservationDisplayPage">
+        {/* Render Reserved Tickets that are fetched from the database through API  */}
+
+            {/* Snack Bar Alert that will display messages when user perform certain actions*/}
             <div className={classes.root}>
             <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={closeSnackbar}>
                 <Alert variant="filled" onClose={closeSnackbar} severity={severity}>
@@ -301,6 +315,12 @@ function postDisplaySeats(id) {
             </Snackbar>
             </div>
 
+            {/* Material UI loading Screen before page render */}
+            {loading ? (
+                <Backdrop className={classes.backdrop} open>
+                    <CircularProgress color="inherit" />
+                </Backdrop>
+            ) : (
             <div id="reservation-display">
                 <h1>Your Ticket(s)</h1>
                 <Grid id="grid2">
@@ -362,79 +382,78 @@ function postDisplaySeats(id) {
                                                 </div>
                                             )}    
                                         </div>
-                                        
 
-                                    <div id="seat-display" style={{display: "none"}}>
-                                    <h3>Available Seats</h3>
-                                        <div id="seat-items-container">
-                                        {/* Rendering a list of data from seat const in Material UI Dialog */}
-                                            {seat.map((seat, index) =>
-                                                <div className={classes.iconButton}>
-                                                    <div id="seats">
-                                                        <IconButton
-                                                            disabled={seat.ReservationStatus}
-                                                            classes={{label: classes.iconButtonLabel}}
-                                                            onClick={() => {transferSeatValueUpdt(seat.SeatBySessionID);}}>
-                                                            <EventSeat />
-                                                            <div>{seat.SeatNumber}</div>
-                                                        </IconButton>
-                                                    </div>                                           
-                                                </div>                                     
-                                            )} 
-                                        </div>
-                                        
-                                        {/* Seat Colour Indicator */}
-                                        <div className="colour-indicator">
-                                            <h4>Colour Indicator</h4>
-                                            <p>Grey: Available</p>
-                                            <p style={{color: "green" }}>Green: Selected</p>
-                                            <p style={{color: "red" }}>Red: Booked</p>
-                                        </div>
-
-                                    <Divider />
-
-                                    <h4>Ticket Types</h4>
-                                    {/* Rendering a list of data from ticketType const in Material UI Dialog */}
-                                    <FormControl component="fieldset">
-                                    <RadioGroup 
-                                        aria-label="tickettype" 
-                                        name="tickettype1" 
-                                        value={radioValue} 
-                                        onChange={handleRadioChange}
-                                    >
-                                        {ticketType.map((ticketType, index) =>
-                                            <div>
-                                            <FormControlLabel
-                                                control={
-                                                    <Radio
-                                                    value={ticketType.TicketTypeID.toString()} 
-                                                />} 
-                                                label={ticketType.Name}
-                                            />
-                                            <div>${ticketType.Price}</div>     
-                                            </div>   
-                                        )} 
-                                        <p>If you are paying for the 'Student' price, you are required to present your Student ID before entering the cinema room.</p>   
-                                    </RadioGroup>
-                                    </FormControl>
+                                        <div id="seat-display" style={{display: "none"}}>
+                                            <h3>Available Seats</h3>
+                                            <div id="seat-items-container">
+                                            {/* Rendering a list of data from seat const in Material UI Dialog */}
+                                                {seat.map((seat, index) =>
+                                                    <div className={classes.iconButton}>
+                                                        <div id="seats">
+                                                            <IconButton
+                                                                disabled={seat.ReservationStatus}
+                                                                classes={{label: classes.iconButtonLabel}}
+                                                                onClick={() => {transferSeatValueUpdt(seat.SeatBySessionID);}}>
+                                                                <EventSeat />
+                                                                <div>{seat.SeatNumber}</div>
+                                                            </IconButton>
+                                                        </div>                                           
+                                                    </div>                                     
+                                                )} 
+                                            </div>
                                             
-                                     {/* Hidden Form that allow seatID and ticketTypeID to be filled and prepare for reservation */}
-                                    <form id="seat-booking">
-                                        <input id="seat-id-update" value={seatSelected} readOnly />
-                                        <input id="ticket-type-update" value={radioValue} readOnly />   
-                                        <input id="ticket-id" value={ticketSelected} readOnly />
-                                    </form>
-                                    <Button
-                                        endIcon={<Check />}
-                                        type="button"
-                                        variant="contained" 
-                                        color="primary"
-                                        className={classes.margin}
-                                        onClick={() => { postUpdateTicket(); closeDialogUpdate();}}
-                                    >
-                                        Reserve
-                                    </Button>
-                                </div> 
+                                            {/* Seat Colour Indicator */}
+                                            <div className="colour-indicator">
+                                                <h4>Colour Indicator</h4>
+                                                <p>Grey: Available</p>
+                                                <p style={{color: "green" }}>Green: Selected</p>
+                                                <p style={{color: "red" }}>Red: Booked</p>
+                                            </div>
+
+                                            <Divider />
+
+                                            <h4>Ticket Types</h4>
+                                            {/* Rendering a list of data from ticketType const in Material UI Dialog */}
+                                            <FormControl component="fieldset">
+                                            <RadioGroup 
+                                                aria-label="tickettype" 
+                                                name="tickettype1" 
+                                                value={radioValue} 
+                                                onChange={handleRadioChange}
+                                            >
+                                                {ticketType.map((ticketType, index) =>
+                                                    <div>
+                                                    <FormControlLabel
+                                                        control={
+                                                            <Radio
+                                                            value={ticketType.TicketTypeID.toString()} 
+                                                        />} 
+                                                        label={ticketType.Name}
+                                                    />
+                                                    <div>${ticketType.Price}</div>     
+                                                    </div>   
+                                                )} 
+                                                <p>If you are paying for the 'Student' price, you are required to present your Student ID before entering the cinema room.</p>   
+                                            </RadioGroup>
+                                            </FormControl>
+                                                
+                                            {/* Hidden Form that allow seatID and ticketTypeID to be filled and prepare for reservation */}
+                                            <form id="seat-booking">
+                                                <input id="seat-id-update" value={seatSelected} readOnly />
+                                                <input id="ticket-type-update" value={radioValue} readOnly />   
+                                                <input id="ticket-id" value={ticketSelected} readOnly />
+                                            </form>
+                                            <Button
+                                                endIcon={<Check />}
+                                                type="button"
+                                                variant="contained" 
+                                                color="primary"
+                                                className={classes.margin}
+                                                onClick={() => { postUpdateTicket(); closeDialogUpdate();}}
+                                            >
+                                                Reserve
+                                            </Button>
+                                        </div> 
                                         </DialogContentText>
                                         </DialogContent>
                                         <DialogActions>
@@ -485,6 +504,7 @@ function postDisplaySeats(id) {
                     )}
                 </Grid>
             </div>
+            )}
         </div>
     )
 }
