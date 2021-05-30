@@ -267,5 +267,16 @@ class databaseOBJ {
         return $stmt->execute();
         return true;
     }
+    // Tracking activity on the web service 
+    function userLogInsert($IPAddress, $Time, $BrowserType, $Activity){
+        $sql = "INSERT INTO userlog(ipAddress, time, browserType, activity)
+        VALUES(:ipaddress, :time, :browsertype, :activity)";
+        $stmt = $this->dbconn->prepare($sql);
+        $stmt->bindValue(':ipaddress', $IPAddress);
+        $stmt->bindValue(':time', $Time);
+        $stmt->bindValue(':browsertype', $BrowserType);
+        $stmt->bindValue(':activity', $Activity);
+        return $stmt->execute();
+    }
 }
 ?>

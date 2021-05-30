@@ -331,11 +331,11 @@ function postLogOut() {
                                                                 <label for="email">Email</label>
                                                                 {/* Email field requires value and must be in correct data format in order to proceed with the register process */}
                                                                 <input type="text" placeholder="Email" name="email" id="EmailUpd" defaultValue={profile.Email}
-                                                                    {...register("email", { required: true, pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i })}
+                                                                    {...register("Email", { required: true, pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i })}
                                                                 />
                                                                 {/* Error message when the user did not provide password value in the password field */}
-                                                                {errors?.email?.type === "required" && <p className="errormssg">This field is required</p>}
-                                                                {errors?.email?.type === "pattern" && <p className="errormssg">Invalid Email</p>}
+                                                                {errors?.Email?.type === "required" && <p className="errormssg">This field is required</p>}
+                                                                {errors?.Email?.type === "pattern" && <p className="errormssg">Invalid Email</p>}
                                                             </div>
 
                                                             <div className="formgroup">
@@ -345,9 +345,9 @@ function postLogOut() {
                                                                     {...register("phone", { required: true, maxLength: 11, pattern: {value: /^\d{11}$/} })}
                                                                 />  
                                                                 {/* Error message when the user did not provide password value in the password field */}
-                                                                {errors?.phone?.type === "required" && <p className="errormssg">This field is required</p>}
-                                                                {errors?.phone?.type === "maxLength" && <p className="errormssg">Please enter a 10 or 11 digit phone number</p>}
-                                                                {errors?.phone?.type === "pattern" && <p className="errormssg">Invalid Mobile Phone Number</p>}  
+                                                                {errors?.Phone?.type === "required" && <p className="errormssg">This field is required</p>}
+                                                                {errors?.Phone?.type === "maxLength" && <p className="errormssg">Please enter a 10 or 11 digit phone number</p>}
+                                                                {errors?.Phone?.type === "pattern" && <p className="errormssg">Invalid Mobile Phone Number</p>}  
                                                             </div>
 
                                                             <div className="formgroup">
@@ -357,7 +357,7 @@ function postLogOut() {
                                                                     {...register("username", { required: true })}
                                                                 />
                                                                 {/* Error message when the user did not provide username value in the unsername field */}
-                                                                {errors?.username?.type === "required" && <p className="errormssg">This field is required</p>}
+                                                                {errors?.Username?.type === "required" && <p className="errormssg">This field is required</p>}
                                                             </div>
 
                                                             <div className="formgroup">
@@ -367,7 +367,7 @@ function postLogOut() {
                                                                     {...register("password", { required: true })}
                                                                 />   
                                                                 {/* Error message when the user did not provide password value in the password field */}
-                                                                {errors?.password?.type === "required" && <p className="errormssg">This field is required</p>}
+                                                                {errors?.Password?.type === "required" && <p className="errormssg">This field is required</p>}
                                                             </div>
                                                         </form>
                                                     </div>   
@@ -408,7 +408,7 @@ function postLogOut() {
                                             variant="contained" 
                                             color="secondary"
                                             className={classes.margin}>
-                                            Closing Account
+                                            Close Account
                                         </Button> 
                                         <Dialog
                                             open={openDeleteAccount}

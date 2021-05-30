@@ -247,7 +247,7 @@ function postDisplaySeats(id) {
         })
         .then(function(response) {
             // If the seat booking process was successful
-            if(response.status == 202) {
+            if(response.status === 202) {
                 console.log('success');
                 setMessage("Your ticket has been updated successfully.");
                 setOpenSnackBar(true);
@@ -256,7 +256,7 @@ function postDisplaySeats(id) {
                 return;    
             }
             // If the seat booking process was unsuccessful
-            if(response.status == 406) {
+            if(response.status === 406) {
                 console.log('unaccepted');
                 setMessage("Error: Unable to update this ticket.");
                 setOpenSnackBar(true);

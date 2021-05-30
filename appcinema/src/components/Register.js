@@ -58,7 +58,8 @@ export default function Register() {
     const [selectedDate, setSelectedDate] = useState(null);
     // React Const sets on empty and awaits for change in date field. Set a new date on change
     const handleDateChange = (date) => {
-    setSelectedDate(date);
+    setSelectedDate((date).toString());
+    console.log(selectedDate)
     };
 
 //---------------------------------------------Registering a new accounts when the users entering register details-----------------------------------------------------------------
@@ -170,43 +171,43 @@ export default function Register() {
                         <label for="email">Email</label>
                         {/* Email field requires value and must be in correct data format in order to proceed with the register process */}
                         <input type="text" placeholder="Email" name="email" id="Email" defaultValue=""
-                            {...register("email", { required: true, pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i })}
+                            {...register("Email", { required: true, pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i })}
                         />    
                         {/* Error message when the user did not provide password value in the password field */}
-                        {errors?.email?.type === "required" && <p className="errormssg">This field is required</p>}
-                        {errors?.email?.type === "pattern" && <p className="errormssg">Invalid Email</p>}
+                        {errors?.Email?.type === "required" && <p className="errormssg">This field is required</p>}
+                        {errors?.Email?.type === "pattern" && <p className="errormssg">Invalid Email</p>}
                     </div>
 
                     <div className="formgroup">
                         <label for="phone">Mobile Phone</label>
                         {/* Mobile Phone field requires value and must be in correct data format in order to proceed with the register process */}
                         <input type="text" placeholder="Phone" name="phone" id="Phone" defaultValue=""
-                            {...register("phone", { required: true, maxLength: 11, pattern: {value: /^\d{11}$/} })}
+                            {...register("Phone", { required: true, maxLength: 10, pattern: {value: /^\d{10}$/} })}
                         />    
                         {/* Error message when the user did not provide password value in the password field */}
-                        {errors?.phone?.type === "required" && <p className="errormssg">This field is required</p>}
-                        {errors?.phone?.type === "maxLength" && <p className="errormssg">Please enter a 10 or 11 digit phone number</p>}
-                        {errors?.phone?.type === "pattern" && <p className="errormssg">Invalid Mobile Phone Number</p>}
+                        {errors?.Phone?.type === "required" && <p className="errormssg">This field is required</p>}
+                        {errors?.Phone?.type === "maxLength" && <p className="errormssg">Please enter a 10 digit phone number</p>}
+                        {errors?.Phone?.type === "pattern" && <p className="errormssg">Invalid Mobile Phone Number</p>}
                     </div>
 
                     <div className="formgroup">
                         <label for="username">Username</label>
                         {/* Username field requires value in order to proceed with the register process */}
                         <input type="text" placeholder="Username" name="username" id="UsernameReg" defaultValue=""
-                            {...register("username", { required: true })}
+                            {...register("Username", { required: true })}
                         />
                         {/* Error message when the user did not provide username value in the unsername field */}
-                        {errors?.username?.type === "required" && <p className="errormssg">This field is required</p>}
+                        {errors?.Username?.type === "required" && <p className="errormssg">This field is required</p>}
                     </div>
 
                     <div className="formgroup">
                         <label for="password">Password</label>
                         {/* Password field requires value in order to proceed with the register process */}
                         <input type="password" placeholder="Password" name="password" id="PasswordUpd" defaultValue=""
-                            {...register("password", { required: true })}
+                            {...register("Password", { required: true })}
                         />    
                         {/* Error message when the user did not provide password value in the password field */}
-                        {errors?.password?.type === "required" && <p className="errormssg">This field is required</p>}
+                        {errors?.Password?.type === "required" && <p className="errormssg">This field is required</p>}
                     </div>
 
                     <div id="login-button">
