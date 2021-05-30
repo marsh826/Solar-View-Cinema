@@ -10,12 +10,12 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Register from './components/Register';
 import Favourite from './components/Favourite';
 import Profile from './components/Profile';
-import Confirm from './components/BookingConfirm';
 import Reservations from './components/Reservations';
 import Footer from './components/Footer';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import { makeStyles, ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { BackgroundSyncPlugin } from 'workbox-background-sync';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,19 +31,35 @@ export default function App () {
   const classes = useStyles();
   
   // Set the Component to Dark Mode by checking for Dark Mode status
-  // function DarkModeCheck() {
-  //   if(localStorage.getItem("DarkMode") === 'Enabled') {
-  //       document.getElementById("swipenavbar").classList.add("darkmodePrimary");
-  //       document.body.classList.add("darkmodeSecondary");
-  //       document.getElementById("footer").classList.add("darkmodePrimary");
-  //       // document.getElementById("userprofile").classList.add("darkmodePrimary");
-  //   } else {
-  //       document.getElementById("swipenavbar").classList.remove("darkmodePrimary");
-  //       document.body.classList.remove("darkmodeSecondary");
-  //       document.getElementById("footer").classList.remove("darkmodePrimary");
-  //       // document.getElementById("userprofile").classList.remove("darkmodePrimary");
-  //   }
-  // }
+  function DarkModeCheck() {
+    if(localStorage.getItem("DarkMode") === 'Enabled') {
+        document.getElementById("swipenavbar").classList.add("darkmodePrimary");
+        document.body.classList.add("darkmodeSecondary");
+        document.getElementById("footer").classList.add("darkmodePrimary");
+        // document.getElementById("userprofile").classList.add("darkmodePrimary");
+    } else {
+        document.getElementById("swipenavbar").classList.remove("darkmodePrimary");
+        document.body.classList.remove("darkmodeSecondary");
+        document.getElementById("footer").classList.remove("darkmodePrimary");
+        // document.getElementById("userprofile").classList.remove("darkmodePrimary");
+    }
+  }
+
+  function backgroundIMGCheck() {
+    if(localStorage.getItem("BackgroundImage") === "Enabled") {
+      document.body.classList.add("backgroundIMG");
+    } else {
+      document.body.classList.remove("backgroundIMG");
+    }
+  }
+
+  function backgroundColourCheck() {
+    if(localStorage.getItem("BackgroundColour") === "Enabled") {
+      document.body.classList.add("backgroundColour2");
+    } else {
+      document.body.classList.remove("backgroundColour2");
+    }
+  }
 
   // React const set up for Snackbar Alert messages
   const [openSnackbar, setOpenSnackBar] = useState(false);
@@ -60,7 +76,9 @@ export default function App () {
 
   useEffect(() => {
     checkLoginStatus();
-    // DarkModeCheck();
+    DarkModeCheck();
+    backgroundColourCheck();
+    backgroundIMGCheck();
   }, []);
 
   function checkLoginStatus(){

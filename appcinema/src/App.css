@@ -10,11 +10,24 @@
   flex: 1;
 }
 
-.darkmodePrimary{
+.backgroundIMG {
+  background-image: url('./img/cinema-background.jpg');
+  position: relative;
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.backgroundColour2 {
+  background-color: #FEAE51FF !important;
+}
+
+.darkmodePrimary {
   background-color: #24262e !important;
 }
 
-.darkmodeSecondary{
+.darkmodeSecondary {
   background-color: #2a2d38 !important;
 }
 

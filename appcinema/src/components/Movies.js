@@ -67,7 +67,7 @@ export default function MovieDisplay() {
     // A React const that is assigned with Material UI Component Style Const
     const classes = useStyles();
 
-    // React const set up for Snackbar Alert messages
+    // React Consts set up for Snackbar Alert messages
     const [openSnackbar, setOpenSnackBar] = useState(false);
     const [severity, setSeverity] = useState("info");
     const [message, setMessage] = useState("");
@@ -90,13 +90,16 @@ export default function MovieDisplay() {
     // store data of a specific movie selected to display in dialog
     const [currentMovie, setCurrentMovie] = useState([]);
 
-    // React consts set up for Dialog
+    // React const set up for Dialog
     const [movieDisplay, setMovieDisplay] = useState(false);
+
+    // Functions for open and close Dialog
     function openMovieDisplay(movie) {
         setMovieDisplay(true);
         setCurrentMovie(movie);
         console.log(movie);
     };
+    
     function closeMovieDisplay() {
         // Upon closing the Movie Dialog, reset seat booking fields
         setMovieDisplay(false);
