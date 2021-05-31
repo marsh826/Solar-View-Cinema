@@ -261,11 +261,10 @@ class databaseOBJ {
     }
     // Delete Booked Ticket from Reservation List
     function deleteTicket($ticketDelete) {
-        $mysql = "DELETE FROM ticket WHERE TicketID = :ticketid";
-        $stmt = $this->dbconn->prepare($mysql);
+        $sql = "DELETE from ticket WHERE TicketID = :ticketid";
+        $stmt = $this->dbconn->prepare($sql);
         $stmt->bindValue(':ticketid', $ticketDelete);
         return $stmt->execute();
-        return true;
     }
     // Tracking activity on the web service 
     function userLogInsert($IPAddress, $Time, $BrowserType, $Activity){
@@ -277,6 +276,30 @@ class databaseOBJ {
         $stmt->bindValue(':browsertype', $BrowserType);
         $stmt->bindValue(':activity', $Activity);
         return $stmt->execute();
+    }
+    // Login for Admin 
+    function adminLogin($usernameAdmin, $passwordAdmin) {
+        $mysql = "SELECT UserID, Password FROM users WHERE Username = :username";
+        $stmt = $this->dbconn->prepare($mysql);
+        $stmt->bindValue(':username', $usernameAdmin);
+        $stmt->execute();
+        $row = $stmt->fetch();
+        // Admin Password verification
+        if(password_verify($passwordAdmin, $row['Password'])) {
+           // Admin User Type verification
+            if($row["AccessRight"] == null) {
+                return false;
+            } else {
+                $userid = $row["UserID"];
+                $_SESSION["UserID"] = $userid;
+                $usertype = $row["AccessRight"];
+                $_SESSION["UserType"] = $usertype;
+                return true;
+            }
+        } else {
+            return false;
+        }
+        
     }
 }
 ?>

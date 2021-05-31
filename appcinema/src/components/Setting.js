@@ -70,7 +70,10 @@ export default function SettingOptions() {
         }
     }
 
-    const [bgColour, setBGColour] = useState();
+    // React Const for Background Colour switch state
+    const [bgColour, setBGColour] = useState(true);
+
+    // React Const for Background Colour Switch State and functionalities
     const handleBackgroundColour = (event) => {
         setBGColour(event.target.checked);
         if(bgColour === false) {
@@ -82,6 +85,7 @@ export default function SettingOptions() {
         }
     }
 
+    // Set the Background Colour Switch state based on Background Colour status
     function backgroundColourCheck() {
         if(localStorage.getItem("BackgroundColour") === "Enabled") {
             setBGColour(true);
@@ -90,8 +94,10 @@ export default function SettingOptions() {
         }
     }
     
+    // React Const for Background Image Switch State
+    const [bgIMG, setBGIMG] = useState(true);
 
-    const [bgIMG, setBGIMG] = useState();
+    // React Const for Background Image Switch State and functionalities
     const handleBackgroundImage = (event) => {
         setBGIMG(event.target.checked);
         if(bgIMG === false) {
@@ -102,6 +108,8 @@ export default function SettingOptions() {
             document.body.classList.remove("backgroundIMG");
         }
     }
+
+    // Set the Background Colour Switch state based on Background Colour status
     function backgroundIMGCheck() {
         if(localStorage.getItem("BackgroundImage") === "Enabled") {
             setBGIMG(true);
@@ -123,22 +131,20 @@ export default function SettingOptions() {
                     <FormControlLabel
                         style = {{color: 'whitesmoke'}}
                         value="end"
-                        control={<Checkbox 
+                        control={<Switch 
                             checked={bgIMG} 
-                            onChange={handleBackgroundImage}
-                            style = {{color: 'white'}} 
-                        />}
+                            onChange={handleBackgroundImage} 
+                            name="backgroundImageSwitch"/>}
                         label="Background Image"
                         labelPlacement="end"
                     />
                     <FormControlLabel
                         style={{color: 'whitesmoke'}}
                         value="end"
-                        control={<Checkbox 
-                            checked={bgColour}
-                            onChange={handleBackgroundColour}
-                            style={{color: 'white'}} 
-                        />}
+                        control={<Switch 
+                            checked={bgColour} 
+                            onChange={handleBackgroundColour} 
+                            name="backgroundColourSwitch"/>}
                         label="Change Background Colour"
                         labelPlacement="end"
                     />

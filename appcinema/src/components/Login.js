@@ -66,6 +66,7 @@ export default function Login() {
         .then(function(response){    
             // When the user login unsuccessfully, alert error message
             if(response.status === 403) {
+                console.log(response);
                 console.log('forbidden');
                 setOpenSnackBar(true);
                 setSeverity("error");
@@ -74,17 +75,14 @@ export default function Login() {
             }
             // When the user login successfully, redirect to Profile page
             if(response.status === 202) {
+                console.log(response);
                 console.log('success');
                 localStorage.setItem('UserStatus', 'Logged In');
                 console.log('Status: Logged In');
-                history.push("/Profile");
                 // document.getElementById('loginform').reset();
+                history.push("/Profile");
                 return;
             }
-            // Send back error into console log
-            response.text().then((text) => {
-                console.log(text)
-            })
         })
         return false;
     }

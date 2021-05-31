@@ -272,31 +272,31 @@ function postDisplaySeats(id) {
     }
 // -------------------------------------------------Delete Selected Ticket From The User's Reservation List------------------------------------------------------------------------
     function postDeleteTicket(id) {
-        var IDticket= {
+        var TicketID = {
             'ticketid' : id
         }
         fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=deleteticket",{
             method: "POST",
-            body: JSON.stringify(IDticket),
-            credentials: "include"
-        }).
-        then(function(response) {
+            body: JSON.stringify(TicketID),
+            credentials: 'include'
+        })
+        .then(function(response){
+            console.log(response);
             // Successfully delete booked ticket from user's reservation list
-            if(response.status === 202) {
+            if(response.status == 202) {
                 console.log('success');
                 setMessage("Ticket Removed.");
                 setOpenSnackBar(true);
                 setSeverity("success");
                 postDisplayTicket();
                 return;
-            } 
+            }
             // Unsuccessfully delete booked ticket from user's reservation list
-            if(response.status === 501) {
+            if(response.status == 501) {
                 console.log('not implemented');
                 setMessage("Error: Failed to delete this ticket.");
                 setOpenSnackBar(true);
                 setSeverity("error");
-                return;
             }
         })
         return false;
@@ -488,7 +488,7 @@ function postDisplaySeats(id) {
                                         </DialogContent>
                                         <DialogActions>
                                         <Button 
-                                            onClick={() => {postDeleteTicket(ticket.TicketID); closeDialogDelete();}} 
+                                            onClick={() => { postDeleteTicket(ticket.TicketID); closeDialogDelete(); }} 
                                             color="primary"
                                         >
                                             Yes

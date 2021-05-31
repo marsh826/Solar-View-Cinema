@@ -9,6 +9,8 @@ import Alert from '@material-ui/lab/Alert';
 import { useForm } from 'react-hook-form';
 import DateFnsUtils from '@date-io/date-fns';
 import {MuiPickersUtilsProvider, DatePicker} from '@material-ui/pickers';
+import frLocale from "date-fns/locale/fr";
+import format from "date-fns/format";
 
 // Material UI Component Style Const
 const useStyles = makeStyles((theme) => ({
@@ -65,13 +67,15 @@ export default function Register() {
     // React Const for Material UI Date Picker with initial state value of null. 
     const [selectedDate, setSelectedDate] = useState(null);
     // React Const sets on empty and awaits for change in date field. Set a new date on change
-    const handleDateChange = (date) => {
-    setSelectedDate((date).toString());
-    console.log(selectedDate)
-    };
+    // const handleDateChange = (date) => {
+    // setSelectedDate((date).toString());
+    // console.log(selectedDate)
+    // };
+    console.log(selectedDate);
 
 //---------------------------------------------Registering a new accounts when the users entering register details-----------------------------------------------------------------
-    function postRegister() {
+    function postRegister(event) {
+        event.preventDefault()
         var registration = {
             // Retrieving inserted values from Registartion form and assign them into a variable
             'UsernameReg': document.getElementById("UsernameReg").value,
@@ -153,7 +157,7 @@ export default function Register() {
                     <div className="formgroup">
                         <label for="dateofbirth">Date of Birth</label>
                         {/* Date of Birth field requires value and must in correct data format in order to proceed with the register process */}
-                        <MuiPickersUtilsProvider utils={LocalisedUtils}>
+                        <MuiPickersUtilsProvider utils={LocalisedUtils} locale={frLocale}>
                             <DatePicker
                                 animateYearScrolling
                                 disableFuture
@@ -165,7 +169,7 @@ export default function Register() {
                                 placeholder="Date Of Birth"
                                 format="yyyy-MM-dd"
                                 value={selectedDate}
-                                onChange={handleDateChange}
+                                onChange={setSelectedDate}
                                 KeyboardButtonProps={{
                                     'aria-label': 'change date',
                                 }}
