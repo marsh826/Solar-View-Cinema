@@ -105,6 +105,7 @@ export default function MovieDisplay() {
         setMovieDisplay(false);
         setSeatSelected([]);
         setRadioValue([]);
+        setSeatHighlight([]);
         closeSeatDisplay();
     };
 
@@ -117,6 +118,9 @@ export default function MovieDisplay() {
     // React Const for Selected Seat Field
     const [seatSelected, setSeatSelected] = useState([]);
 
+    // React Const Seat Highlighted when Selected
+    const [seatHighlight, setSeatHighlight] = useState([]);
+
     // React Const for Material UI Radio button that is used for Ticket Type Field
     const [radioValue, setRadioValue] = useState([]);
     const handleRadioChange = (event) => {
@@ -124,7 +128,7 @@ export default function MovieDisplay() {
     };
 
     // React Const for loading screen before rendering
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false); 
 
     // When the Movie page/component is loaded, useEffect will use a JavaScript Function to display profile in JSON output only once
     useEffect(() => {
@@ -213,9 +217,17 @@ export default function MovieDisplay() {
             }
         })
     }
-// -----------------------------------------------------------Select Seat Change Color---------------------------------------------------------------------------------------------
-    function selectedSeatColor() {
-        
+// ------------------------------------------Upon Selecting, the selected seat will be highlighted green---------------------------------------------------------------------------
+    function seatToggleActive(id) {
+        setSeatHighlight(id);
+    }
+
+    function seatToggleStyles(id) {
+        if(id === seatHighlight) {
+            return "seatSelected";
+        } else {
+            return  "seatNotSelected";
+        }
     }
 // --------------------------------------Storing Ticket Values into Hidden Input Form for Ticket Reservation-----------------------------------------------------------------------
     function transferSeatValue(id) {
@@ -462,8 +474,8 @@ export default function MovieDisplay() {
                                                         <IconButton
                                                             disabled={seat.ReservationStatus}
                                                             classes={{label: classes.iconButtonLabel}}
-                                                            onClick={() => {transferSeatValue(seat.SeatBySessionID); selectedSeatColor();}}>
-                                                            <EventSeat />
+                                                            onClick={() => {transferSeatValue(seat.SeatBySessionID); seatToggleActive(seat.SeatBySessionID);}}>
+                                                            <EventSeat className={seatToggleStyles(seat.SeatBySessionID)}/>
                                                             <div>{seat.SeatNumber}</div>
                                                         </IconButton>
                                                     </div>                                           
@@ -505,7 +517,7 @@ export default function MovieDisplay() {
                                     </FormControl>
                                             
                                      {/* Hidden Form that allow seatID and ticketTypeID to be filled and prepare for reservation */}
-                                    <form id="seat-booking">
+                                    <form id="seat-booking" style={{display: 'none'}}>
                                         <input id="seat-id" value={seatSelected} readOnly />
                                         <input id="ticket-type" value={radioValue} readOnly />    
                                     </form>

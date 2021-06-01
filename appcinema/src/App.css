@@ -39,8 +39,8 @@ body {
   color: red !important;
 }
 
-.seatSelected{
-  color: rgb(16, 141, 16)
+.seatSelected {
+  color: rgb(16, 141, 16) !important;
 }
 
 fieldset {
