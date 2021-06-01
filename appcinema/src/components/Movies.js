@@ -121,7 +121,6 @@ export default function MovieDisplay() {
     const [radioValue, setRadioValue] = useState([]);
     const handleRadioChange = (event) => {
         setRadioValue(event.target.value);
-        console.log(event.target.value);
     };
 
     // React Const for loading screen before rendering
@@ -272,7 +271,7 @@ export default function MovieDisplay() {
         })
         .then(function(response) {
             // If the seat booking process was successful
-            if(response.status == 202) {
+            if(response.status === 202) {
                 console.log('success');
                 setMessage("Ticket Booked Successfully!");
                 setOpenSnackBar(true);
@@ -280,7 +279,7 @@ export default function MovieDisplay() {
                 return;    
             }
             // If the seat booking process was unsuccessful
-            if(response.status == 406) {
+            if(response.status === 406) {
                 console.log('unaccepted');
                 setMessage("Error: Booking Failed.");
                 setOpenSnackBar(true);
@@ -302,13 +301,13 @@ export default function MovieDisplay() {
         })
         .then(function(response){
             console.log(response);
-            if(response.status == 202) {
+            if(response.status === 202) {
                 console.log('success');
                 setMessage("The movie is added to your Favourite list");
                 setOpenSnackBar(true);
                 setSeverity("success");
             }
-            if(response.status == 501) {
+            if(response.status === 501) {
                 console.log('not implemented');
                 setMessage("The movie is already in your Favourite list");
                 setOpenSnackBar(true);
@@ -324,7 +323,7 @@ export default function MovieDisplay() {
 
             {/* Snack Bar Alert that will display messages when user perform certain actions*/}
             <div className={classes.root}>
-            <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={closeSnackbar}>
+            <Snackbar open={openSnackbar} autoHideDuration={4000} onClose={closeSnackbar}>
                 <Alert variant="filled" onClose={closeSnackbar} severity={severity}>
                     {message}
                 </Alert>
@@ -383,9 +382,7 @@ export default function MovieDisplay() {
                             {currentMovie.MovieName}
                     </DialogTitle>
                         <DialogContent>
-                        <DialogContentText 
-                            id="alert-dialog-slide-description"
-                        >
+                        <DialogContentText id="alert-dialog-slide-description">
                             <div id="display-movie">
                                 <div id="imgMovieDisplay">
                                     <Grid id="grid-MovieIMG">

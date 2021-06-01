@@ -3,14 +3,12 @@ import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
 import '../App.css';
 import { makeStyles } from '@material-ui/core/styles';
-import {Link, useHistory} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import { useForm } from 'react-hook-form';
 import DateFnsUtils from '@date-io/date-fns';
 import {MuiPickersUtilsProvider, DatePicker} from '@material-ui/pickers';
-import frLocale from "date-fns/locale/fr";
-import format from "date-fns/format";
 
 // Material UI Component Style Const
 const useStyles = makeStyles((theme) => ({
@@ -28,21 +26,10 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-// Preset Customised DateFnUtils for coverting Material UI datepicker date 
-// into a more suitable date format for MySQL data insertion
-class LocalisedUtils extends DateFnsUtils {
-    getDatePickerHeaderText(date) {
-      return format(date, "yyyy-MM-dd", { locale: this.locale });
-    }
-}
-
 // Register Functional Component with export default
 export default function Register() {
     // A React const that is assigned with Material UI Component Style Const
     const classes = useStyles();
-
-    // React Router Dom useHistory in a const 
-    const history = useHistory();
 
     // React const set up for Snackbar Alert messages
     const [openSnackbar, setOpenSnackBar] = useState(false);
@@ -67,15 +54,13 @@ export default function Register() {
     // React Const for Material UI Date Picker with initial state value of null. 
     const [selectedDate, setSelectedDate] = useState(null);
     // React Const sets on empty and awaits for change in date field. Set a new date on change
-    // const handleDateChange = (date) => {
-    // setSelectedDate((date).toString());
-    // console.log(selectedDate)
-    // };
-    console.log(selectedDate);
+    const handleDateChange = (date) => {
+    setSelectedDate(date.toISOString());
+    };
 
 //---------------------------------------------Registering a new accounts when the users entering register details-----------------------------------------------------------------
-    function postRegister(event) {
-        event.preventDefault()
+    function postRegister() {
+        // event.preventDefault();
         var registration = {
             // Retrieving inserted values from Registartion form and assign them into a variable
             'UsernameReg': document.getElementById("UsernameReg").value,
@@ -105,10 +90,13 @@ export default function Register() {
             // If the form was fully filled in and data was successfully inserted
                 console.log('success');
                 localStorage.setItem('LoginStatus', 'Logged In');
-                localStorage.setItem('BackgroundImage');
-                localStorage.setItem('DarkMode');
-                localStorage.setItem('BackgroundColour'); 
-                history.push("/Profile");
+                localStorage.setItem('BackgroundImage', 'Disabled');
+                localStorage.setItem('DarkMode', 'Disabled');
+                localStorage.setItem('BackgroundColour', 'Default');
+                document.getElementById("registerform").reset(); 
+                setOpenSnackBar(true);
+                setSeverity("success");
+                setMessage("You have successfully registered an account! Welcome to Solar View Cinema.");
                 return;
             }
             // Send back error into console log
@@ -157,19 +145,18 @@ export default function Register() {
                     <div className="formgroup">
                         <label for="dateofbirth">Date of Birth</label>
                         {/* Date of Birth field requires value and must in correct data format in order to proceed with the register process */}
-                        <MuiPickersUtilsProvider utils={LocalisedUtils} locale={frLocale}>
+                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
                             <DatePicker
                                 animateYearScrolling
                                 disableFuture
                                 minDate="1930-01-01"
-                                clearable
                                 name="dateofbirth"
                                 margin="normal"
                                 id="DateOfBirth"
                                 placeholder="Date Of Birth"
                                 format="yyyy-MM-dd"
                                 value={selectedDate}
-                                onChange={setSelectedDate}
+                                onChange={handleDateChange}
                                 KeyboardButtonProps={{
                                     'aria-label': 'change date',
                                 }}
@@ -215,7 +202,7 @@ export default function Register() {
                     <div className="formgroup">
                         <label for="password">Password</label>
                         {/* Password field requires value in order to proceed with the register process */}
-                        <input type="password" placeholder="Password" name="password" id="PasswordUpd" defaultValue=""
+                        <input type="password" placeholder="Password" name="password" id="PasswordReg" defaultValue=""
                             {...register("Password", { required: true })}
                         />    
                         {/* Error message when the user did not provide password value in the password field */}

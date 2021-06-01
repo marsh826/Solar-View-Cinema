@@ -89,7 +89,6 @@ export default function Reservations() {
 
     // React Const Movie Session set up empty array to store data that is successfully fetched
     const [movieSession, setMovieSession] = useState([]);
-    const [currentMovie, setCurrentMovie] = useState([]);
 
     // React Const Seat set up empty array to store data that is succesfully fetched 
     const [seat, setSeat] = useState([]);
@@ -283,7 +282,7 @@ function postDisplaySeats(id) {
         .then(function(response){
             console.log(response);
             // Successfully delete booked ticket from user's reservation list
-            if(response.status == 202) {
+            if(response.status === 202) {
                 console.log('success');
                 setMessage("Ticket Removed.");
                 setOpenSnackBar(true);
@@ -292,7 +291,7 @@ function postDisplaySeats(id) {
                 return;
             }
             // Unsuccessfully delete booked ticket from user's reservation list
-            if(response.status == 501) {
+            if(response.status === 501) {
                 console.log('not implemented');
                 setMessage("Error: Failed to delete this ticket.");
                 setOpenSnackBar(true);
@@ -308,7 +307,7 @@ function postDisplaySeats(id) {
 
             {/* Snack Bar Alert that will display messages when user perform certain actions*/}
             <div className={classes.root}>
-            <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={closeSnackbar}>
+            <Snackbar open={openSnackbar} autoHideDuration={4000} onClose={closeSnackbar}>
                 <Alert variant="filled" onClose={closeSnackbar} severity={severity}>
                     {message}
                 </Alert>

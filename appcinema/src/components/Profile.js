@@ -3,7 +3,6 @@ import { Person } from '@material-ui/icons';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
-import Container from '@material-ui/core/Container';
 import Alert from '@material-ui/lab/Alert';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -126,15 +125,15 @@ export default function Profile() {
             setLoading(false);
             if (res.status === 401) {
                 console.log('forbidden');
-                setProfile("No Profile Selected");
-                setMessage("Error: You are not logged in");
+                setProfile([]);
+                setMessage("You are not logged in. No Profile is found.");
                 setOpenSnackBar(true);
-                setSeverity("error");
+                setSeverity("warning");
             }
 
             if (res.status === 503) {
                 console.log('service unavailable');
-                setProfile("No Profile Selected");
+                setProfile([]);
                 setMessage("Error: Unable to fetch user profile");
                 setOpenSnackBar(true);
                 setSeverity("error");
@@ -203,11 +202,11 @@ function postDeleteProfile(id) {
         if(response.status === 202) {
             // if success, local storage items will be removed and user will be sent back to the index page
             console.log('success');
-            localStorage.setItem('LoginStatus', 'Logged Out');
-            localStorage.setItem('BackgroundImage');
-            localStorage.setItem('DarkMode');
-            localStorage.setItem('BackgroundColour');  
-            history.push("/Home")        
+            localStorage.setItem('UserStatus', 'Logged Out');
+            localStorage.setItem('BackgroundImage', 'Disabled');
+            localStorage.setItem('DarkMode', 'Disabled');
+            localStorage.setItem('BackgroundColour', 'Default');  
+            history.push("/Home");        
             return;
         }
     })
@@ -237,7 +236,7 @@ function postLogOut() {
 
             {/* Snack Bar Alert that will display messages when user perform certain actions*/}
             <div className={classes.root}>
-            <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={closeSnackbar}>
+            <Snackbar open={openSnackbar} autoHideDuration={4000} onClose={closeSnackbar}>
                 <Alert variant="filled" onClose={closeSnackbar} severity={severity}>
                     {message}
                 </Alert>
@@ -252,192 +251,194 @@ function postLogOut() {
             ) : (
             <div className={classes.root}>
                 <Grid id="grid">
-                    <div id="userprofile">
-                        <Person id="profile-logo" style={{fontSize: 120}} />
-                        {profile.map((profile, index) => (
-                            <div>
-                                <div id="profilecontent">
-                                    <div><h2>{profile.Username}</h2></div>
-                                    <div><strong>Name:</strong> {profile.FirstName} {profile.LastName}</div>
-                                    <div><strong>Date Of Birth</strong>: {profile.DateOfBirth}</div>
-                                    <div><strong>Email</strong>: {profile.Email}</div>
-                                    <div><strong>Mobile Phone</strong>: {profile.Phone}</div>
-                                </div> 
-                                <div className="acc-button-arrangement">
-                                    <div className="acc-update-button">
-                                        <Button 
-                                            onClick={() => openUpdateAccountForm()}
-                                            size="small"
-                                            variant="contained" 
-                                            color="secondary"
-                                            className={classes.margin}>
-                                            Update Profile
-                                        </Button>   
-                                    </div>
-                                    
-                                    <div className="acc-logout-button">
-                                        <Button 
-                                            onClick={postLogOut}
-                                            size="small"
-                                            variant="contained" 
-                                            color="secondary"
-                                            className={classes.margin}>
-                                            Log Out
-                                        </Button>
-                                    </div>
+                {profile.map((profile, index) => (   
+                    <div> 
+                        <div id="userprofile">
+                            <Person id="profile-logo" style={{fontSize: 120}} />
+                                <div>
+                                    <div id="profilecontent">
+                                        <div><h2>{profile.Username}</h2></div>
+                                        <div><strong>Name:</strong> {profile.FirstName} {profile.LastName}</div>
+                                        <div><strong>Date Of Birth</strong>: {profile.DateOfBirth}</div>
+                                        <div><strong>Email</strong>: {profile.Email}</div>
+                                        <div><strong>Mobile Phone</strong>: {profile.Phone}</div>
+                                    </div> 
+                                    <div className="acc-button-arrangement">
+                                        <div className="acc-update-button">
+                                            <Button 
+                                                onClick={() => openUpdateAccountForm()}
+                                                size="small"
+                                                variant="contained" 
+                                                color="secondary"
+                                                className={classes.margin}>
+                                                Update Profile
+                                            </Button>   
+                                        </div>
+                                        
+                                        <div className="acc-logout-button">
+                                            <Button 
+                                                onClick={postLogOut}
+                                                size="small"
+                                                variant="contained" 
+                                                color="secondary"
+                                                className={classes.margin}>
+                                                Log Out
+                                            </Button>
+                                        </div>
 
-                                    <div className="acc-delete-button">
-                                        <Button 
-                                            onClick={handleClickOpenDeleteAccount}
-                                            size="small"
-                                            variant="contained" 
-                                            color="secondary"
-                                            className={classes.margin}>
-                                            Close Account
-                                        </Button> 
-                                        <Dialog
-                                            open={openDeleteAccount}
-                                            TransitionComponent={Transition}
-                                            keepMounted
-                                            onClose={handleCloseDeleteAccount}
-                                            aria-labelledby="delete-profile"
-                                            aria-describedby="delete-acc-content"
-                                        >
-                                            <DialogTitle id="delete-profile">{"Closing Your Solar View Cinema Account"}</DialogTitle>
-                                            <DialogContent>
-                                                <DialogContentText id="delete-acc-content">
-                                                    <div id="delete-account">
-                                                        <h2>Are you sure you want to close your account?</h2>
-                                                        <h3>You will no longer be able to book a movie ticket after this account is closed</h3>
-                                                    </div>
-                                                </DialogContentText>
-                                            </DialogContent>
+                                        <div className="acc-delete-button">
+                                            <Button 
+                                                onClick={handleClickOpenDeleteAccount}
+                                                size="small"
+                                                variant="contained" 
+                                                color="secondary"
+                                                className={classes.margin}>
+                                                Close Account
+                                            </Button> 
+                                            <Dialog
+                                                open={openDeleteAccount}
+                                                TransitionComponent={Transition}
+                                                keepMounted
+                                                onClose={handleCloseDeleteAccount}
+                                                aria-labelledby="delete-profile"
+                                                aria-describedby="delete-acc-content"
+                                            >
+                                                <DialogTitle id="delete-profile">{"Closing Your Solar View Cinema Account"}</DialogTitle>
+                                                <DialogContent>
+                                                    <DialogContentText id="delete-acc-content">
+                                                        <div id="delete-account">
+                                                            <h2>Are you sure you want to close your account?</h2>
+                                                            <h3>You will no longer be able to book a movie ticket after this account is closed</h3>
+                                                        </div>
+                                                    </DialogContentText>
+                                                </DialogContent>
 
-                                            <DialogActions>
-                                                <Button onClick={() => postDeleteProfile(profile.UserID)} color="primary">
-                                                    Yes, Close My Account
-                                                </Button>
+                                                <DialogActions>
+                                                    <Button onClick={() => postDeleteProfile(profile.UserID)} color="primary">
+                                                        Yes, Close My Account
+                                                    </Button>
 
-                                                <Button onClick={handleCloseDeleteAccount} color="primary">
-                                                    No, Not Really
-                                                </Button>
-                                            </DialogActions>
-                                        </Dialog>    
-                                    </div>          
-                                </div>  
-                            </div>
-                        ))}
-                    </div>
-                
-                    <div id="updateform" style={{display: 'none'}}>
-                        <form id="updateform" autoComplete="off" onSubmit={handleSubmit(postUpdateProfile)}>
-                            <div className="formgroup">
-                                <label for="firstname">First Name</label>
-                                {/* First Name field requires value in order to proceed with the register process */}
-                                <input type="text" placeholder="First Name" name="firstname" id="FirstNameUpd" defaultValue={profile.FirstName}
-                                    {...register("FirstName", { required: true })}
-                                />
-                                {/* Error message when the user did not provide username value in the unsername field */}
-                                {errors?.FirstName?.type === "required" && <p className="errormssg">This field is required</p>}
-                            </div>
+                                                    <Button onClick={handleCloseDeleteAccount} color="primary">
+                                                        No, Not Really
+                                                    </Button>
+                                                </DialogActions>
+                                            </Dialog>    
+                                        </div>          
+                                    </div>  
+                                </div>
+                        </div>
 
-                            <div className="formgroup">
-                                <label for="lastname">Last Name</label>
-                                <input type="text" placeholder="Last Name" name="lastname" id="LastNameUpd" defaultValue={profile.LastName}
-                                    {...register("LastName", { required: true })}    
-                                />
-                                {/* Error message when the user did not provide username value in the unsername field */}
-                                {errors?.LastName?.type === "required" && <p className="errormssg">This field is required</p>}
-                            </div>  
-
-                            <div className="formgroup">
-                                <label for="dateofbirth">Date of Birth</label>
-                                {/* Date of Birth field requires value and must in correct data format in order to proceed with the register process */}
-                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                    <DatePicker
-                                        animateYearScrolling
-                                        disableFuture
-                                        initialFocusedDate={profile.DateOfBirth}
-                                        minDate="1930-01-01"
-                                        clearable
-                                        name="dateofbirth"
-                                        margin="normal"
-                                        id="DateOfBirth"
-                                        placeholder="Date Of Birth"
-                                        format="yyyy-MM-dd"
-                                        value={selectedDate}
-                                        onChange={handleDateChange}
-                                        KeyboardButtonProps={{
-                                            'aria-label': 'change date',
-                                        }}
+                        <div id="updateform" style={{display: 'none'}}>
+                            <form id="updateform" autoComplete="off" onSubmit={handleSubmit(postUpdateProfile)}>
+                                <div className="formgroup">
+                                    <label for="firstname">First Name</label>
+                                    {/* First Name field requires value in order to proceed with the register process */}
+                                    <input type="text" placeholder="First Name" name="firstname" id="FirstNameUpd" defaultValue={profile.FirstName}
+                                        {...register("FirstName", { required: true })}
                                     />
-                                </MuiPickersUtilsProvider>
-                            </div>  
+                                    {/* Error message when the user did not provide username value in the unsername field */}
+                                    {errors?.FirstName?.type === "required" && <p className="errormssg">This field is required</p>}
+                                </div>
 
-                            <br/>  
+                                <div className="formgroup">
+                                    <label for="lastname">Last Name</label>
+                                    <input type="text" placeholder="Last Name" name="lastname" id="LastNameUpd" defaultValue={profile.LastName}
+                                        {...register("LastName", { required: true })}    
+                                    />
+                                    {/* Error message when the user did not provide username value in the unsername field */}
+                                    {errors?.LastName?.type === "required" && <p className="errormssg">This field is required</p>}
+                                </div>  
 
-                            <div className="formgroup">
-                                <label for="email">Email</label>
-                                {/* Email field requires value and must be in correct data format in order to proceed with the register process */}
-                                <input type="text" placeholder="Email" name="email" id="EmailUpd" defaultValue={profile.Email}
-                                    {...register("Email", { required: true, pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i })}
-                                />
-                                {/* Error message when the user did not provide password value in the password field */}
-                                {errors?.Email?.type === "required" && <p className="errormssg">This field is required</p>}
-                                {errors?.Email?.type === "pattern" && <p className="errormssg">Invalid Email</p>}
-                            </div>
+                                <div className="formgroup">
+                                    <label for="dateofbirth">Date of Birth</label>
+                                    {/* Date of Birth field requires value and must in correct data format in order to proceed with the register process */}
+                                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                        <DatePicker
+                                            animateYearScrolling
+                                            disableFuture
+                                            initialFocusedDate={profile.DateOfBirth}
+                                            minDate="1930-01-01"
+                                            name="dateofbirth"
+                                            margin="normal"
+                                            id="DateOfBirthUpd"
+                                            placeholder="Date Of Birth"
+                                            format="yyyy-MM-dd"
+                                            value={selectedDate}
+                                            onChange={handleDateChange}
+                                            KeyboardButtonProps={{
+                                                'aria-label': 'change date',
+                                            }}
+                                        />
+                                    </MuiPickersUtilsProvider>
+                                </div>  
 
-                            <div className="formgroup">
-                                <label for="Phone">Mobile Phone</label>
-                                {/* Mobile Phone field requires value and must be in correct data format in order to proceed with the register process */}
-                                <input type="text" placeholder="Phone" name="phone" id="PhoneUpd" defaultValue={profile.Phone}
-                                    {...register("Phone", { required: true, maxLength: 11, pattern: {value: /^\d{11}$/} })}
-                                />  
-                                {/* Error message when the user did not provide password value in the password field */}
-                                {errors?.Phone?.type === "required" && <p className="errormssg">This field is required</p>}
-                                {errors?.Phone?.type === "maxLength" && <p className="errormssg">Please enter a 10 or 11 digit phone number</p>}
-                                {errors?.Phone?.type === "pattern" && <p className="errormssg">Invalid Mobile Phone Number</p>}  
-                            </div>
+                                <br/>  
 
-                            <div className="formgroup">
-                                <label for="username">Username</label>
-                                {/* Username field requires value in order to proceed with the register process */}
-                                <input type="text" placeholder="Username" name="username" id="UsernameUpd" defaultValue={profile.Username}
-                                    {...register("Username", { required: true })}
-                                />
-                                {/* Error message when the user did not provide username value in the unsername field */}
-                                {errors?.Username?.type === "required" && <p className="errormssg">This field is required</p>}
-                            </div>
+                                <div className="formgroup">
+                                    <label for="email">Email</label>
+                                    {/* Email field requires value and must be in correct data format in order to proceed with the register process */}
+                                    <input type="text" placeholder="Email" name="email" id="EmailUpd" defaultValue={profile.Email}
+                                        {...register("Email", { required: true, pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i })}
+                                    />
+                                    {/* Error message when the user did not provide password value in the password field */}
+                                    {errors?.Email?.type === "required" && <p className="errormssg">This field is required</p>}
+                                    {errors?.Email?.type === "pattern" && <p className="errormssg">Invalid Email</p>}
+                                </div>
 
-                            <div className="formgroup">
-                                <label for="password">Password</label>
-                                {/* Password field requires value in order to proceed with the register process */}
-                                <input type="password" placeholder="Password" name="password" id="PasswordUpd" defaultValue={profile.Password}
-                                    {...register("Password", { required: true })}
-                                />   
-                                {/* Error message when the user did not provide password value in the password field */}
-                                {errors?.Password?.type === "required" && <p className="errormssg">This field is required</p>}
-                            </div>
+                                <div className="formgroup">
+                                    <label for="Phone">Mobile Phone</label>
+                                    {/* Mobile Phone field requires value and must be in correct data format in order to proceed with the register process */}
+                                    <input type="text" placeholder="Phone" name="phone" id="PhoneUpd" defaultValue={profile.Phone}
+                                        {...register("Phone", { required: true, maxLength: 11, pattern: {value: /^\d{11}$/} })}
+                                    />  
+                                    {/* Error message when the user did not provide password value in the password field */}
+                                    {errors?.Phone?.type === "required" && <p className="errormssg">This field is required</p>}
+                                    {errors?.Phone?.type === "maxLength" && <p className="errormssg">Please enter a 10 or 11 digit phone number</p>}
+                                    {errors?.Phone?.type === "pattern" && <p className="errormssg">Invalid Mobile Phone Number</p>}  
+                                </div>
 
-                            <div id="login-button">
-                                <Button
-                                    type="submit"
-                                    variant="contained" 
-                                    color="primary"
-                                    className={classes.margin}>
-                                    Submit
-                                </Button>    
+                                <div className="formgroup">
+                                    <label for="username">Username</label>
+                                    {/* Username field requires value in order to proceed with the register process */}
+                                    <input type="text" placeholder="Username" name="username" id="UsernameUpd" defaultValue={profile.Username}
+                                        {...register("Username", { required: true })}
+                                    />
+                                    {/* Error message when the user did not provide username value in the unsername field */}
+                                    {errors?.Username?.type === "required" && <p className="errormssg">This field is required</p>}
+                                </div>
 
-                                <Button 
-                                    onClick={() => closeUpdateAccountForm()}
-                                    variant="contained" 
-                                    color="primary"
-                                    className={classes.margin}>
-                                    Cancell Profile Update
-                                </Button>
-                            </div> 
-                        </form>
-                    </div> 
+                                <div className="formgroup">
+                                    <label for="password">Password</label>
+                                    {/* Password field requires value in order to proceed with the register process */}
+                                    <input type="text" placeholder="Password" name="password" id="PasswordUpd" defaultValue=""
+                                        {...register("Password", { required: true })}
+                                    />   
+                                    {/* Error message when the user did not provide password value in the password field */}
+                                    {errors?.Password?.type === "required" && <p className="errormssg">This field is required</p>}
+                                </div>
+
+                                <div id="login-button">
+                                    <Button
+                                        type="submit"
+                                        variant="contained" 
+                                        color="primary"
+                                        className={classes.margin}>
+                                        Submit
+                                    </Button>    
+
+                                    <Button 
+                                        onClick={() => closeUpdateAccountForm()}
+                                        variant="contained" 
+                                        color="primary"
+                                        className={classes.margin}>
+                                        Cancel Profile Update
+                                    </Button>
+                                </div> 
+                            </form>
+                        </div>
+                    </div>
+                ))}
+                     
                 </Grid>
             </div>
             )}

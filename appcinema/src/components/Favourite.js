@@ -121,7 +121,7 @@ export default function FavouriteMovies() {
         .then(function(response){
             console.log(response);
             // Successfully removing Movie from Favourite list
-            if(response.status == 202) {
+            if(response.status === 202) {
                 console.log('success');
                 setOpenSnackBar(true);
                 setSeverity("success");
@@ -129,7 +129,7 @@ export default function FavouriteMovies() {
                 postDisplayFavouriteMovie();
             }
             // Unsuccessfully removing Movie From Favourite list
-            if(response.status == 501) {
+            if(response.status === 501) {
                 console.log('not implemented');
                 setOpenSnackBar(true);
                 setSeverity("error");
@@ -147,7 +147,7 @@ export default function FavouriteMovies() {
 
             {/* Render User's Profile that is fetched from the database through API  */}
             <div className={classes.root}>
-            <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={closeSnackbar}>
+            <Snackbar open={openSnackbar} autoHideDuration={4000} onClose={closeSnackbar}>
                 <Alert variant="filled" onClose={closeSnackbar} severity={severity}>
                     {message}
                 </Alert>

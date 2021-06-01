@@ -367,10 +367,8 @@ switch($_GET['action']) {
         $_SERVER['REQUEST_METHOD'] == 'POST';
         $objreg = json_decode(file_get_contents("php://input"), true);
         $ticketDelete = testInput($objreg['ticketid']);
-        if($_SESSION['session']->logged_in_check()){
-            if($db->deleteTicket($ticketDelete)){
-                http_response_code(599);
-                break;
+        if($_SESSION['session']->logged_in_check()) {
+            if($db->deleteTicket($ticketDelete)) {
                 // Successfully delete booked ticket from database
                 http_response_code(202);
             } else {
@@ -385,7 +383,6 @@ switch($_GET['action']) {
 // ----------------------------------------Default 500 ERROR------------------------------------
     default:
         http_response_code(500);
-        echo "Something went wrong. SERVER ERROR 500";
     break;
 // --------------------------------------Admin Login--------------------------------------------
     case 'adminlogin':

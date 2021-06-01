@@ -13,6 +13,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Backdrop from '@material-ui/core/Backdrop';
+import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -106,7 +107,7 @@ export default function HomePage() {
 
             {/* Snack Bar Alert that will display messages when user perform certain actions*/}
             <div className={classes.root}>
-                <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={closeSnackbar}>
+                <Snackbar open={openSnackbar} autoHideDuration={4000} onClose={closeSnackbar}>
                     <Alert variant="filled" onClose={closeSnackbar} severity={severity}>
                         {message}
                     </Alert>
@@ -150,14 +151,14 @@ export default function HomePage() {
                         <DialogTitle id="alert-dialog-slide-title">{selectedMovie.MovieName}</DialogTitle>
                             <DialogContent>
                             <DialogContentText id="alert-dialog-slide-description">
-                                <div className="display-movie">
-                                    <div className="imgMovieDisplay">
-                                        <img 
-                                            style={{borderRadius: 50}}
-                                            width='300px'
-                                            height='480px'
-                                            src={selectedMovie.MovieImage}
-                                        />
+                                <div id="display-movie">
+                                    <div id="imgMovieDisplay">
+                                        <Grid id="grid-MovieIMG">
+                                            <img 
+                                                className="movie-img-cover"
+                                                src={selectedMovie.MovieImage}
+                                            />
+                                        </Grid>
                                     </div>
                                     
                                     {/* Render Movie Details in Material UI Dialog */}
