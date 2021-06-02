@@ -35,12 +35,10 @@ export default function App () {
         document.getElementById("swipenavbar").classList.add("darkmodePrimary");
         document.body.classList.add("darkmodeSecondary");
         document.getElementById("footer").classList.add("darkmodePrimary");
-        // document.getElementById("userprofile").classList.add("darkmodePrimary");
     } else {
         document.getElementById("swipenavbar").classList.remove("darkmodePrimary");
         document.body.classList.remove("darkmodeSecondary");
         document.getElementById("footer").classList.remove("darkmodePrimary");
-        // document.getElementById("userprofile").classList.remove("darkmodePrimary");
     }
   }
 
@@ -103,8 +101,8 @@ export default function App () {
     })
   }
   return (
-    <div className = "page-container">
-      <div className = "content-wrap">
+    <div className="page-container">
+      <div className="content-wrap">
           <div className={classes.root}>
             <Snackbar open={openSnackbar} autoHideDuration={4000} onClose={closeSnackbar}>
                 <Alert variant="filled" onClose={closeSnackbar} severity={severity}>
