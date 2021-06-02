@@ -37,6 +37,7 @@ function testInput($data) {
     // Insert activities into the userlog table in the database
     $_SESSION['session']->lastSessionRequest();
     $IPAddress = $_SERVER['REMOTE_ADDR'];
+    date_default_timezone_set("Australia/Brisbane");
     $Time = date('Y-m-d H:i:s', $_SERVER['REQUEST_TIME']);
     $BrowserType = $_SERVER['HTTP_USER_AGENT'];
     $Activity = $_SERVER['QUERY_STRING'];
