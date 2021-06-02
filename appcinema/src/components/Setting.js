@@ -209,9 +209,9 @@ export default function SettingOptions() {
                                 Customisation Options are available as check boxes where you can experience the diffrent side of the app with just one click
                             </p>
                             <p>
-                                Note: By enabling "Change Background Picture" option, the background picture will cover the background of the app, hence you 
-                                will be unable to see the app's default background colour or default background colour 2 that can be set through 
-                                "Change Background Colour" option.
+                                Note: By enabling "Change Background Picture" and/or "Dark Mode" options, the background picture and/or dark color theme will 
+                                cover the background of the app, hence you will be unable to see the app's default background colour or default background colour 
+                                2 that can be set through "Change Background Colour" option.
                             </p>
                         </DialogContentText>
                         </DialogContent>
@@ -229,7 +229,7 @@ export default function SettingOptions() {
                             onChange={handleDarkMode} 
                             name="darkModeSwitch"/>
                         }
-                        label="Dark Mode"
+                        label="Dark Theme"
                         labelPlacement="end"
                     />
                 </div>

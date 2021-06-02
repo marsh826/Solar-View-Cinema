@@ -124,6 +124,7 @@ export default function Profile() {
         .then((res) => {
             setLoading(false);
             if (res.status === 401) {
+                console.log(res);
                 console.log('forbidden');
                 setProfile([]);
                 setMessage("You are not logged in. No Profile is found.");
@@ -132,6 +133,7 @@ export default function Profile() {
             }
 
             if (res.status === 503) {
+                console.log(res);
                 console.log('service unavailable');
                 setProfile([]);
                 setMessage("Error: Unable to fetch user profile");
@@ -140,6 +142,7 @@ export default function Profile() {
             }
             
             if (res.status === 201) {
+                console.log(res);
                 console.log('created');
                 res.json().then((data) => {
                     setProfile(data);
@@ -170,11 +173,18 @@ export default function Profile() {
             if(response.status === 406) {
                 // Will not accept the new update information if they are not filled fully or correctly
                 console.log('unaccepted');
+                setMessage("Error: Something went wrong.");
+                setOpenSnackBar(true);
+                setSeverity("error");
                 return;
             } 
             if(response.status === 202) {
                 console.log('success');
                 // Upon successful update, the profile page will be refreshed by reusing the display profile function
+                setMessage("You have successfully updated your account details!");
+                setOpenSnackBar(true);
+                setSeverity("success");
+                closeUpdateAccountForm();
                 postDisplayProfile();
                 return;
             } 
@@ -410,7 +420,7 @@ function postLogOut() {
                                 <div className="formgroup">
                                     <label for="password">Password</label>
                                     {/* Password field requires value in order to proceed with the register process */}
-                                    <input type="text" placeholder="Password" name="password" id="PasswordUpd" defaultValue=""
+                                    <input type="password" placeholder="Password" name="password" id="PasswordUpd" defaultValue=""
                                         {...register("Password", { required: true })}
                                     />   
                                     {/* Error message when the user did not provide password value in the password field */}

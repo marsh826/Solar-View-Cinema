@@ -267,14 +267,15 @@ class databaseOBJ {
         return $stmt->execute();
     }
     // Tracking activity on the web service 
-    function userLogInsert($IPAddress, $Time, $BrowserType, $Activity){
-        $sql = "INSERT INTO userlog(ipAddress, time, browserType, activity)
-        VALUES(:ipaddress, :time, :browsertype, :activity)";
+    function activityLogInsert($IPAddress, $Time, $BrowserType, $Activity ,$User){
+        $sql = "INSERT INTO activitylog(ipAddress, Time, BrowserType, Activity, UserID)
+        VALUES(:ipaddress, :time, :browsertype, :activity, :userid)";
         $stmt = $this->dbconn->prepare($sql);
         $stmt->bindValue(':ipaddress', $IPAddress);
         $stmt->bindValue(':time', $Time);
         $stmt->bindValue(':browsertype', $BrowserType);
         $stmt->bindValue(':activity', $Activity);
+        $stmt->bindValue(':userid', $User);
         return $stmt->execute();
     }
     // Login for Admin 
