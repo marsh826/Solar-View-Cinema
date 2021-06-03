@@ -5,6 +5,7 @@ import Alert from '@material-ui/lab/Alert';
 import Snackbar from '@material-ui/core/Snackbar';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 
 // Material UI Component Style Const
 const useStyles = makeStyles((theme) => ({
@@ -35,6 +36,13 @@ export default function Login() {
         }
         setOpenSnackBar(false);
     };
+
+    // Default React Hook Form const for Login FormValidation
+    const { 
+        register, 
+        handleSubmit,
+        formState: { errors } 
+    } = useForm();
 
     function postAdminLogin() {
         var adminlogin = {
@@ -79,15 +87,26 @@ export default function Login() {
 
             <div className="login-container">
                 <h2>Administrator Login</h2>
+                {/* Login Form */}
                 <form id="login-form" autoComplete="off">
                     <div className="formgroup">
+                        {/* Username field requires value in order to proceed with the login process */}
                         <label for="usernameAdmin">Username</label>
-                        <input id="UserNameAdmin" defaultValue="" name="usernameAdmin" placeholder="Username" />
+                        <input id="UserNameAdmin" defaultValue="" name="usernameAdmin" placeholder="Username" 
+                            {...register("adminUsername", { required: true})}
+                        />
+                        {/* Error message when the user did not provide username value in the unsername field */}
+                        {errors?.adminUsername?.type === "required" && <p className="errormssg">Please enter your username</p>}
                     </div>
 
                     <div className="formgroup">
                         <label for="passwordAdmin">Password</label>
-                        <input id="PasswordAdmin" defaultValue="" name="passwordAdmin" placeholder="Password" />    
+                        {/* Password field requires value in order to proceed with the login process */}
+                        <input id="PasswordAdmin" defaultValue="" name="passwordAdmin" placeholder="Password" 
+                            {...register("adminPassword", { required: true})}
+                        />  
+                        {/* Error message when the user did not provide password value in the password field */}
+                        {errors?.adminPassword?.type === "required" && <p className="errormssg">Please enter your password</p>}  
                     </div>
                     <Button 
                         id="login-submit"

@@ -30,9 +30,9 @@ function testInput($data) {
 }
 
 // Checking request limit, rate limit and domain lock
-// if($_SESSION['sesseion']->ratelimit() == true &&
-//    $_SESSION['session']->requestlimit() == true &&
-//    $_SESSION['session']->domainlock() == true){
+if($_SESSION['session']->ratelimit() === true &&
+   $_SESSION['session']->dailyrequestlimit() === true &&
+   $_SESSION['session']->domainlock() === true){
 
     // Insert activities into the userlog table in the database
     $_SESSION['session']->lastSessionRequest();
@@ -427,5 +427,5 @@ function testInput($data) {
         break;
         }
     }
-// }
+}
 ?>

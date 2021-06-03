@@ -25,14 +25,15 @@ class sessionOBJ {
         return true;
     }
     // Request Limit of 1000 within 24 hours
-    function requestlimit(){
+    function dailyrequestlimit(){
         $time = time();
         array_push($this->limit,$time);
         $limitCount = count($this->limit);
         // 24 hours have been converted in 864000 seconds
         // If current request past 1000 requests limit within 24 hours, the system will stop and will be available after 24 hours from the current time
         if(time() - $this->lastTime < 864000){
-            if($limitCount > 1000){
+            if($limitCount > 10){
+                http_response_code(429);
                 die("Request limit exceeded within 24 hours");
                 return false;
             } else {
@@ -52,7 +53,7 @@ class sessionOBJ {
     function domainlock(){
         if(!isset($data)){
             // If the user access the web service through this link, the user will be granted access, else they will not be granted access
-            $data = isset($_SERVER['HTTP_REFERER'])? $_SERVER['HTTP_REFERER'] : "http://localhost/UX1prototype/";
+            $data = isset($_SERVER['HTTP_REFERER'])? $_SERVER['HTTP_REFERER'] : "http://localhost:3000";
             return true;
         } else {
             die("URL Not Valid");
