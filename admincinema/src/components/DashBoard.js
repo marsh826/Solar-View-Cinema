@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
+import { DataGrid } from '@material-ui/data-grid';
 
 // React const that sets up style customisation for Material UI components
 const useStyles = makeStyles((theme) => ({
@@ -53,8 +54,16 @@ export default function Dashboard() {
     // React Router Dom useHistory in a const 
     const history = useHistory();
 
-    // React Const Seat set up empty array to store data that is succesfully fetched
-    const [dashboard, setDashboard] = useState();
+    // React Const Activity Log set up empty array to store data that is succesfully fetched
+    const [activiylog, setActivityLog] = useState([]);
+
+    // Const columns for Material UI DataGrid table for table headers
+    const columns = [
+        { field: 'id', headerName: 'ID', width: 70 },
+        { field: 'firstName', headerName: 'First name', width: 130 },
+        { field: 'lastName', headerName: 'Last name', width: 130 },    
+    ]
+    
 
     function postDashboardDisplay() {
         fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=logout", {
@@ -64,7 +73,7 @@ export default function Dashboard() {
             // Successfully displaying movies 
             if (response.status === 204) {
                 console.log('no content');
-                setDashboard([]);
+                setActivityLog([]);
                 // setMessage("Error: No movie is found");
                 // setOpenSnackBar(true);
                 // setSeverity("Error");
@@ -74,7 +83,7 @@ export default function Dashboard() {
             if (response.status === 201) {
                 console.log('created');
                 response.json().then((data) => {
-                    setDashboard(data);
+                    setActivityLog(data);
                     console.log(data);
                 })
             }
@@ -127,6 +136,9 @@ export default function Dashboard() {
                 Log Out
             </Button>
 
+            <div style={{ height: 400, width: '100%' }}>
+                <DataGrid rows={activiylog} columns={columns} pageSize={5} checkboxSelection />
+            </div>
 
         </div>
     );

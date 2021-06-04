@@ -11,7 +11,7 @@ class databaseOBJ {
         $this->dbconn->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
     }
     // User Login 
-    function login($usernamelogin, $passwordlogin) {
+    function login($usernamelogin, $passwordlogin, $IPAddress, $Time, $BrowserType, $Activity) {
         $sql = "SELECT UserID, Password FROM users WHERE Username = :username";
         $stmt = $this->dbconn->prepare($sql);
         $stmt->bindValue(':username', $usernamelogin);
@@ -25,6 +25,17 @@ class databaseOBJ {
         } else {
             return false;
         }
+        // Track which user logged in 
+        $User = $_SESSION["UserID"];
+        $sql = "INSERT INTO activitylog(ipAddress, DateAndTime, BrowserType, Activity, UserID)
+        VALUES(:ipaddress, :time, :browsertype, :activity, :userid)";
+        $stmt = $this->dbconn->prepare($sql);
+        $stmt->bindValue(':ipaddress', $IPAddress);
+        $stmt->bindValue(':time', $Time);
+        $stmt->bindValue(':browsertype', $BrowserType);
+        $stmt->bindValue(':activity', $Activity);
+        $stmt->bindValue(':userid', $User);
+        return $stmt->execute();
     }
     // User Registration
     function registration($firstname, $lastname, $dateofbirth, $email, $phone, $usernamereg, $passwordreg) {
@@ -268,7 +279,7 @@ class databaseOBJ {
     }
     // Tracking activity on the web service 
     function activityLogInsert($IPAddress, $Time, $BrowserType, $Activity ,$User){
-        $sql = "INSERT INTO activitylog(ipAddress, Time, BrowserType, Activity, UserID)
+        $sql = "INSERT INTO activitylog(ipAddress, DateAndTime, BrowserType, Activity, UserID)
         VALUES(:ipaddress, :time, :browsertype, :activity, :userid)";
         $stmt = $this->dbconn->prepare($sql);
         $stmt->bindValue(':ipaddress', $IPAddress);
@@ -279,7 +290,7 @@ class databaseOBJ {
         return $stmt->execute();
     }
     // Login for Admin 
-    function adminLogin($usernameAdmin, $passwordAdmin) {
+    function adminLogin($usernameAdmin, $passwordAdmin, $IPAddress, $Time, $BrowserType, $Activity) {
         $mysql = "SELECT UserID, Password FROM users WHERE Username = :username AND AccessRight = 'Administrator' ";
         $stmt = $this->dbconn->prepare($mysql);
         $stmt->bindValue(':username', $usernameAdmin);
@@ -287,20 +298,25 @@ class databaseOBJ {
         $row = $stmt->fetch();
         // Admin Password verification
         if(password_verify($passwordAdmin, $row['Password'])) {
-           // Admin User Type verification
-            // if($row["AccessRight"] = "Administrator") {
-                $userid = $row["UserID"];
-                $_SESSION["UserID"] = $userid;
-                $usertype = $row["AccessRight"];
-                $_SESSION["UserType"] = $usertype;
-                return true;
-            // } else {
-            //     return false;
-            // }
+            $userid = $row["UserID"];
+            $_SESSION["UserID"] = $userid;
+            $usertype = $row["AccessRight"];
+            $_SESSION["UserType"] = $usertype;
+            return true;
         } else {
             return false;
         }
-        
+         // Track which user logged in 
+         $User = $_SESSION["UserID"];
+         $sql = "INSERT INTO activitylog(ipAddress, DateAndTime, BrowserType, Activity, UserID)
+         VALUES(:ipaddress, :time, :browsertype, :activity, :userid)";
+         $stmt = $this->dbconn->prepare($sql);
+         $stmt->bindValue(':ipaddress', $IPAddress);
+         $stmt->bindValue(':time', $Time);
+         $stmt->bindValue(':browsertype', $BrowserType);
+         $stmt->bindValue(':activity', $Activity);
+         $stmt->bindValue(':userid', $User);
+         return $stmt->execute();
     }
 }
 ?>
