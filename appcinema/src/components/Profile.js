@@ -230,93 +230,93 @@ export default function Profile() {
         return false;
     }
 //-----------------------------------------------Deleting User Account after the user agree to delete their account----------------------------------------------------------------
-function postDeleteProfile(id) {
-    var IDuser = {
-        'userid' : id
+    function postDeleteProfile(id) {
+        var IDuser = {
+            'userid' : id
+        }
+        fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=deleteprofile",{
+            // The function applies DELETE method. It will delete the users account along with all its details from the database.
+            method: "POST",
+            body: JSON.stringify(IDuser),
+            credentials: 'include'
+        })
+        .then(function(response) {    
+            console.log(response);
+
+            // Unsuccessfully deleting account 
+            if(response.status === 501){
+                console.log('not implemented');
+                setMessage("Error: Unable to close this account.");
+                setOpenSnackBar(true);
+                setSeverity("error");
+                return;
+            }
+
+            // Successfully deleting account
+            if(response.status === 202) {
+                // if success, local storage items will be removed and user will be sent back to the index page
+                console.log('success');
+                localStorage.setItem('UserStatus', 'Logged Out');
+                localStorage.setItem('BackgroundImage', 'Disabled');
+                localStorage.setItem('DarkMode', 'Disabled');
+                localStorage.setItem('BackgroundColour', 'Default');  
+                history.push("/Home");        
+                return;
+            }
+
+            // When daily request limit exceeded
+            if (response.status === 422) {
+                console.log('Request limit exceeded within 24 hours');
+                setMessage("Error: Request limit exceeded within 24 hours");
+                setOpenSnackBar(true);
+                setSeverity("error");
+            }
+
+            // When Rate Limit per second exceeded
+            if (response.status === 429) {
+                console.log('Exceeded Rate Limit');
+                setMessage("Error: Exceeded Rate Limit");
+                setOpenSnackBar(true);
+                setSeverity("error");
+            }
+        })
+        return false;
     }
-    fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=deleteprofile",{
-        // The function applies DELETE method. It will delete the users account along with all its details from the database.
-        method: "POST",
-        body: JSON.stringify(IDuser),
-        credentials: 'include'
-    })
-    .then(function(response) {    
-        console.log(response);
-
-        // Unsuccessfully deleting account 
-        if(response.status === 501){
-            console.log('not implemented');
-            setMessage("Error: Unable to close this account.");
-            setOpenSnackBar(true);
-            setSeverity("error");
-            return;
-        }
-
-        // Successfully deleting account
-        if(response.status === 202) {
-            // if success, local storage items will be removed and user will be sent back to the index page
-            console.log('success');
-            localStorage.setItem('UserStatus', 'Logged Out');
-            localStorage.setItem('BackgroundImage', 'Disabled');
-            localStorage.setItem('DarkMode', 'Disabled');
-            localStorage.setItem('BackgroundColour', 'Default');  
-            history.push("/Home");        
-            return;
-        }
-
-        // When daily request limit exceeded
-        if (response.status === 422) {
-            console.log('Request limit exceeded within 24 hours');
-            setMessage("Error: Request limit exceeded within 24 hours");
-            setOpenSnackBar(true);
-            setSeverity("error");
-        }
-
-        // When Rate Limit per second exceeded
-        if (response.status === 429) {
-            console.log('Exceeded Rate Limit');
-            setMessage("Error: Exceeded Rate Limit");
-            setOpenSnackBar(true);
-            setSeverity("error");
-        }
-    })
-    return false;
-}
 // ----------------------------------------------Logout user when user click Log Out Button----------------------------------------------------------------------------------------
-function postLogOut() {                                                                   
-    fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=logout",{
-        method: "POST",
-        credentials: 'include'
-    })
-    .then(function(response){ 
-        
-        // Successfully logging user out
-        if(response.status === 202) {
-            console.log('success');      
-            localStorage.setItem('UserStatus', 'Logged Out');
-            console.log('Status: Logged Out');
-            history.push("/Home");
-            return;
-        }
+    function postLogOut() {                                                                   
+        fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=logout",{
+            method: "POST",
+            credentials: 'include'
+        })
+        .then(function(response){ 
+            
+            // Successfully logging user out
+            if(response.status === 202) {
+                console.log('success');      
+                localStorage.setItem('UserStatus', 'Logged Out');
+                console.log('Status: Logged Out');
+                history.push("/Home");
+                return;
+            }
 
-        // When daily request limit exceeded
-        if (response.status === 422) {
-            console.log('Request limit exceeded within 24 hours');
-            setMessage("Error: Request limit exceeded within 24 hours");
-            setOpenSnackBar(true);
-            setSeverity("error");
-        }
+            // When daily request limit exceeded
+            if (response.status === 422) {
+                console.log('Request limit exceeded within 24 hours');
+                setMessage("Error: Request limit exceeded within 24 hours");
+                setOpenSnackBar(true);
+                setSeverity("error");
+            }
 
-        // When Rate Limit per second exceeded
-        if (response.status === 429) {
-            console.log('Exceeded Rate Limit');
-            setMessage("Error: Exceeded Rate Limit");
-            setOpenSnackBar(true);
-            setSeverity("error");
-        }
-    })
-    return false;
-}
+            // When Rate Limit per second exceeded
+            if (response.status === 429) {
+                console.log('Exceeded Rate Limit');
+                setMessage("Error: Exceeded Rate Limit");
+                setOpenSnackBar(true);
+                setSeverity("error");
+            }
+        })
+        return false;
+    }
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     return(
         <div id="profilepage"> 

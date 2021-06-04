@@ -49,6 +49,8 @@ class sessionOBJ {
         $_SESSION['last_request_time'] = time();
         return true;
     }
+
+    // $_SESSION['last_request_time'] = time();
     // Domain Lock
     function domainlock(){
         if(!isset($data)){

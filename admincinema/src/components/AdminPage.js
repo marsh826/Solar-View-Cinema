@@ -1,6 +1,6 @@
 import React from 'react';
 import {Tabs, Tab, AppBar } from '@material-ui/core';
-import Movies from './Movies';
+import MovieManage from './MovieManage';
 import MovieSessions from './MovieSession';
 import DashBoard from './DashBoard';
 
@@ -11,9 +11,9 @@ export default function AdminPage(props) {
     const { page } = params;
 
     const indexToTabName = {
-        0: "dashboard",
-        1: "movies",
-        2: "moviesessions"
+        "dashboard": 0,
+        "movies": 1,
+        "moviesessions": 2
     }
 
     const tabNameToIndex = {
@@ -39,7 +39,7 @@ export default function AdminPage(props) {
                 </Tabs>
             </AppBar>
             { selectedTab === 0 && <DashBoard />}
-            { selectedTab === 1 && <Movies />}
+            { selectedTab === 1 && <MovieManage />}
             { selectedTab === 2 && <MovieSessions />}
         </div>
     );

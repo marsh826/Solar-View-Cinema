@@ -92,7 +92,7 @@ export default function Login() {
                     <div className="formgroup">
                         {/* Username field requires value in order to proceed with the login process */}
                         <label for="usernameAdmin">Username</label>
-                        <input id="UserNameAdmin" defaultValue="" name="usernameAdmin" placeholder="Username" 
+                        <input id="UserNameAdmin" defaultValue="" name="usernameAdmin" placeholder="Username" type="text" 
                             {...register("adminUsername", { required: true})}
                         />
                         {/* Error message when the user did not provide username value in the unsername field */}
@@ -102,7 +102,7 @@ export default function Login() {
                     <div className="formgroup">
                         <label for="passwordAdmin">Password</label>
                         {/* Password field requires value in order to proceed with the login process */}
-                        <input id="PasswordAdmin" defaultValue="" name="passwordAdmin" placeholder="Password" 
+                        <input id="PasswordAdmin" defaultValue="" name="passwordAdmin" placeholder="Password" type="password"
                             {...register("adminPassword", { required: true})}
                         />  
                         {/* Error message when the user did not provide password value in the password field */}

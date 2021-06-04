@@ -30,9 +30,9 @@ function testInput($data) {
 }
 
 // Checking request limit, rate limit and domain lock
-if($_SESSION['session']->ratelimit() === true &&
-   $_SESSION['session']->dailyrequestlimit() === true &&
-   $_SESSION['session']->domainlock() === true){
+// if($_SESSION['session']->ratelimit() === true ||
+//    $_SESSION['session']->dailyrequestlimit() === true ||
+//    $_SESSION['session']->domainlock() === true){
 
     // Insert activities into the userlog table in the database
     $_SESSION['session']->lastSessionRequest();
@@ -419,6 +419,7 @@ if($_SESSION['session']->ratelimit() === true &&
             if($db->adminLogin($usernameAdmin, $passwordAdmin)){
                 // When the login attempt is successful
                 echo json_encode($_SESSION["UserID"]);
+                echo json_encode($_SESSION["UserType"]);
                 http_response_code(202);
             } else {
                 // When the login attempt is unsuccessful
@@ -427,5 +428,5 @@ if($_SESSION['session']->ratelimit() === true &&
         break;
         }
     }
-}
+// }
 ?>

@@ -280,7 +280,7 @@ class databaseOBJ {
     }
     // Login for Admin 
     function adminLogin($usernameAdmin, $passwordAdmin) {
-        $mysql = "SELECT UserID, Password FROM users WHERE Username = :username";
+        $mysql = "SELECT UserID, Password FROM users WHERE Username = :username AND AccessRight = 'Administrator' ";
         $stmt = $this->dbconn->prepare($mysql);
         $stmt->bindValue(':username', $usernameAdmin);
         $stmt->execute();
@@ -288,15 +288,15 @@ class databaseOBJ {
         // Admin Password verification
         if(password_verify($passwordAdmin, $row['Password'])) {
            // Admin User Type verification
-            if($row["AccessRight"] == null) {
-                return false;
-            } else {
+            // if($row["AccessRight"] = "Administrator") {
                 $userid = $row["UserID"];
                 $_SESSION["UserID"] = $userid;
                 $usertype = $row["AccessRight"];
                 $_SESSION["UserType"] = $usertype;
                 return true;
-            }
+            // } else {
+            //     return false;
+            // }
         } else {
             return false;
         }
