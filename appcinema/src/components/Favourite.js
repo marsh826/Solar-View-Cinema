@@ -91,6 +91,8 @@ export default function FavouriteMovies() {
             credentials: 'include'
         }).then((res) => {
             setLoading(false);
+
+            // Unsuccessfully displaying movies in favourite list
             if (res.status === 204) {
                 console.log('no content');
                 setMovie([]);
@@ -99,12 +101,29 @@ export default function FavouriteMovies() {
                 setSeverity("warning");
             }
             
+            // Successfully displaying movies in favourite list
             if (res.status === 201) {
                 console.log('created');
                 res.json().then((data) => {
                     setMovie(data);
                     console.log(data);
                 })
+            }
+
+            // When daily request limit exceeded
+            if (res.status === 422) {
+                console.log('Request limit exceeded within 24 hours');
+                setMessage("Error: Request limit exceeded within 24 hours");
+                setOpenSnackBar(true);
+                setSeverity("error");
+            }
+
+            // When Rate Limit per second exceeded
+            if (res.status === 429) {
+                console.log('Exceeded Rate Limit');
+                setMessage("Error: Exceeded Rate Limit");
+                setOpenSnackBar(true);
+                setSeverity("error");
             }
         })   
     }
@@ -120,6 +139,7 @@ export default function FavouriteMovies() {
         })
         .then(function(response){
             console.log(response);
+
             // Successfully removing Movie from Favourite list
             if(response.status === 202) {
                 console.log('success');
@@ -128,6 +148,7 @@ export default function FavouriteMovies() {
                 setMessage("The movie is removed from your favourite list.");
                 postDisplayFavouriteMovie();
             }
+
             // Unsuccessfully removing Movie From Favourite list
             if(response.status === 501) {
                 console.log('not implemented');
@@ -135,6 +156,22 @@ export default function FavouriteMovies() {
                 setSeverity("error");
                 setMessage("Error: Unable to remove favourite. Please try again");
                 return;
+            }
+
+            // When daily request limit exceeded
+            if (response.status === 422) {
+                console.log('Request limit exceeded within 24 hours');
+                setMessage("Error: Request limit exceeded within 24 hours");
+                setOpenSnackBar(true);
+                setSeverity("error");
+            }
+
+            // When Rate Limit per second exceeded
+            if (response.status === 429) {
+                console.log('Exceeded Rate Limit');
+                setMessage("Error: Exceeded Rate Limit");
+                setOpenSnackBar(true);
+                setSeverity("error");
             }
         })
         return false;

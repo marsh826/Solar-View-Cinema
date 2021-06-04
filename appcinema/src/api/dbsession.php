@@ -32,8 +32,8 @@ class sessionOBJ {
         // 24 hours have been converted in 864000 seconds
         // If current request past 1000 requests limit within 24 hours, the system will stop and will be available after 24 hours from the current time
         if(time() - $this->lastTime < 864000){
-            if($limitCount > 10){
-                http_response_code(429);
+            if($limitCount > 1000){
+                http_response_code(422);
                 die("Request limit exceeded within 24 hours");
                 return false;
             } else {
@@ -56,6 +56,7 @@ class sessionOBJ {
             $data = isset($_SERVER['HTTP_REFERER'])? $_SERVER['HTTP_REFERER'] : "http://localhost:3000";
             return true;
         } else {
+            http_response_code(404);
             die("URL Not Valid");
             return false;
         } 
@@ -78,8 +79,8 @@ class sessionOBJ {
         if(isset($_SESSION['last_session_request'])){ 
             // If the current request time is equal or more that then the previous request time (Current Time - 1), any activity in the app will be stopped for 1 second
             if($_SESSION["last_session_request"] >= time() - 1){
-                die;
-                echo"Surpassed Rate Limit";
+                http_response_code(429);
+                die("Surpassed Rate Limit");
             } else {
                 return true;
             }

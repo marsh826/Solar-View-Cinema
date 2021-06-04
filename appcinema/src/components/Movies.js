@@ -54,6 +54,13 @@ const useStyles = makeStyles((theme) => ({
     backdrop: {
         zIndex: theme.zIndex.drawer + 1,
         color: '#fff',
+    },
+    loadingcontent: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        textAlign: 'center',
     }
 }));
 
@@ -129,6 +136,8 @@ export default function MovieDisplay() {
 
     // React Const for loading screen before rendering
     const [loading, setLoading] = useState(false); 
+    const [loading2, setLoading2] = useState(false);
+    const [loading3, setLoading3] = useState(false);
 
     // When the Movie page/component is loaded, useEffect will use a JavaScript Function to display profile in JSON output only once
     useEffect(() => {
@@ -143,7 +152,9 @@ export default function MovieDisplay() {
             redirect: "error",
             credentials: 'include'
         }).then((res) => {
-            setLoading(false)
+            setLoading(false);
+
+            // Successfully displaying movies 
             if (res.status === 204) {
                 console.log('no content');
                 setMovie([]);
@@ -152,12 +163,29 @@ export default function MovieDisplay() {
                 setSeverity("Error");
             }
             
+            // Unsuccessfully displaying movies
             if (res.status === 201) {
                 console.log('created');
                 res.json().then((data) => {
                     setMovie(data);
                     console.log(data);
                 })
+            }
+
+            // When daily request limit exceeded
+            if (res.status === 422) {
+                console.log('Request limit exceeded within 24 hours');
+                setMessage("Error: Request limit exceeded within 24 hours");
+                setOpenSnackBar(true);
+                setSeverity("error");
+            }
+
+            // When Rate Limit per second exceeded
+            if (res.status === 429) {
+                console.log('Exceeded Rate Limit');
+                setMessage("Error: Exceeded Rate Limit");
+                setOpenSnackBar(true);
+                setSeverity("error");
             }
         })   
     }
@@ -172,6 +200,8 @@ export default function MovieDisplay() {
             credentials: 'include'
         })
         .then((res) => {
+
+            // Successfully display movie session when selecting a movie
             if (res.status === 204) {
                 console.log('no content');
                 setMovieSession([]);
@@ -179,6 +209,8 @@ export default function MovieDisplay() {
                 setOpenSnackBar(true);
                 setSeverity("warning");
             }
+
+            // Unsuccessfully display movie session when selecting a movie
             if (res.status === 201) {
                 console.log('created');
                 res.json().then((data) => {
@@ -186,11 +218,30 @@ export default function MovieDisplay() {
                     console.log(data);
                 })
             }
+
+            // When daily request limit exceeded
+            if (res.status === 422) {
+                console.log('Request limit exceeded within 24 hours');
+                setMessage("Error: Request limit exceeded within 24 hours");
+                setOpenSnackBar(true);
+                setSeverity("error");
+            }
+
+            // When Rate Limit per second exceeded
+            if (res.status === 429) {
+                console.log('Exceeded Rate Limit');
+                setMessage("Error: Exceeded Rate Limit");
+                setOpenSnackBar(true);
+                setSeverity("error");
+            }
         })
         return false;
 }
 //-------------------------------------------------------Display All Seats Available-----------------------------------------------------------------------------------------------
     function postDisplaySeats(id) {
+        // Turn on loading
+        setLoading2(true);
+        openSeatDisplay();
         var moviesession = {
             'moviesessionid' : id
         }
@@ -200,7 +251,9 @@ export default function MovieDisplay() {
             credentials: 'include'
         })
         .then((res) => {
-            openSeatDisplay();
+            // Turn off loading
+            setLoading2(false);
+            // Successfully display seats when selecting a specific movie session 
             if (res.status === 204) {
                 console.log('no content');
                 setSeat([]);
@@ -208,12 +261,30 @@ export default function MovieDisplay() {
                 setOpenSnackBar(true);
                 setSeverity("Error");    
             }
+
+            // Unsuccessfully display seats when selecting a specific movie session
             if (res.status === 201) {
                 console.log('created');
                 res.json().then((data) => {
                     setSeat(data);
                     console.log(data);
                 })
+            }
+
+            // When daily request limit exceeded
+            if (res.status === 422) {
+                console.log('Request limit exceeded within 24 hours');
+                setMessage("Error: Request limit exceeded within 24 hours");
+                setOpenSnackBar(true);
+                setSeverity("error");
+            }
+
+            // When Rate Limit per second exceeded
+            if (res.status === 429) {
+                console.log('Exceeded Rate Limit');
+                setMessage("Error: Exceeded Rate Limit");
+                setOpenSnackBar(true);
+                setSeverity("error");
             }
         })
     }
@@ -248,11 +319,14 @@ export default function MovieDisplay() {
     }
 //---------------------------------------------------------Displaying Ticket Type--------------------------------------------------------------------------------------------------
     function postTicketTypes() {
+        setLoading3(true);
         fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=displaytickettype",{
             method: "GET",
             credentials: "include"
         })
         .then((res) => {
+            setLoading3(false);
+            // Unsuccessfully display ticket types
             if (res.status === 204) {
                 console.log('no content');
                 setMovieSession([]);
@@ -260,12 +334,30 @@ export default function MovieDisplay() {
                 setOpenSnackBar(true);
                 setSeverity("error");    
             }
+
+            // Successfully display ticket types
             if (res.status === 201) {
                 console.log('created');
                 res.json().then((data) => {
                     setTicketType(data);
                     console.log(data);
                 })
+            }
+
+            // When daily request limit exceeded
+            if (res.status === 422) {
+                console.log('Request limit exceeded within 24 hours');
+                setMessage("Error: Request limit exceeded within 24 hours");
+                setOpenSnackBar(true);
+                setSeverity("error");
+            }
+
+            // When Rate Limit per second exceeded
+            if (res.status === 429) {
+                console.log('Exceeded Rate Limit');
+                setMessage("Error: Exceeded Rate Limit");
+                setOpenSnackBar(true);
+                setSeverity("error");
             }
         })
         return false;
@@ -298,6 +390,22 @@ export default function MovieDisplay() {
                 setSeverity("error");
                 return;
             }
+
+            // When daily request limit exceeded
+            if (response.status === 422) {
+                console.log('Request limit exceeded within 24 hours');
+                setMessage("Error: Request limit exceeded within 24 hours");
+                setOpenSnackBar(true);
+                setSeverity("error");
+            }
+
+            // When Rate Limit per second exceeded
+            if (response.status === 429) {
+                console.log('Exceeded Rate Limit');
+                setMessage("Error: Exceeded Rate Limit");
+                setOpenSnackBar(true);
+                setSeverity("error");
+            }
         })
         return false;
     }
@@ -313,18 +421,38 @@ export default function MovieDisplay() {
         })
         .then(function(response){
             console.log(response);
+
+            // Successfully adding selected movie into favourite list
             if(response.status === 202) {
                 console.log('success');
                 setMessage("The movie is added to your Favourite list");
                 setOpenSnackBar(true);
                 setSeverity("success");
             }
+
+            // Unsuccessfully adding selected movie into favourite list
             if(response.status === 501) {
                 console.log('not implemented');
                 setMessage("The movie is already in your Favourite list");
                 setOpenSnackBar(true);
                 setSeverity("warning");
             }
+
+            // When daily request limit exceeded
+            if (response.status === 422) {
+                console.log('Request limit exceeded within 24 hours');
+                setMessage("Error: Request limit exceeded within 24 hours");
+                setOpenSnackBar(true);
+                setSeverity("error");
+            }
+
+            // When Rate Limit per second exceeded
+            if (response.status === 429) {
+                console.log('Exceeded Rate Limit');
+                setMessage("Error: Exceeded Rate Limit");
+                setOpenSnackBar(true);
+                setSeverity("error");
+            }            
         })
         return false;
     }   
@@ -466,6 +594,11 @@ export default function MovieDisplay() {
                                 {/* Render Seats in Material UI Dialog */}
                                 <div id="seat-display" style={{display: "none"}}>
                                     <h3>Available Seats</h3>
+                                        {loading2 ? (
+                                            <div className={classes.loadingcontent}>
+                                                <CircularProgress color="inherit" />
+                                            </div>
+                                        ) : (
                                         <div id="seat-items-container">
                                         {/* Rendering a list of data from seat const in Material UI Dialog */}
                                             {seat.map((seat, index) =>
@@ -482,6 +615,7 @@ export default function MovieDisplay() {
                                                 </div>                                     
                                             )} 
                                         </div>
+                                        )}
                                         
                                         {/* Seat Colour Indicator */}
                                         <div className="colour-indicator">
@@ -495,6 +629,11 @@ export default function MovieDisplay() {
 
                                     <h4>Ticket Types</h4>
                                     {/* Rendering a list of data from ticketType const in Material UI Dialog */}
+                                    {loading3 ? (
+                                        <div className={classes.loadingcontent}>
+                                            <CircularProgress color="inherit" />
+                                        </div>
+                                    ) : (
                                     <FormControl component="fieldset">
                                     <RadioGroup 
                                         aria-label="tickettype" 
@@ -515,8 +654,9 @@ export default function MovieDisplay() {
                                         <p>If you are paying for the 'Student' price, you are required to present your Student ID before entering the cinema room.</p>   
                                     </RadioGroup>
                                     </FormControl>
+                                    )}
                                             
-                                     {/* Hidden Form that allow seatID and ticketTypeID to be filled and prepare for reservation */}
+                                    {/* Hidden Form that allow seatID and ticketTypeID to be filled and prepare for reservation */}
                                     <form id="seat-booking" style={{display: 'none'}}>
                                         <input id="seat-id" value={seatSelected} readOnly />
                                         <input id="ticket-type" value={radioValue} readOnly />    

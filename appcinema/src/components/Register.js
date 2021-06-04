@@ -78,6 +78,7 @@ export default function Register() {
             credentials: 'include',
         })
         .then(function(response) {
+            
             // If the form was not fully filled in or register values are invalid
             if(response.status === 406){
                 console.log('unaccepted');
@@ -86,6 +87,7 @@ export default function Register() {
                 setMessage("Error: Unable to register. Please try again");
                 return;
             }
+
             if(response.status === 202) {
             // If the form was fully filled in and data was successfully inserted
                 console.log('success');
@@ -99,10 +101,22 @@ export default function Register() {
                 setMessage("You have successfully registered an account! Welcome to Solar View Cinema.");
                 return;
             }
-            // Send back error into console log
-            response.text().then((text) => {
-                console.log(text)
-            });
+
+            // When daily request limit exceeded
+            if (response.status === 422) {
+                console.log('Request limit exceeded within 24 hours');
+                setMessage("Error: Request limit exceeded within 24 hours");
+                setOpenSnackBar(true);
+                setSeverity("error");
+            }
+
+            // When Rate Limit per second exceeded
+            if (response.status === 429) {
+                console.log('Exceeded Rate Limit');
+                setMessage("Error: Exceeded Rate Limit");
+                setOpenSnackBar(true);
+                setSeverity("error");
+            }
         })
         return false;
     }

@@ -139,6 +139,8 @@ export default function Reservations() {
         })
         .then((res) => {
             setLoading(false);
+
+            // Successfully displaying a list of booked tickets 
             if (res.status === 204) {
                 console.log('no content');
                 setTicket([]);
@@ -146,12 +148,30 @@ export default function Reservations() {
                 setOpenSnackBar(true);
                 setSeverity("Error");    
             }
+
+            // Unsuccessfully displaying a list of booked tickets
             if (res.status === 201) {
                 console.log('created');
                 res.json().then((data) => {
                     setTicket(data);
                     console.log(data);
                 })
+            }
+
+            // When daily request limit exceeded
+            if (res.status === 422) {
+                console.log('Request limit exceeded within 24 hours');
+                setMessage("Error: Request limit exceeded within 24 hours");
+                setOpenSnackBar(true);
+                setSeverity("error");
+            }
+
+            // When Rate Limit per second exceeded
+            if (res.status === 429) {
+                console.log('Exceeded Rate Limit');
+                setMessage("Error: Exceeded Rate Limit");
+                setOpenSnackBar(true);
+                setSeverity("error");
             }
         })
         return false;
@@ -163,6 +183,8 @@ export default function Reservations() {
             credentials: "include"
         })
         .then((res) => {
+
+            // Successfully displaying all movie sessions
             if (res.status === 204) {
                 console.log('no content');
                 setMovieSession([]);
@@ -170,12 +192,30 @@ export default function Reservations() {
                 setOpenSnackBar(true);
                 setSeverity("warning");
             }
+
+            // Unsuccessfully displaying all movie sessions
             if (res.status === 201) {
                 console.log('created');
                 res.json().then((data) => {
                     setMovieSession(data);
                     console.log(data);
                 })
+            }
+
+            // When daily request limit exceeded
+            if (res.status === 422) {
+                console.log('Request limit exceeded within 24 hours');
+                setMessage("Error: Request limit exceeded within 24 hours");
+                setOpenSnackBar(true);
+                setSeverity("error");
+            }
+
+            // When Rate Limit per second exceeded
+            if (res.status === 429) {
+                console.log('Exceeded Rate Limit');
+                setMessage("Error: Exceeded Rate Limit");
+                setOpenSnackBar(true);
+                setSeverity("error");
             }
         })
         return false;
@@ -192,6 +232,8 @@ function postDisplaySeats(id) {
     })
     .then((res) => {
         openSeatDisplay();
+
+        // Successfully displaying seats when selecting a specific movie sessions
         if (res.status === 204) {
             console.log('no content');
             setSeat([]);
@@ -199,12 +241,30 @@ function postDisplaySeats(id) {
             setOpenSnackBar(true);
             setSeverity("Error");    
         }
+
+        // Unsuccessfully displaying seats when selecting a specific movie sessions
         if (res.status === 201) {
             console.log('created');
             res.json().then((data) => {
                 setSeat(data);
                 console.log(data);
             })
+        }
+
+        // When daily request limit exceeded
+        if (res.status === 422) {
+            console.log('Request limit exceeded within 24 hours');
+            setMessage("Error: Request limit exceeded within 24 hours");
+            setOpenSnackBar(true);
+            setSeverity("error");
+        }
+
+        // When Rate Limit per second exceeded
+        if (res.status === 429) {
+            console.log('Exceeded Rate Limit');
+            setMessage("Error: Exceeded Rate Limit");
+            setOpenSnackBar(true);
+            setSeverity("error");
         }
     })
 }
@@ -215,6 +275,8 @@ function postDisplaySeats(id) {
             credentials: "include"
         })
         .then((res) => {
+
+            // Unsuccessfully displaying ticket types in ticket booking field
             if (res.status === 204) {
                 console.log('no content');
                 setMovieSession([]);
@@ -222,12 +284,30 @@ function postDisplaySeats(id) {
                 setOpenSnackBar(true);
                 setSeverity("error");    
             }
+
+            // Successfullly displaying ticket types in ticket booking field 
             if (res.status === 201) {
                 console.log('created');
                 res.json().then((data) => {
                     setTicketType(data);
                     console.log(data);
                 })
+            }
+
+            // When daily request limit exceeded
+            if (res.status === 422) {
+                console.log('Request limit exceeded within 24 hours');
+                setMessage("Error: Request limit exceeded within 24 hours");
+                setOpenSnackBar(true);
+                setSeverity("error");
+            }
+
+            // When Rate Limit per second exceeded
+            if (res.status === 429) {
+                console.log('Exceeded Rate Limit');
+                setMessage("Error: Exceeded Rate Limit");
+                setOpenSnackBar(true);
+                setSeverity("error");
             }
         })
         return false;
@@ -262,10 +342,22 @@ function postDisplaySeats(id) {
                 setSeverity("error");
                 return;
             }
-            // Send back error into console log
-            response.text().then((text) => {
-                console.log(text);
-            })
+
+            // When daily request limit exceeded
+            if (response.status === 422) {
+                console.log('Request limit exceeded within 24 hours');
+                setMessage("Error: Request limit exceeded within 24 hours");
+                setOpenSnackBar(true);
+                setSeverity("error");
+            }
+
+            // When Rate Limit per second exceeded
+            if (response.status === 429) {
+                console.log('Exceeded Rate Limit');
+                setMessage("Error: Exceeded Rate Limit");
+                setOpenSnackBar(true);
+                setSeverity("error");
+            }
         })
         return false;
     }
@@ -281,6 +373,7 @@ function postDisplaySeats(id) {
         })
         .then(function(response){
             console.log(response);
+
             // Successfully delete booked ticket from user's reservation list
             if(response.status === 202) {
                 console.log('success');
@@ -290,10 +383,27 @@ function postDisplaySeats(id) {
                 postDisplayTicket();
                 return;
             }
+
             // Unsuccessfully delete booked ticket from user's reservation list
             if(response.status === 501) {
                 console.log('not implemented');
                 setMessage("Error: Failed to delete this ticket.");
+                setOpenSnackBar(true);
+                setSeverity("error");
+            }
+
+            // When daily request limit exceeded
+            if (response.status === 422) {
+                console.log('Request limit exceeded within 24 hours');
+                setMessage("Error: Request limit exceeded within 24 hours");
+                setOpenSnackBar(true);
+                setSeverity("error");
+            }
+
+            // When Rate Limit per second exceeded
+            if (response.status === 429) {
+                console.log('Exceeded Rate Limit');
+                setMessage("Error: Exceeded Rate Limit");
                 setOpenSnackBar(true);
                 setSeverity("error");
             }

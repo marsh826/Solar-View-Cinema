@@ -83,6 +83,8 @@ export default function HomePage() {
             credentials: 'include'
         }).then((res) => {
             setLoading(false);
+
+            // Successfully display latest movie
             if (res.status === 204) {
                 console.log('no content');
                 setLatestMovie([]);
@@ -91,12 +93,29 @@ export default function HomePage() {
                 setSeverity("error");
             }
             
+            // Unsuccessfully display lastest movie
             if (res.status === 201) {
                 console.log('created');
                 res.json().then((data) => {
                     setLatestMovie(data);
                     console.log(data);
                 })
+            }
+
+            // When daily request limit exceeded
+            if (res.status === 422) {
+                console.log('Request limit exceeded within 24 hours');
+                setMessage("Error: Request limit exceeded within 24 hours");
+                setOpenSnackBar(true);
+                setSeverity("error");
+            }
+
+            // When Rate Limit per second exceeded
+            if (res.status === 429) {
+                console.log('Exceeded Rate Limit');
+                setMessage("Error: Exceeded Rate Limit");
+                setOpenSnackBar(true);
+                setSeverity("error");
             }
         })   
     }  

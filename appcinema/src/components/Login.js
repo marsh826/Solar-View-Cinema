@@ -64,6 +64,7 @@ export default function Login() {
             credentials: 'include',
         })
         .then(function(response){    
+
             // When the user login unsuccessfully, alert error message
             if(response.status === 403) {
                 console.log(response);
@@ -73,6 +74,7 @@ export default function Login() {
                 setMessage("Error: Invalid Username or Password.");
                 return;
             }
+
             // When the user login successfully, redirect to Profile page
             if(response.status === 202) {
                 console.log(response);
@@ -82,6 +84,22 @@ export default function Login() {
                 // document.getElementById('loginform').reset();
                 history.push("/Profile");
                 return;
+            }
+
+            // When daily request limit exceeded
+            if (response.status === 422) {
+                console.log('Request limit exceeded within 24 hours');
+                setMessage("Error: Request limit exceeded within 24 hours");
+                setOpenSnackBar(true);
+                setSeverity("error");
+            }
+
+            // When Rate Limit per second exceeded
+            if (response.status === 429) {
+                console.log('Exceeded Rate Limit');
+                setMessage("Error: Exceeded Rate Limit");
+                setOpenSnackBar(true);
+                setSeverity("error");
             }
         })
         return false;

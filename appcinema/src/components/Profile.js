@@ -123,6 +123,8 @@ export default function Profile() {
         })
         .then((res) => {
             setLoading(false);
+
+            // When the user is not logged in
             if (res.status === 401) {
                 console.log(res);
                 console.log('forbidden');
@@ -132,6 +134,7 @@ export default function Profile() {
                 setSeverity("warning");
             }
 
+            // Unsuccessfully displaying account details
             if (res.status === 503) {
                 console.log(res);
                 console.log('service unavailable');
@@ -141,6 +144,7 @@ export default function Profile() {
                 setSeverity("error");
             }
             
+            // Successfully displaying account details
             if (res.status === 201) {
                 console.log(res);
                 console.log('created');
@@ -148,6 +152,22 @@ export default function Profile() {
                     setProfile(data);
                     console.log(data);
                 })
+            }
+        
+            // When daily request limit exceeded
+            if (res.status === 422) {
+                console.log('Request limit exceeded within 24 hours');
+                setMessage("Error: Request limit exceeded within 24 hours");
+                setOpenSnackBar(true);
+                setSeverity("error");
+            }
+
+            // When Rate Limit per second exceeded
+            if (res.status === 429) {
+                console.log('Exceeded Rate Limit');
+                setMessage("Error: Exceeded Rate Limit");
+                setOpenSnackBar(true);
+                setSeverity("error");
             }
         })   
         return false;
@@ -170,6 +190,7 @@ export default function Profile() {
             credentials: 'include'
         })
         .then(function(response){
+
             if(response.status === 406) {
                 // Will not accept the new update information if they are not filled fully or correctly
                 console.log('unaccepted');
@@ -178,6 +199,7 @@ export default function Profile() {
                 setSeverity("error");
                 return;
             } 
+
             if(response.status === 202) {
                 console.log('success');
                 // Upon successful update, the profile page will be refreshed by reusing the display profile function
@@ -188,6 +210,22 @@ export default function Profile() {
                 postDisplayProfile();
                 return;
             } 
+
+            // When daily request limit exceeded
+            if (response.status === 422) {
+                console.log('Request limit exceeded within 24 hours');
+                setMessage("Error: Request limit exceeded within 24 hours");
+                setOpenSnackBar(true);
+                setSeverity("error");
+            }
+
+            // When Rate Limit per second exceeded
+            if (response.status === 429) {
+                console.log('Exceeded Rate Limit');
+                setMessage("Error: Exceeded Rate Limit");
+                setOpenSnackBar(true);
+                setSeverity("error");
+            }
         })
         return false;
     }
@@ -203,12 +241,18 @@ function postDeleteProfile(id) {
         credentials: 'include'
     })
     .then(function(response) {    
-        // if display, the user will receive the error message
-        console.log(response)
+        console.log(response);
+
+        // Unsuccessfully deleting account 
         if(response.status === 501){
             console.log('not implemented');
+            setMessage("Error: Unable to close this account.");
+            setOpenSnackBar(true);
+            setSeverity("error");
             return;
         }
+
+        // Successfully deleting account
         if(response.status === 202) {
             // if success, local storage items will be removed and user will be sent back to the index page
             console.log('success');
@@ -219,6 +263,22 @@ function postDeleteProfile(id) {
             history.push("/Home");        
             return;
         }
+
+        // When daily request limit exceeded
+        if (response.status === 422) {
+            console.log('Request limit exceeded within 24 hours');
+            setMessage("Error: Request limit exceeded within 24 hours");
+            setOpenSnackBar(true);
+            setSeverity("error");
+        }
+
+        // When Rate Limit per second exceeded
+        if (response.status === 429) {
+            console.log('Exceeded Rate Limit');
+            setMessage("Error: Exceeded Rate Limit");
+            setOpenSnackBar(true);
+            setSeverity("error");
+        }
     })
     return false;
 }
@@ -228,13 +288,31 @@ function postLogOut() {
         method: "POST",
         credentials: 'include'
     })
-    .then(function(response){    
+    .then(function(response){ 
+        
+        // Successfully logging user out
         if(response.status === 202) {
             console.log('success');      
             localStorage.setItem('UserStatus', 'Logged Out');
             console.log('Status: Logged Out');
             history.push("/Home");
             return;
+        }
+
+        // When daily request limit exceeded
+        if (response.status === 422) {
+            console.log('Request limit exceeded within 24 hours');
+            setMessage("Error: Request limit exceeded within 24 hours");
+            setOpenSnackBar(true);
+            setSeverity("error");
+        }
+
+        // When Rate Limit per second exceeded
+        if (response.status === 429) {
+            console.log('Exceeded Rate Limit');
+            setMessage("Error: Exceeded Rate Limit");
+            setOpenSnackBar(true);
+            setSeverity("error");
         }
     })
     return false;
