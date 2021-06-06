@@ -69,7 +69,7 @@ export default function Login() {
                 localStorage.setItem('UserStatus', 'Logged In');
                 console.log('Status: Logged In');
                 // document.getElementById('loginform').reset();
-                history.push("/admin");
+                history.push("/admin/dashboard");
                 return;
             }
         })
@@ -88,7 +88,7 @@ export default function Login() {
             <div className="login-container">
                 <h2>Administrator Login</h2>
                 {/* Login Form */}
-                <form id="login-form" autoComplete="off">
+                <form id="login-form" autoComplete="off" onSubmit={handleSubmit(postAdminLogin)}>
                     <div className="formgroup">
                         {/* Username field requires value in order to proceed with the login process */}
                         <label for="usernameAdmin">Username</label>
@@ -110,10 +110,9 @@ export default function Login() {
                     </div>
                     <Button 
                         id="login-submit"
-                        type="button"
+                        type="submit"
                         variant="contained" 
                         color="primary"
-                        onClick={postAdminLogin}
                     >
                         Enter
                     </Button>

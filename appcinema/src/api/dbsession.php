@@ -64,14 +64,6 @@ class sessionOBJ {
         $_SESSION['last_request_time'] = time();
         return true;
     }
-    // function IPwhitelist() {
-    //     // If IP Address is not valid, the user will not be granted access
-    //     if($_SERVER['REMOTE_ADDR'] != "[::1]:80"){
-    //         return true;
-    //     } else {
-    //         return false;
-    //     } 
-    // }
     // Rate Limit
     function ratelimit(){
         date_default_timezone_set("Australia/Brisbane");

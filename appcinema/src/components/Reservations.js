@@ -146,7 +146,8 @@ export default function Reservations() {
                 setTicket([]);
                 setMessage("Error: You do not have any reservations.");
                 setOpenSnackBar(true);
-                setSeverity("Error");    
+                setSeverity("Error");   
+                return; 
             }
 
             // Unsuccessfully displaying a list of booked tickets
@@ -156,6 +157,7 @@ export default function Reservations() {
                     setTicket(data);
                     console.log(data);
                 })
+                return;
             }
 
             // When daily request limit exceeded
@@ -164,6 +166,7 @@ export default function Reservations() {
                 setMessage("Error: Request limit exceeded within 24 hours");
                 setOpenSnackBar(true);
                 setSeverity("error");
+                return;
             }
 
             // When Rate Limit per second exceeded
@@ -172,6 +175,7 @@ export default function Reservations() {
                 setMessage("Error: Exceeded Rate Limit");
                 setOpenSnackBar(true);
                 setSeverity("error");
+                return;
             }
         })
         return false;
@@ -191,6 +195,7 @@ export default function Reservations() {
                 setMessage("Error: Unable to fetch movie sessions.");
                 setOpenSnackBar(true);
                 setSeverity("warning");
+                return;
             }
 
             // Unsuccessfully displaying all movie sessions
@@ -199,7 +204,8 @@ export default function Reservations() {
                 res.json().then((data) => {
                     setMovieSession(data);
                     console.log(data);
-                })
+                });
+                return;
             }
 
             // When daily request limit exceeded
@@ -208,6 +214,7 @@ export default function Reservations() {
                 setMessage("Error: Request limit exceeded within 24 hours");
                 setOpenSnackBar(true);
                 setSeverity("error");
+                return;
             }
 
             // When Rate Limit per second exceeded
@@ -216,6 +223,7 @@ export default function Reservations() {
                 setMessage("Error: Exceeded Rate Limit");
                 setOpenSnackBar(true);
                 setSeverity("error");
+                return;
             }
         })
         return false;
@@ -240,6 +248,7 @@ function postDisplaySeats(id) {
             setMessage("Error: Unable to display seats for this movie session");
             setOpenSnackBar(true);
             setSeverity("Error");    
+            return;
         }
 
         // Unsuccessfully displaying seats when selecting a specific movie sessions
@@ -248,7 +257,8 @@ function postDisplaySeats(id) {
             res.json().then((data) => {
                 setSeat(data);
                 console.log(data);
-            })
+            });
+            return;
         }
 
         // When daily request limit exceeded
@@ -257,6 +267,7 @@ function postDisplaySeats(id) {
             setMessage("Error: Request limit exceeded within 24 hours");
             setOpenSnackBar(true);
             setSeverity("error");
+            return;
         }
 
         // When Rate Limit per second exceeded
@@ -265,6 +276,7 @@ function postDisplaySeats(id) {
             setMessage("Error: Exceeded Rate Limit");
             setOpenSnackBar(true);
             setSeverity("error");
+            return;
         }
     })
 }
@@ -283,6 +295,7 @@ function postDisplaySeats(id) {
                 setMessage("Error: Unable to fetch ticket types");
                 setOpenSnackBar(true);
                 setSeverity("error");    
+                return;
             }
 
             // Successfullly displaying ticket types in ticket booking field 
@@ -291,7 +304,8 @@ function postDisplaySeats(id) {
                 res.json().then((data) => {
                     setTicketType(data);
                     console.log(data);
-                })
+                });
+                return;
             }
 
             // When daily request limit exceeded
@@ -300,14 +314,16 @@ function postDisplaySeats(id) {
                 setMessage("Error: Request limit exceeded within 24 hours");
                 setOpenSnackBar(true);
                 setSeverity("error");
+                return;
             }
 
             // When Rate Limit per second exceeded
             if (res.status === 429) {
                 console.log('Exceeded Rate Limit');
-                setMessage("Error: Exceeded Rate Limit");
+                setMessage("Warning: Exceeded Rate Limit");
                 setOpenSnackBar(true);
-                setSeverity("error");
+                setSeverity("warning");
+                return;
             }
         })
         return false;
@@ -349,6 +365,7 @@ function postDisplaySeats(id) {
                 setMessage("Error: Request limit exceeded within 24 hours");
                 setOpenSnackBar(true);
                 setSeverity("error");
+                return;
             }
 
             // When Rate Limit per second exceeded
@@ -357,6 +374,7 @@ function postDisplaySeats(id) {
                 setMessage("Error: Exceeded Rate Limit");
                 setOpenSnackBar(true);
                 setSeverity("error");
+                return;
             }
         })
         return false;
@@ -390,6 +408,7 @@ function postDisplaySeats(id) {
                 setMessage("Error: Failed to delete this ticket.");
                 setOpenSnackBar(true);
                 setSeverity("error");
+                return;
             }
 
             // When daily request limit exceeded
@@ -398,6 +417,7 @@ function postDisplaySeats(id) {
                 setMessage("Error: Request limit exceeded within 24 hours");
                 setOpenSnackBar(true);
                 setSeverity("error");
+                return;
             }
 
             // When Rate Limit per second exceeded
@@ -406,6 +426,7 @@ function postDisplaySeats(id) {
                 setMessage("Error: Exceeded Rate Limit");
                 setOpenSnackBar(true);
                 setSeverity("error");
+                return;
             }
         })
         return false;

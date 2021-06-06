@@ -1,8 +1,8 @@
 import React from 'react';
 import {Tabs, Tab, AppBar } from '@material-ui/core';
-import MovieManage from './MovieManage';
-import MovieSessions from './MovieSession';
-import DashBoard from './DashBoard';
+import AdminMovieManage from './AdminMovieManage';
+import AdminSessionManage from './AdminSessionManage';
+import AdminDashboard from './AdminDashboard';
 
 export default function AdminPage(props) {
 
@@ -38,9 +38,9 @@ export default function AdminPage(props) {
                     <Tab label="Movie Sessions" />
                 </Tabs>
             </AppBar>
-            { selectedTab === 0 && <DashBoard />}
-            { selectedTab === 1 && <MovieManage />}
-            { selectedTab === 2 && <MovieSessions />}
+            { selectedTab === 0 && <AdminDashboard />}
+            { selectedTab === 1 && <AdminMovieManage />}
+            { selectedTab === 2 && <AdminSessionManage />}
         </div>
     );
 }  

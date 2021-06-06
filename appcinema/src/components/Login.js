@@ -81,7 +81,7 @@ export default function Login() {
                 console.log('success');
                 localStorage.setItem('UserStatus', 'Logged In');
                 console.log('Status: Logged In');
-                // document.getElementById('loginform').reset();
+                document.getElementById('loginform').reset();
                 history.push("/Profile");
                 return;
             }
@@ -92,14 +92,16 @@ export default function Login() {
                 setMessage("Error: Request limit exceeded within 24 hours");
                 setOpenSnackBar(true);
                 setSeverity("error");
+                return;
             }
 
             // When Rate Limit per second exceeded
             if (response.status === 429) {
                 console.log('Exceeded Rate Limit');
-                setMessage("Error: Exceeded Rate Limit");
+                setMessage("Warning: Exceeded Rate Limit");
                 setOpenSnackBar(true);
-                setSeverity("error");
+                setSeverity("warning");
+                return;
             }
         })
         return false;

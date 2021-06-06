@@ -161,6 +161,7 @@ export default function MovieDisplay() {
                 setMessage("Error: No movie is found");
                 setOpenSnackBar(true);
                 setSeverity("Error");
+                return;
             }
             
             // Unsuccessfully displaying movies
@@ -169,7 +170,8 @@ export default function MovieDisplay() {
                 res.json().then((data) => {
                     setMovie(data);
                     console.log(data);
-                })
+                });
+                return;
             }
 
             // When daily request limit exceeded
@@ -178,6 +180,7 @@ export default function MovieDisplay() {
                 setMessage("Error: Request limit exceeded within 24 hours");
                 setOpenSnackBar(true);
                 setSeverity("error");
+                return;
             }
 
             // When Rate Limit per second exceeded
@@ -186,6 +189,7 @@ export default function MovieDisplay() {
                 setMessage("Error: Exceeded Rate Limit");
                 setOpenSnackBar(true);
                 setSeverity("error");
+                return;
             }
         })   
     }
@@ -208,6 +212,7 @@ export default function MovieDisplay() {
                 setMessage("Error: Movie sessions are unavailable for this movie");
                 setOpenSnackBar(true);
                 setSeverity("warning");
+                return;
             }
 
             // Unsuccessfully display movie session when selecting a movie
@@ -216,7 +221,8 @@ export default function MovieDisplay() {
                 res.json().then((data) => {
                     setMovieSession(data);
                     console.log(data);
-                })
+                });
+                return;
             }
 
             // When daily request limit exceeded
@@ -225,6 +231,7 @@ export default function MovieDisplay() {
                 setMessage("Error: Request limit exceeded within 24 hours");
                 setOpenSnackBar(true);
                 setSeverity("error");
+                return;
             }
 
             // When Rate Limit per second exceeded
@@ -233,6 +240,7 @@ export default function MovieDisplay() {
                 setMessage("Error: Exceeded Rate Limit");
                 setOpenSnackBar(true);
                 setSeverity("error");
+                return;
             }
         })
         return false;
@@ -259,7 +267,8 @@ export default function MovieDisplay() {
                 setSeat([]);
                 setMessage("Error: Unable to display seats for this movie session");
                 setOpenSnackBar(true);
-                setSeverity("Error");    
+                setSeverity("Error");  
+                return;  
             }
 
             // Unsuccessfully display seats when selecting a specific movie session
@@ -268,7 +277,8 @@ export default function MovieDisplay() {
                 res.json().then((data) => {
                     setSeat(data);
                     console.log(data);
-                })
+                });
+                return;
             }
 
             // When daily request limit exceeded
@@ -277,6 +287,7 @@ export default function MovieDisplay() {
                 setMessage("Error: Request limit exceeded within 24 hours");
                 setOpenSnackBar(true);
                 setSeverity("error");
+                return;
             }
 
             // When Rate Limit per second exceeded
@@ -285,6 +296,7 @@ export default function MovieDisplay() {
                 setMessage("Error: Exceeded Rate Limit");
                 setOpenSnackBar(true);
                 setSeverity("error");
+                return;
             }
         })
     }
@@ -341,7 +353,8 @@ export default function MovieDisplay() {
                 res.json().then((data) => {
                     setTicketType(data);
                     console.log(data);
-                })
+                });
+                return;
             }
 
             // When daily request limit exceeded
@@ -350,6 +363,7 @@ export default function MovieDisplay() {
                 setMessage("Error: Request limit exceeded within 24 hours");
                 setOpenSnackBar(true);
                 setSeverity("error");
+                return;
             }
 
             // When Rate Limit per second exceeded
@@ -358,6 +372,7 @@ export default function MovieDisplay() {
                 setMessage("Error: Exceeded Rate Limit");
                 setOpenSnackBar(true);
                 setSeverity("error");
+                return;
             }
         })
         return false;
@@ -377,6 +392,7 @@ export default function MovieDisplay() {
             // If the seat booking process was successful
             if(response.status === 202) {
                 console.log('success');
+                document.getElementById("seat-booking").rest();
                 setMessage("Ticket Booked Successfully!");
                 setOpenSnackBar(true);
                 setSeverity("success");
@@ -397,6 +413,7 @@ export default function MovieDisplay() {
                 setMessage("Error: Request limit exceeded within 24 hours");
                 setOpenSnackBar(true);
                 setSeverity("error");
+                return;
             }
 
             // When Rate Limit per second exceeded
@@ -405,6 +422,7 @@ export default function MovieDisplay() {
                 setMessage("Error: Exceeded Rate Limit");
                 setOpenSnackBar(true);
                 setSeverity("error");
+                return;
             }
         })
         return false;
@@ -428,6 +446,7 @@ export default function MovieDisplay() {
                 setMessage("The movie is added to your Favourite list");
                 setOpenSnackBar(true);
                 setSeverity("success");
+                return;
             }
 
             // Unsuccessfully adding selected movie into favourite list
@@ -436,6 +455,7 @@ export default function MovieDisplay() {
                 setMessage("The movie is already in your Favourite list");
                 setOpenSnackBar(true);
                 setSeverity("warning");
+                return;
             }
 
             // When daily request limit exceeded
@@ -444,6 +464,7 @@ export default function MovieDisplay() {
                 setMessage("Error: Request limit exceeded within 24 hours");
                 setOpenSnackBar(true);
                 setSeverity("error");
+                return;
             }
 
             // When Rate Limit per second exceeded
@@ -452,6 +473,7 @@ export default function MovieDisplay() {
                 setMessage("Error: Exceeded Rate Limit");
                 setOpenSnackBar(true);
                 setSeverity("error");
+                return;
             }            
         })
         return false;

@@ -279,7 +279,7 @@ class databaseOBJ {
     }
     // Tracking activity on the web service 
     function activityLogInsert($IPAddress, $Time, $BrowserType, $Activity ,$User){
-        $sql = "INSERT INTO activitylog(ipAddress, DateAndTime, BrowserType, Activity, UserID)
+        $sql = "INSERT INTO activitylog(ipAddress, DateAndTime, BrowserType, Action, UserID)
         VALUES(:ipaddress, :time, :browsertype, :activity, :userid)";
         $stmt = $this->dbconn->prepare($sql);
         $stmt->bindValue(':ipaddress', $IPAddress);
@@ -308,7 +308,7 @@ class databaseOBJ {
         }
          // Track which user logged in 
          $User = $_SESSION["UserID"];
-         $sql = "INSERT INTO activitylog(ipAddress, DateAndTime, BrowserType, Activity, UserID)
+         $sql = "INSERT INTO activitylog(ipAddress, DateAndTime, BrowserType, Action, UserID)
          VALUES(:ipaddress, :time, :browsertype, :activity, :userid)";
          $stmt = $this->dbconn->prepare($sql);
          $stmt->bindValue(':ipaddress', $IPAddress);
@@ -317,6 +317,32 @@ class databaseOBJ {
          $stmt->bindValue(':activity', $Activity);
          $stmt->bindValue(':userid', $User);
          return $stmt->execute();
+    }
+    // Display Activity Log in Admin Dashboard
+    function displayDashBoard(){
+        try {
+            $mysql = "SELECT * FROM activitylog";
+            $stmt = $this->dbconn->prepare($mysql);
+            $stmt->execute();
+            $result = $stmt->fetchAll();
+            return $result;
+        }
+        catch (PDOException $ex) {
+            throw $ex;
+        }
+    }
+    // Display Activity Log in Admin Dashboard
+    function adminSelectMovieData(){
+        try {
+            $mysql = "SELECT MovieID, MovieName FROM movie";
+            $stmt = $this->dbconn->prepare($mysql);
+            $stmt->execute();
+            $result = $stmt->fetchAll();
+            return $result;
+        }
+        catch (PDOException $ex) {
+            throw $ex;
+        }
     }
 }
 ?>

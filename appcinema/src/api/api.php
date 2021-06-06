@@ -30,34 +30,43 @@ function testInput($data) {
 }
 
 // Rate Limiter Activation
-if($_GET["action"] == "logout") {
-    // Allow the user to logout despite rate limit exceeded
-} else {
-    // If the daily request limit has been exceeded, block any other incoming requests
-    if($_SESSION['session']->dailyrequestLimit() == true) {
-        http_response_code(422);
-        die();
-    }
-    // If the user breaks the rate limit by sending more than one request in one second, block any other incoming requests
-    if($_SESSION['session']->rateLimit() == true) {
-        http_response_code(429);
-        die();
-    }
+// if($_GET["action"] == "logout") {
+//     // Allow the user to logout despite rate limit exceeded
+// } else {
+//     // If the daily request limit has been exceeded, block any other incoming requests
+//     if($_SESSION['session']->dailyrequestLimit() == true) {
+//         http_response_code(422);
+//         die();
+//     }
+//     // If the user breaks the rate limit by sending more than one request in one second, block any other incoming requests
+//     if($_SESSION['session']->rateLimit() == true) {
+//         http_response_code(429);
+//         die();
+//     }
+// }
+
+// // IP Whitelisting
+if(!isset($_SERVER['HTTP_REFERER'])) {
+    $_SERVER['HTTP_REFERER'] = 0;
 }
 
 // Domain Locker
-if($_SERVER['HTTP_REFERER'] == "http://localhost:3000/") {
+if($_SERVER['HTTP_REFERER'] == "http://localhost:3000/" || $_SERVER['HTTP_REFERER'] == "http://192.168.0.8:3000" 
+    || $_SERVER['HTTP_REFERER'] == "http://localhost:3000/admin/") {
     // Allow user access and proceed requests with valid URL
 } else {
     // Prevent access or any incoming request from invalid URL
     http_response_code(404);
     die();  
 }
-    
-// IP Whitelisting
-if(!isset($_SERVER['HTTP_REFERER'])) {
-    $_SERVER['HTTP_REFERER'] = 0;
+
+// Checking for IP Address
+if ($_SERVER['REMOTE_ADDR'] !== "[::1]:80") {
+    http_response_code(501);
 }
+
+    
+
 
 // Insert activities into the userlog table in the database
 $_SESSION['session']->lastSessionRequest();
@@ -80,7 +89,7 @@ if(!isset($_GET['action'])) {
     echo "HTTP ERROR 500 - INTERNAL SERVER ERROR";
 } else {
     switch($_GET['action']) {
-// -----------------------------------Login--------------------------------------------
+// -----------------------------------Login----------------------------------------------------------------------------
     case 'login': 
         // A super global variable which is used to collect data from REQUEST METHOD that is POST
         $_SERVER['REQUEST_METHOD'] == 'POST';
@@ -101,7 +110,7 @@ if(!isset($_GET['action'])) {
             http_response_code(403);
         }
     break;
-// -------------------------------------------------Checking Log In Status------------------------------
+// -------------------------------------------------Checking Log In Status---------------------------------------------
     case 'loginstatus':
         // A super global variable which is used to collect data from REQUEST METHOD that is POST
         $_SERVER['REQUEST_METHOD'] == 'GET';
@@ -113,7 +122,7 @@ if(!isset($_GET['action'])) {
             http_response_code(401);
         }
     break;
-// --------------------------------------------------Logout---------------------------------------------
+// --------------------------------------------------Logout------------------------------------------------------------
     case 'logout':
         // A super global variable which is used to collect data from REQUEST METHOD that is POST
         $_SERVER['REQUEST_METHOD'] == 'POST';
@@ -123,7 +132,7 @@ if(!isset($_GET['action'])) {
             http_response_code(202);
         }
     break;
-// --------------------------------------------------Register-------------------------------------------
+// --------------------------------------------------Register----------------------------------------------------------
     case 'register':
         // A super global variable which is used to collect data from REQUEST METHOD that is POST
         $_SERVER['REQUEST_METHOD'] == 'POST';
@@ -141,7 +150,7 @@ if(!isset($_GET['action'])) {
             http_response_code(406);
         }
     break;
-// ------------------------------------Display Profile----------------------------------------------------------
+// ------------------------------------Display Profile-----------------------------------------------------------------
     case 'displayprofile':
         // A super global variable which is used to display data from REQUEST METHOD that is GET 
         $_SERVER['REQUEST_METHOD'] == 'GET';
@@ -160,7 +169,7 @@ if(!isset($_GET['action'])) {
             http_response_code(401);
         }
     break;
-// ---------------------------------Delete Profile--------------------------------
+// ---------------------------------Delete Profile---------------------------------------------------------------------
     case 'deleteprofile':
         // A super global variable which is used to collect data from REQUEST METHOD that is POST
         $_SERVER['REQUEST_METHOD'] == 'POST';
@@ -177,7 +186,7 @@ if(!isset($_GET['action'])) {
             http_response_code(501);
         }
     break;
-// -------------------------------Update Profile------------------------------------------------
+// -------------------------------Update Profile-----------------------------------------------------------------------
     case 'updateprofile':
         // A super global variable which is used to collect data from REQUEST METHOD that is POST
         $_SERVER['REQUEST_METHOD'] == 'POST';
@@ -204,7 +213,7 @@ if(!isset($_GET['action'])) {
             http_response_code(401);
         }
     break;
-//-------------------------------------------Display Movies------------------------------
+//-------------------------------------------Display Movies------------------------------------------------------------
     case 'displaymovies':
         // A super global variable which is used to display data from REQUEST METHOD that is GET 
         $_SERVER['REQUEST_METHOD'] == "GET";   
@@ -218,7 +227,7 @@ if(!isset($_GET['action'])) {
             echo json_encode($result);
         }  
     break;
-//-----------------------------------------Display 3 latest movies--------------------------
+//-----------------------------------------Display 3 latest movies-----------------------------------------------------
     case 'displaylatestmovies':
         // A super global variable which is used to display data from REQUEST METHOD that is GET 
         $_SERVER['REQUEST_METHOD'] == "GET";
@@ -232,7 +241,7 @@ if(!isset($_GET['action'])) {
             echo json_encode($result);
         }
     break;
-//--------------------------------------------Add Movie to Favourite List------------------
+//--------------------------------------------Add Movie to Favourite List----------------------------------------------
     case 'addfavouritemovie':
         // A super global variable which is used to collect data from REQUEST METHOD that is POST
         $_SERVER['REQUEST_METHOD'] == "POST";
@@ -253,7 +262,7 @@ if(!isset($_GET['action'])) {
             http_response_code(401);
         }
     break;
-// ----------------------------------------Display Favourite Movie List-----------------
+// ----------------------------------------Display Favourite Movie List------------------------------------------------
     case 'displayfavouritelist':
         // A super global variable which is used to display data from REQUEST METHOD that is GET
         $_SERVER['REQUEST_METHOD'] == 'GET';
@@ -272,7 +281,7 @@ if(!isset($_GET['action'])) {
             http_response_code(401);
         }
     break;
-// -----------------------------------------Remove Favourite Movie-----------------------
+// -----------------------------------------Remove Favourite Movie-----------------------------------------------------
     case 'removefavouritemovie':
         // A super global variable which is used to collect data from REQUEST METHOD that is POST
         $_SERVER['REQUEST_METHOD'] == 'POST';
@@ -291,7 +300,7 @@ if(!isset($_GET['action'])) {
             http_response_code(401);
         }
     break;
-// ------------------------------------------Display Movie Session---------------------------
+// ------------------------------------------Display Movie Session-----------------------------------------------------
     case 'displaymoviesession':
         // A super global variable which is used to collect data from REQUEST METHOD that is POST
         $_SERVER['REQUEST_METHOD'] == 'POST';
@@ -307,7 +316,7 @@ if(!isset($_GET['action'])) {
             echo json_encode($result);
         }
     break;
-// -----------------------------------------Display Seats------------------------------------
+// -----------------------------------------Display Seats--------------------------------------------------------------
     case 'displayseats':
         // A super global variable which is used to collect data from REQUEST METHOD that is POST
         $_SERVER['REQUEST_METHOD'] == 'POST';
@@ -323,7 +332,7 @@ if(!isset($_GET['action'])) {
             echo json_encode($result);
         }
     break;
-// ------------------------------------------Display Ticket Type-----------------------------
+// ------------------------------------------Display Ticket Type-------------------------------------------------------
     case 'displaytickettype':
         // A super global variable which is used to display data from REQUEST METHOD that is GET
         $_SERVER['REQUEST_METHOD'] == 'GET';
@@ -337,7 +346,7 @@ if(!isset($_GET['action'])) {
             echo json_encode($result);
         }
     break;
-// --------------------------------------------Seat Reservation---------------------------------
+// --------------------------------------------Seat Reservation--------------------------------------------------------
     case 'seatreserve':
         // A super global variable which is used to collect data from REQUEST METHOD that is POST
         $_SERVER['REQUEST_METHOD'] == 'POST';
@@ -357,7 +366,7 @@ if(!isset($_GET['action'])) {
             http_response_code(401);
         }
     break;
-// -------------------------------------------Display Booked Ticket-----------------------------
+// -------------------------------------------Display Booked Ticket----------------------------------------------------
     case 'displayticket':
         // A super global variable which is used to display data from REQUEST METHOD that is GET
         $_SERVER['REQUEST_METHOD'] = 'GET';
@@ -376,7 +385,7 @@ if(!isset($_GET['action'])) {
             http_response_code(401);
         }
     break;
-// -------------------------------------Display Movie Sessions for Ticket Update------------------
+// -------------------------------------Display Movie Sessions for Ticket Update---------------------------------------
     case 'displayallsessions':
         // A super global variable which is used to display data from REQUEST METHOD that is GET
         $_SERVER['REQUEST_METHOD'] == 'GET';
@@ -395,7 +404,7 @@ if(!isset($_GET['action'])) {
             http_response_code(401);
         }
     break;
-//-----------------------------------------Update Movie Ticket----------------------------------
+//-----------------------------------------Update Movie Ticket---------------------------------------------------------
     case 'updateticket':
         // A super global variable which is used to collect data from REQUEST METHOD that is POST
         $_SERVER['REQUEST_METHOD'] == 'POST';
@@ -416,7 +425,7 @@ if(!isset($_GET['action'])) {
             http_response_code(401);
         }
     break;
-// ----------------------------------------Delete Movie Ticket----------------------------------
+// ----------------------------------------Delete Movie Ticket---------------------------------------------------------
     case 'deleteticket':
         // A super global variable which is used to collect data from REQUEST METHOD that is POST
         $_SERVER['REQUEST_METHOD'] == 'POST';
@@ -435,11 +444,11 @@ if(!isset($_GET['action'])) {
             http_response_code(401);
         }
     break;
-// ----------------------------------------Default 500 ERROR------------------------------------
+// ----------------------------------------Default 500 ERROR-----------------------------------------------------------
     default:
         http_response_code(500);
     break;
-// --------------------------------------Admin Login--------------------------------------------
+// --------------------------------------Admin Login-------------------------------------------------------------------
     case 'adminlogin':
         // A super global variable which is used to collect data from REQUEST METHOD that is POST
         $_SERVER['REQUEST_METHOD'] == 'POST';
@@ -452,12 +461,50 @@ if(!isset($_GET['action'])) {
         $BrowserType = $_SERVER['HTTP_USER_AGENT'];
         $Activity = $_SERVER['QUERY_STRING'];
         if($db->adminLogin($usernameAdmin, $passwordAdmin, $IPAddress, $Time, $BrowserType, $Activity)){
-            // When the login attempt is successful
+            // When the admin login attempt is successful
             echo json_encode($_SESSION["UserID"]);
             echo json_encode($_SESSION["UserType"]);
             http_response_code(202);
         } else {
-            // When the login attempt is unsuccessful
+            // When the admin login attempt is unsuccessful
+            http_response_code(403);
+        }
+    break;
+// ---------------------------------Display Activity Log in Admin Dashboard--------------------------------------------
+    case 'displaydashboard':
+        // A super global variable which is used to display data from REQUEST METHOD that is GET
+        $_SERVER['REQUEST_METHOD'] == 'GET';
+        $result = $db->displayDashBoard();
+        if($_SESSION['session']->logged_in_check()) {
+            if($result == false) {
+                // Failed fetch all Movies from the database
+                http_response_code(204);
+            } else {
+                // Return as JSON output after successful fetchAll Movies from the database
+                http_response_code(201);
+                echo json_encode($result);
+            }
+        } else {
+            // If the admin is not logged in
+            http_response_code(403);
+        } 
+    break;
+// -------------------------------Display Movies in Admin Movie Session Section----------------------------------------
+    case 'adminpresetmoviedata':
+        // A super global variable which is used to display data from REQUEST METHOD that is GET
+        $_SERVER['REQUEST_METHOD'] == 'GET';
+        $result = $db->adminSelectMovieData();
+        if($_SESSION['session']->logged_in_check()) {
+            if($result == false) {
+                // Failed to fetch all Movie data from the database
+                http_response_code(204);
+            } else {
+                // Return as JSON output after successful fetchAll Movie data from the database
+                http_response_code(201);
+                echo json_encode($result);
+            }
+        } else {
+            // If the admin is not logged in
             http_response_code(403);
         }
     break;

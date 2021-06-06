@@ -72,7 +72,7 @@ export default function HomePage() {
 
     useEffect(() => {
         setLoading(true);
-        postDisplayLatestMovies();
+        postDisplayLatestMovies();    
     }, []);
 
 //--------------------------------------Display 3 Latest Movies on Home page-------------------------------------------------------------------------------------------------------   
@@ -113,9 +113,9 @@ export default function HomePage() {
             // When Rate Limit per second exceeded
             if (res.status === 429) {
                 console.log('Exceeded Rate Limit');
-                setMessage("Error: Exceeded Rate Limit");
+                setMessage("Warning: Exceeded Rate Limit");
                 setOpenSnackBar(true);
-                setSeverity("error");
+                setSeverity("warning");
             }
         })   
     }  

@@ -99,6 +99,7 @@ export default function FavouriteMovies() {
                 setMessage("Your favourite list is empty");
                 setOpenSnackBar(true);
                 setSeverity("warning");
+                return;
             }
             
             // Successfully displaying movies in favourite list
@@ -107,7 +108,8 @@ export default function FavouriteMovies() {
                 res.json().then((data) => {
                     setMovie(data);
                     console.log(data);
-                })
+                });
+                return;
             }
 
             // When daily request limit exceeded
@@ -116,14 +118,16 @@ export default function FavouriteMovies() {
                 setMessage("Error: Request limit exceeded within 24 hours");
                 setOpenSnackBar(true);
                 setSeverity("error");
+                return;
             }
 
             // When Rate Limit per second exceeded
             if (res.status === 429) {
                 console.log('Exceeded Rate Limit');
-                setMessage("Error: Exceeded Rate Limit");
+                setMessage("Warning: Exceeded Rate Limit");
                 setOpenSnackBar(true);
-                setSeverity("error");
+                setSeverity("warning");
+                return;
             }
         })   
     }
@@ -147,6 +151,7 @@ export default function FavouriteMovies() {
                 setSeverity("success");
                 setMessage("The movie is removed from your favourite list.");
                 postDisplayFavouriteMovie();
+                return;
             }
 
             // Unsuccessfully removing Movie From Favourite list
@@ -164,14 +169,16 @@ export default function FavouriteMovies() {
                 setMessage("Error: Request limit exceeded within 24 hours");
                 setOpenSnackBar(true);
                 setSeverity("error");
+                return;
             }
 
             // When Rate Limit per second exceeded
             if (response.status === 429) {
                 console.log('Exceeded Rate Limit');
-                setMessage("Error: Exceeded Rate Limit");
+                setMessage("Warning: Exceeded Rate Limit");
                 setOpenSnackBar(true);
-                setSeverity("error");
+                setSeverity("warning");
+                return;
             }
         })
         return false;

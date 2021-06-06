@@ -248,15 +248,6 @@ h1 {
   margin-bottom: 12px;
 }
 
-#loading-spinner {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  margin-top: 200px;
-}
-
 #moviecontents {
   width: 330px; 
   height: 565px; 

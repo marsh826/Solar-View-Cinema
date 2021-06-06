@@ -132,6 +132,7 @@ export default function Profile() {
                 setMessage("You are not logged in. No Profile is found.");
                 setOpenSnackBar(true);
                 setSeverity("warning");
+                return;
             }
 
             // Unsuccessfully displaying account details
@@ -142,6 +143,7 @@ export default function Profile() {
                 setMessage("Error: Unable to fetch user profile");
                 setOpenSnackBar(true);
                 setSeverity("error");
+                return;
             }
             
             // Successfully displaying account details
@@ -151,7 +153,8 @@ export default function Profile() {
                 res.json().then((data) => {
                     setProfile(data);
                     console.log(data);
-                })
+                });
+                return;
             }
         
             // When daily request limit exceeded
@@ -160,14 +163,16 @@ export default function Profile() {
                 setMessage("Error: Request limit exceeded within 24 hours");
                 setOpenSnackBar(true);
                 setSeverity("error");
+                return;
             }
 
             // When Rate Limit per second exceeded
             if (res.status === 429) {
                 console.log('Exceeded Rate Limit');
-                setMessage("Error: Exceeded Rate Limit");
+                setMessage("Warning: Exceeded Rate Limit");
                 setOpenSnackBar(true);
-                setSeverity("error");
+                setSeverity("warning");
+                return;
             }
         })   
         return false;
@@ -212,19 +217,21 @@ export default function Profile() {
             } 
 
             // When daily request limit exceeded
-            if (response.status === 422) {
+            if(response.status === 422) {
                 console.log('Request limit exceeded within 24 hours');
                 setMessage("Error: Request limit exceeded within 24 hours");
                 setOpenSnackBar(true);
                 setSeverity("error");
+                return;
             }
 
             // When Rate Limit per second exceeded
-            if (response.status === 429) {
+            if(response.status === 429) {
                 console.log('Exceeded Rate Limit');
-                setMessage("Error: Exceeded Rate Limit");
+                setMessage("Warning: Exceeded Rate Limit");
                 setOpenSnackBar(true);
-                setSeverity("error");
+                setSeverity("warning");
+                return;
             }
         })
         return false;
@@ -270,14 +277,16 @@ export default function Profile() {
                 setMessage("Error: Request limit exceeded within 24 hours");
                 setOpenSnackBar(true);
                 setSeverity("error");
+                return;
             }
 
             // When Rate Limit per second exceeded
             if (response.status === 429) {
                 console.log('Exceeded Rate Limit');
-                setMessage("Error: Exceeded Rate Limit");
+                setMessage("Warning: Exceeded Rate Limit");
                 setOpenSnackBar(true);
-                setSeverity("error");
+                setSeverity("warning");
+                return;
             }
         })
         return false;
@@ -305,14 +314,16 @@ export default function Profile() {
                 setMessage("Error: Request limit exceeded within 24 hours");
                 setOpenSnackBar(true);
                 setSeverity("error");
+                return;
             }
 
             // When Rate Limit per second exceeded
             if (response.status === 429) {
                 console.log('Exceeded Rate Limit');
-                setMessage("Error: Exceeded Rate Limit");
+                setMessage("Warning: Exceeded Rate Limit");
                 setOpenSnackBar(true);
-                setSeverity("error");
+                setSeverity("warning");
+                return;
             }
         })
         return false;
@@ -420,20 +431,21 @@ export default function Profile() {
                             <form id="updateform" autoComplete="off" onSubmit={handleSubmit(postUpdateProfile)}>
                                 <div className="formgroup">
                                     <label for="firstname">First Name</label>
-                                    {/* First Name field requires value in order to proceed with the register process */}
+                                    {/* First Name field requires value in order to proceed with the update process */}
                                     <input type="text" placeholder="First Name" name="firstname" id="FirstNameUpd" defaultValue={profile.FirstName}
                                         {...register("FirstName", { required: true })}
                                     />
-                                    {/* Error message when the user did not provide username value in the unsername field */}
+                                    {/* Error message when the user did not provide username value in the first name field */}
                                     {errors?.FirstName?.type === "required" && <p className="errormssg">This field is required</p>}
                                 </div>
 
                                 <div className="formgroup">
                                     <label for="lastname">Last Name</label>
+                                    {/* Last Name field requires value in order to proceed with the update process */}
                                     <input type="text" placeholder="Last Name" name="lastname" id="LastNameUpd" defaultValue={profile.LastName}
                                         {...register("LastName", { required: true })}    
                                     />
-                                    {/* Error message when the user did not provide username value in the unsername field */}
+                                    {/* Error message when the user did not provide username value in the last name field */}
                                     {errors?.LastName?.type === "required" && <p className="errormssg">This field is required</p>}
                                 </div>  
 
@@ -464,7 +476,7 @@ export default function Profile() {
 
                                 <div className="formgroup">
                                     <label for="email">Email</label>
-                                    {/* Email field requires value and must be in correct data format in order to proceed with the register process */}
+                                    {/* Email field requires value and must be in correct data format in order to proceed with the update process */}
                                     <input type="text" placeholder="Email" name="email" id="EmailUpd" defaultValue={profile.Email}
                                         {...register("Email", { required: true, pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i })}
                                     />
@@ -475,7 +487,7 @@ export default function Profile() {
 
                                 <div className="formgroup">
                                     <label for="Phone">Mobile Phone</label>
-                                    {/* Mobile Phone field requires value and must be in correct data format in order to proceed with the register process */}
+                                    {/* Mobile Phone field requires value and must be in correct data format in order to proceed with the update process */}
                                     <input type="text" placeholder="Phone" name="phone" id="PhoneUpd" defaultValue={profile.Phone}
                                         {...register("Phone", { required: true, maxLength: 11, pattern: {value: /^\d{11}$/} })}
                                     />  
@@ -487,17 +499,17 @@ export default function Profile() {
 
                                 <div className="formgroup">
                                     <label for="username">Username</label>
-                                    {/* Username field requires value in order to proceed with the register process */}
+                                    {/* Username field requires value in order to proceed with the update process */}
                                     <input type="text" placeholder="Username" name="username" id="UsernameUpd" defaultValue={profile.Username}
                                         {...register("Username", { required: true })}
                                     />
-                                    {/* Error message when the user did not provide username value in the unsername field */}
+                                    {/* Error message when the user did not provide username value in the username field */}
                                     {errors?.Username?.type === "required" && <p className="errormssg">This field is required</p>}
                                 </div>
 
                                 <div className="formgroup">
                                     <label for="password">Password</label>
-                                    {/* Password field requires value in order to proceed with the register process */}
+                                    {/* Password field requires value in order to proceed with the update process */}
                                     <input type="password" placeholder="Password" name="password" id="PasswordUpd" defaultValue=""
                                         {...register("Password", { required: true })}
                                     />   

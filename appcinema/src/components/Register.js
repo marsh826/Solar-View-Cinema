@@ -108,14 +108,16 @@ export default function Register() {
                 setMessage("Error: Request limit exceeded within 24 hours");
                 setOpenSnackBar(true);
                 setSeverity("error");
+                return;
             }
 
             // When Rate Limit per second exceeded
             if (response.status === 429) {
                 console.log('Exceeded Rate Limit');
-                setMessage("Error: Exceeded Rate Limit");
+                setMessage("Warning: Exceeded Rate Limit");
                 setOpenSnackBar(true);
-                setSeverity("error");
+                setSeverity("warning");
+                return;
             }
         })
         return false;
@@ -142,7 +144,7 @@ export default function Register() {
                         <input type="text" placeholder="First Name" name="firstname" id="FirstName" defaultValue=""
                             {...register("FirstName", { required: true })}
                         />
-                        {/* Error message when the user did not provide username value in the unsername field */}
+                        {/* Error message when the user did not provide username value in the first name field */}
                         {errors?.FirstName?.type === "required" && <p className="errormssg">This field is required</p>}
                     </div>
 
@@ -152,7 +154,7 @@ export default function Register() {
                         <input type="text" placeholder="Last Name" name="lastname" id="LastName" defaultValue=""
                             {...register("LastName", { required: true })}
                         />
-                        {/* Error message when the user did not provide username value in the unsername field */}
+                        {/* Error message when the user did not provide username value in the last name field */}
                         {errors?.LastName?.type === "required" && <p className="errormssg">This field is required</p>}    
                     </div>  
 
@@ -186,7 +188,7 @@ export default function Register() {
                         <input type="text" placeholder="Email" name="email" id="Email" defaultValue=""
                             {...register("Email", { required: true, pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i })}
                         />    
-                        {/* Error message when the user did not provide password value in the password field */}
+                        {/* Error message when the user did not provide password value in the email field */}
                         {errors?.Email?.type === "required" && <p className="errormssg">This field is required</p>}
                         {errors?.Email?.type === "pattern" && <p className="errormssg">Invalid Email</p>}
                     </div>
@@ -197,7 +199,7 @@ export default function Register() {
                         <input type="text" placeholder="Phone" name="phone" id="Phone" defaultValue=""
                             {...register("Phone", { required: true, maxLength: 10, pattern: {value: /^\d{10}$/} })}
                         />    
-                        {/* Error message when the user did not provide password value in the password field */}
+                        {/* Error message when the user did not provide password value in the phone field */}
                         {errors?.Phone?.type === "required" && <p className="errormssg">This field is required</p>}
                         {errors?.Phone?.type === "maxLength" && <p className="errormssg">Please enter a 10 digit phone number</p>}
                         {errors?.Phone?.type === "pattern" && <p className="errormssg">Invalid Mobile Phone Number</p>}
@@ -209,7 +211,7 @@ export default function Register() {
                         <input type="text" placeholder="Username" name="username" id="UsernameReg" defaultValue=""
                             {...register("Username", { required: true })}
                         />
-                        {/* Error message when the user did not provide username value in the unsername field */}
+                        {/* Error message when the user did not provide username value in the username field */}
                         {errors?.Username?.type === "required" && <p className="errormssg">This field is required</p>}
                     </div>
 
