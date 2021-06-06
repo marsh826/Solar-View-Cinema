@@ -401,5 +401,38 @@ class databaseOBJ {
             throw $ex;
         }
     }
+    // Add a Movie in Admin Movie Management Section
+    function adminAddMovie($movieName, $releaseDate, $movieDescription, $genre, $movieIMG) {
+        $sql = "INSERT INTO movie(MovieName, ReleaseDate, MovieDescription, Genre, MovieImage)
+        VALUES(:moviename, :releasedate, :moviedescription, :genre, :movieimage)";
+        $stmt = $this->dbconn->prepare($sql);
+        $stmt->bindValue(':moviename', $movieName);
+        $stmt->bindValue(':releasedate', $releaseDate);
+        $stmt->bindValue(':moviedescription', $movieDescription);
+        $stmt->bindValue(':genre', $genre);
+        $stmt->bindValue(':movieimage', $movieIMG);
+        return $stmt->execute();
+    }
+    // Update Movie in Admin Movie Management Section
+    function adminUpdateMovie($movieNameUPDT, $releaseDateUPDT, $movieDescriptionUPDT, $genreUPDT, $movieIMGUPDT, $movieIDUPDT) {
+        $mysql = "UPDATE movie SET MovieName = :movienameupdt, ReleaseDate = :releasedateupdt, 
+        MovieDescription = :moviedescriptionupdt, Genre = :genreupdt, MovieImage = :movieimageupdt
+        WHERE MovieID = :movieidupdt";
+        $stmt = $this->dbconn->prepare($mysql);
+        $stmt->bindValue(':movienameupdt', $movieNameUPDT);
+        $stmt->bindValue(':releasedateupdt', $releaseDateUPDT);
+        $stmt->bindValue(':moviedescriptionupdt', $movieDescriptionUPDT);
+        $stmt->bindValue(':genreupdt', $genreUPDT);
+        $stmt->bindValue(':movieimageupdt', $movieIMGUPDT);
+        $stmt->bindValue(':movieidupdt', $movieIDUPDT);
+        return $stmt->execute();
+    }
+    // Delete Movie in Admin Movie Management Section
+    function admindeleteMovie($movieDelete) {
+        $sql = "DELETE from movie WHERE MovieID = :movieid";
+        $stmt = $this->dbconn->prepare($sql);
+        $stmt->bindValue(':movieid', $movieDelete);
+        return $stmt->execute();
+    }
 }
 ?>

@@ -13,14 +13,24 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import TablePagination from '@material-ui/core/TablePagination';
 import Paper from '@material-ui/core/Paper';
+import { Publish, Delete } from '@material-ui/icons';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import IconButton from '@material-ui/core/IconButton';
 
 // React const that sets up style customisation for Material UI components
 const useStyles = makeStyles((theme) => ({
     margin: {
-      margin: theme.spacing(1),
+        margin: theme.spacing(1),
     },
+    tableRow: {
+        whiteSpace: 'normal',
+        wordBreak: 'break-word'
+    }
 }));
 
 export default function ManageMovie() {
@@ -60,30 +70,36 @@ export default function ManageMovie() {
     // Toggle between Admin Movie Management and Admin Add Movie section
     const [toggleAddMovie, setToggleAddMovie ] = useState(true);
 
-    // React Const for Setting Pages
-    const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    // React const for selected movie
+    const [selectedMovie, setSelectedMovie] = useState([]);
 
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage);
-      };
-    
-    const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
-    };
+    // React Const for Dialog Movie Update
+    const [dialogUpdate, setDialogUpdate] = useState(true);
 
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, movies.length - page * rowsPerPage);
-
-    const ellipsisStyle = {
-        // whiteSpace: 'nowrap',
-        // textOverflow: 'ellipsis',
-        // overflow: 'hidden',
-        // width: '350px',
-        // maxWidth: '350px' 
-        whiteSpace: 'normal',
-        wordBreak: 'break-word',
+    // React Functions for Opening and Closing Dialog Movie Update
+    function openDialogUpdate(movies) {
+        setSelectedMovie(movies);
+        setDialogUpdate(true);
+        console.log(movies);
     }
+    function closeDialogUpdate() {
+        setDialogUpdate(false);
+        // setSelectedMovie([]);
+    }
+
+    // React Const for Dialog Movie Delete
+    const [dialogDelete, setDialogDelete] = useState(false);
+
+    // React Functions for Opening and Closing Dialog Movie Delete
+    function openDialogDelete() {
+        setDialogDelete(true);
+        setSelectedMovie(movies)
+    }
+    function closeDialogDelete() {
+        setDialogDelete(false);
+        // setSelectedMovie([]);
+    }
+
 
     useEffect(() => {
         postDisplayMovies();
@@ -129,17 +145,22 @@ export default function ManageMovie() {
             credentials: "include"
         })
         .then((response) => {
-
+            // Successfully add a movie
             if(response.status === 202) {
                 console.log('success');
+                setMessage("A new movie is added");
+                setOpenSnackBar(true);
+                setSeverity("success");
                 return;
             }
-
+            // Unsuccessfully add a movie
             if(response.status === 501) {
                 console.log('not implemented');
+                setMessage("Error: Something went wrong. Try Again.");
+                setOpenSnackBar(true);
+                setSeverity("error");
                 return;
             }
-            
             // When daily request limit exceeded
             if(response.status === 422) {
                 console.log('Request limit exceeded within 24 hours');
@@ -148,7 +169,6 @@ export default function ManageMovie() {
                 setSeverity("error");
                 return;
             }
-
             // When Rate Limit per second exceeded
             if(response.status === 429) {
                 console.log('Exceeded Rate Limit');
@@ -159,7 +179,97 @@ export default function ManageMovie() {
             }
         })
     }
-
+// ----------------------------------------------------------------------Update Movie----------------------------------------------------------------------------------------------
+    function postUpdateMovie() {
+        var movie = {
+            "MovieNameUpdt" : document.getElementById("MovieNameUpdt").value,
+            "ReleaseDateUpdt" : document.getElementById("ReleaseDateUpdt").value,
+            "MovieDescriptionUpdt" : document.getElementById("MovieDescriptionUpdt").value,
+            "GenreUpdt" : document.getElementById("GenreUpdt").value,
+            "MovieIMGUpdt" : document.getElementById("MovieIMGUpdt").value,
+            "MovieIDUpdt" : document.getElementById("MovieIDUpdt").value
+        }
+        fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=adminupdatemovie", {
+            method: "POST",
+            body: JSON.stringify(movie),
+            credentials: "include"
+        })
+        .then((response) => {
+            // Successfully update the movie
+            if(response.status === 202) {
+                console.log('success');
+                return;
+            }
+            // Unsuccessfully update the movie
+            if(response.status === 501) {
+                console.log('not implemented');
+                return;
+            }
+            // When daily request limit exceeded
+            if(response.status === 422) {
+                console.log('Request limit exceeded within 24 hours');
+                setMessage("Error: Request limit exceeded within 24 hours");
+                setOpenSnackBar(true);
+                setSeverity("error");
+                return;
+            }
+            // When Rate Limit per second exceeded
+            if(response.status === 429) {
+                console.log('Exceeded Rate Limit');
+                setMessage("Warning: Exceeded Rate Limit");
+                setOpenSnackBar(true);
+                setSeverity("warning");
+                return;
+            }
+        })
+    }    
+// ------------------------------------------------------------Delete Movie--------------------------------------------------------------------------------------------------------
+    function postDeleteMovie(id) {
+        var movieID = {
+            'movieid' : id
+        }
+        fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=admindeletemovie",{
+            method: "POST",
+            body: JSON.stringify(movieID),
+            credentials: 'include'
+        })
+        .then(function(response){
+            console.log(response);
+            // Successfully removing Movie 
+            if(response.status === 202) {
+                console.log('success');
+                setOpenSnackBar(true);
+                setSeverity("success");
+                setMessage("The movie is removed.");
+                return;
+            }
+            // Unsuccessfully removing Movie 
+            if(response.status === 501) {
+                console.log('not implemented');
+                setOpenSnackBar(true);
+                setSeverity("error");
+                setMessage("Error: Unable to remove movie. Please try again");
+                return;
+            }
+            // When daily request limit exceeded
+            if (response.status === 422) {
+                console.log('Request limit exceeded within 24 hours');
+                setMessage("Error: Request limit exceeded within 24 hours");
+                setOpenSnackBar(true);
+                setSeverity("error");
+                return;
+            }
+            // When Rate Limit per second exceeded
+            if (response.status === 429) {
+                console.log('Exceeded Rate Limit');
+                setMessage("Warning: Exceeded Rate Limit");
+                setOpenSnackBar(true);
+                setSeverity("warning");
+                return;
+            }
+        })
+        return false;
+    }
 // --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     return(
         <div id="moviepage">
@@ -222,21 +332,30 @@ export default function ManageMovie() {
                                         <TableCell component="th" scope="row">
                                             {movies.MovieID}
                                         </TableCell>
-                                        <TableCell style={ellipsisStyle}>{movies.MovieName}</TableCell>
-                                        <TableCell style={ellipsisStyle}>{movies.ReleaseDate}</TableCell>
-                                        <TableCell style={ellipsisStyle}>{movies.MovieDescription}</TableCell>
-                                        <TableCell style={ellipsisStyle}>{movies.Genre}</TableCell>
-                                        <TableCell style={ellipsisStyle}>{movies.MovieImage}</TableCell>
+                                        <TableCell className={classes.tableRow}>{movies.MovieName}</TableCell>
+                                        <TableCell className={classes.tableRow}>{movies.ReleaseDate}</TableCell>
+                                        <TableCell className={classes.tableRow}>{movies.MovieDescription}</TableCell>
+                                        <TableCell className={classes.tableRow}>{movies.Genre}</TableCell>
+                                        <TableCell className={classes.tableRow}>{movies.MovieImage}</TableCell>
+                                        <TableCell padding="default">
+                                            <IconButton
+                                                onClick={() => {openDialogUpdate([movies])}}
+                                            >
+                                                <Publish />
+                                            </IconButton>
+                                        </TableCell>
+                                        <TableCell padding="default">
+                                            <IconButton
+                                                onClick={() => {openDialogDelete([movies])}}
+                                            >
+                                                <Delete />
+                                            </IconButton>
+                                        </TableCell>
                                     </TableRow>
-                                ))}
-                                {emptyRows > 0 && (
-                                    <TableRow style={{ height: 53 * emptyRows }}>
-                                        <TableCell colSpan={6} />
-                                    </TableRow>
-                                )}
+                                ))}    
                                 </TableBody>
                             </Table>
-                        </TableContainer>
+                        </TableContainer>   
                     </div>
                     :
                     <div id="add-movie">
@@ -321,6 +440,135 @@ export default function ManageMovie() {
                                 </Button>  
                             </div>    
                         </form>
+{/* -----------------------------------------------------------------------Movie Update Dialog------------------------------------------------------------ */}
+                        <Dialog onClose={closeDialogDelete} aria-labelledby="simple-dialog-title" open={dialogDelete}>
+                            <DialogTitle id="simple-dialog-title">Set backup account</DialogTitle>
+                            <DialogContent>
+                            <DialogContentText id="alert-dialog-description">
+                                {selectedMovie.map((selectedMovie, index) => (
+                                <form id="movieform" autoComplete="off" onSubmit={handleSubmit(postUpdateMovie)}>
+                                    <div className="formgroup">
+                                        <label for="moviename">Movie Name</label>
+                                        {/* Movie Name field requires value in order to proceed with the register process */}
+                                        <input id="MovieNameUpdt" type="text" placeholder="Movie Name" name="moviename"  defaultValue={selectedMovie.MovieName}
+                                            {...register("MovieName", { required: true })}
+                                        />
+                                        {/* Error message when the user did not provide username value in the movie name field */}
+                                        {errors?.MovieName?.type === "required" && <p className="errormssg">Movie Name field is required</p>}
+                                    </div>
+
+                                    <div className="formgroup">
+                                        <label for="releasedate">Release Date</label>
+                                        {/* Date of Birth field requires value and must in correct data format in order to proceed with the register process */}
+                                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                            <DatePicker
+                                                animateYearScrolling
+                                                disableFuture
+                                                minDate="1930-01-01"
+                                                name="releasedate"
+                                                margin="normal"
+                                                id="ReleaseDateUpdt"
+                                                initialFocusedDate={selectedMovie.ReleaseDate}
+                                                placeholder="Release Date"
+                                                format="yyyy-MM-dd"
+                                                value={selectedDate}
+                                                onChange={handleDateChange}
+                                                KeyboardButtonProps={{
+                                                    'aria-label': 'change date',
+                                                }}
+                                            />
+                                        </MuiPickersUtilsProvider>
+                                    </div>  
+
+                                    <br/>
+
+                                    <div className="formgroup">
+                                        <label for="moviedescription">Movie Description</label>
+                                        {/* Username field requires value in order to proceed with the register process */}
+                                        <textarea id="MovieDescriptionUpdt" name="moviedescription"  cols="50" rows="10" 
+                                            defaultValue={selectedMovie.MovieDescription}
+                                            {...register("MovieDescription", { required: true })}
+                                        />
+                                        {/* Error message when the user did not provide username value in the unsername field */}
+                                        {errors?.MovieDescription?.type === "required" && <p className="errormssg">This field is required</p>}
+                                    </div>
+                                    <br />
+
+                                    <div className="formgroup">
+                                        <label for="genre">Genre</label>
+                                        {/* Genre field requires value and must be in correct data format in order to proceed with the register process */}
+                                        <input id="GenreUpdt" type="text" placeholder="Genre" name="genre"  defaultValue={selectedMovie.Genre}
+                                            {...register("Genre", { required: true })}
+                                        />    
+                                        {/* Error message when the user did not provide password value in the password field */}
+                                        {errors?.Genre?.type === "required" && <p className="errormssg">Genre field is required</p>}
+                                    </div>
+
+                                    <div className="formgroup">
+                                        <label for="movieimg">Movie Image Reference Link</label>
+                                        {/* Mobile Phone field requires value and must be in correct data format in order to proceed with the register process */}
+                                        <input id="MovieIMGUpdt" type="url" placeholder="Movie Image Link" name="phone" defaultValue={selectedMovie.MovieImage}
+                                            {...register("MovieIMG", { required: true, maxLength: 10 })}
+                                        />    
+                                        {/* Error message when the user did not provide password value in the password field */}
+                                        {errors?.MovieIMG?.type === "required" && 
+                                            <p className="errormssg">
+                                                Movie Image Reference Link field is required 
+                                            </p>
+                                        }
+                                    </div>
+
+                                    <div className="formgroup">
+                                        <label for="movieID">MovieID</label>
+                                        {/* Mobile Phone field requires value and must be in correct data format in order to proceed with the register process */}
+                                        <input id="MovieIDUpdt" type="text" name="movieID" value={selectedMovie.MovieID}/>
+                                    </div>
+                                    
+                                    <div id="add-button">
+                                    <Button
+                                        type="submit"
+                                        variant="contained" 
+                                        color="primary"
+                                        className={classes.margin}>
+                                        Submit
+                                    </Button>  
+                                    </div>
+                                </form>
+                            ))}   
+                            </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>                            
+                                <Button onClick={closeDialogUpdate} color="primary">
+                                    No
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
+
+                        <Dialog onClose={closeDialogUpdate} aria-labelledby="update-dialog-title" open={dialogUpdate}>
+                        <DialogTitle id="update-dialog-title">Set backup account</DialogTitle>
+                        
+                        </Dialog>
+                    
+// --------------------------------------------------------------------Delete Movie Dialog-----------------------------------------------------------------------------------------
+                        <Dialog onClose={closeDialogDelete} aria-labelledby="simple-dialog-title" open={dialogDelete}>
+                            <DialogTitle id="simple-dialog-title">Set backup account</DialogTitle>
+                            <DialogContent>
+                            <DialogContentText id="alert-dialog-description">
+                                Are you sure you want to delete this movie ?
+                            </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                            {selectedMovie.map((selectedMovie, index) => (
+                            <Button onClick={() => postDeleteMovie(selectedMovie.MovieID)} color="primary">
+                                Yes
+                            </Button>
+                            ))}
+                            
+                            <Button onClick={closeDialogDelete} color="primary">
+                                No
+                            </Button>
+                            </DialogActions>
+                        </Dialog>
                     </div>
             }
         </div>

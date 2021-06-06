@@ -113,6 +113,7 @@ export default function MovieSession() {
             credentials: "include"
         })
         .then((response) => {
+            // Successfully fetched movies
             if(response.status === 201) {
                 console.log('success');
                 response.json().then((data) => {
@@ -121,7 +122,7 @@ export default function MovieSession() {
                 });
                 return;
             }
-
+            // Unsuccessfully fetched movies
             if(response.status === 204) {
                 console.log('not accepted');
                 setMovie([]);
