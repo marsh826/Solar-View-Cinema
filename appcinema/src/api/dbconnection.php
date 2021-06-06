@@ -344,5 +344,28 @@ class databaseOBJ {
             throw $ex;
         }
     }
+    function admindisplayMovies() {
+        try {
+            $mysql = "SELECT * FROM movie WHERE MovieID = 1";
+            $stmt = $this->dbconn->prepare($mysql);
+            $stmt->execute();
+            $data = $stmt->fetchAll();
+            $result = array();
+            foreach($data as $moviedata) {
+                $jsonformat["MovieID"] = $moviedata["MovieID"];
+                $jsonformat["MovieName"] = $moviedata["MovieName"];
+                $jsonformat["ReleaseDate"] = $moviedata["ReleaseDate"];
+                $jsonformat["MovieDescription"] = $moviedata["MovieDescription"];
+                $jsonformat["Genre"] = $moviedata["Genre"];
+                $jsonformat["MovieImage"] = $moviedata["MovieImage"];
+                array_push($result, $jsonformat);
+            }
+            return $result;  
+            return true;
+        }
+        catch (PDOException $ex) { 
+            throw $ex;
+        }
+    }
 }
 ?>

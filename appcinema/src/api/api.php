@@ -508,6 +508,20 @@ if(!isset($_GET['action'])) {
             http_response_code(403);
         }
     break;
+//-------------------------------------------Display Movies------------------------------------------------------------
+    case 'admindisplaymovies':
+        // A super global variable which is used to display data from REQUEST METHOD that is GET 
+        $_SERVER['REQUEST_METHOD'] == "GET";   
+        $result = $db->admindisplayMovies();
+        if($result == false) {
+            // Failed fetch all Movies from the database
+            http_response_code(204);
+        } else {
+            // Return as JSON output after successful fetchAll Movies  from the database
+            http_response_code(201);
+            echo json_encode($result);
+        }  
+    break;
     }
 }
 ?>

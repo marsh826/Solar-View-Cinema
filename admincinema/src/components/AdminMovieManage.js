@@ -17,12 +17,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const columns = [
-    { field: 'id', headerName: 'MovieID', width: 70 },
-    { field: 'moviename', headerName: 'Movie Name', width: 190 },
-    { field: 'releasedate', headerName: 'Release Date', width: 190 },
-    { field: 'moviedescription', headerName: 'Movie Description', width: 190 },
-    { field: 'genre', headerName: 'Genre', width: 170 },
-    { field: 'movieimg', headerName: 'Movie Image Link', width: 190 }
+    { field: 'MovieID', headerName: 'MovieID', width: 135 },
+    { field: 'MovieName', headerName: 'Movie Name', width: 190 },
+    { field: 'ReleaseDate', headerName: 'Release Date', width: 190 },
+    { field: 'MovieDescription', headerName: 'Movie Description', width: 190 },
+    { field: 'Genre', headerName: 'Genre', width: 170 },
+    { field: 'MovieImage', headerName: 'Movie Image Link', width: 190 }
 ];
 
 export default function ManageMovie() {
@@ -44,10 +44,6 @@ export default function ManageMovie() {
 
     // React Const Movies set up empty array to store data that is succesfully fetched 
     const [movies, setMovies] = useState([]);
-
-    
-    // // React Const for loading screen before rendering
-    // const [loading, setLoading] = useState(false); 
 
     // Default React Hook Form const for Login FormValidation
     const { 
@@ -71,12 +67,11 @@ export default function ManageMovie() {
     }, []);
 // -----------------------------------------------------------Get Movies from Database--------------------------------------------------------------------------------------------- 
     function postDisplayMovies() {
-        fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=displaymovies",{
+        fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=admindisplaymovies",{
             method: "GET",
             credentials: 'include'
         }).then((res) => {
-            // setLoading(false);
-            // Successfully displaying movies 
+            // Unsuccessfully displaying movies 
             if (res.status === 204) {
                 console.log('no content');
                 setMovies([]);
@@ -85,7 +80,7 @@ export default function ManageMovie() {
                 setSeverity("Error");
                 return;
             } 
-            // Unsuccessfully displaying movies
+            // Successfully displaying movies
             if (res.status === 201) {
                 console.log('created');
                 res.json().then((data) => {
@@ -153,7 +148,7 @@ export default function ManageMovie() {
                     </Alert>
                 </Snackbar>
             </div>
-
+{/* -----------------------------------Show and Hide Buttons for navigating between Movie Management and Add Movie Section--------------------------------------------------------- */}
             {
                 toggleAddMovie ?
                     <Button 
@@ -174,16 +169,18 @@ export default function ManageMovie() {
                         Return to Movie Management
                     </Button>
             }
-
+{/* --------------------------------------------------Show and Hide Movie Management and Add Movie Section------------------------------------------------------------------------- */}
             {
                 toggleAddMovie ?
                     <div id="movie-manage">
                         Display Some Movies
-                        <DataGrid 
-                            rows={movies}
-                            columns={columns}
-                            pageSize={10}
-                        />
+                        <div style={{ height: 400, width: '100%' }}>
+                            <DataGrid 
+                                rows={movies}
+                                columns={columns}
+                                pageSize={10}
+                            />
+                        </div>
                     </div>
                     :
                     <div id="add-movie">
