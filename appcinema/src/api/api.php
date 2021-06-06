@@ -522,6 +522,20 @@ if(!isset($_GET['action'])) {
             echo json_encode($result);
         }  
     break;
+//-------------------------------------------Display Movies------------------------------------------------------------
+    case 'admindisplaysession':
+        // A super global variable which is used to display data from REQUEST METHOD that is GET 
+        $_SERVER['REQUEST_METHOD'] == "GET";   
+        $result = $db->admindisplaySession();
+        if($result == false) {
+            // Failed fetch all Movie Session from the database
+            http_response_code(204);
+        } else {
+            // Return as JSON output after successful fetchAll Movie Session  from the database
+            http_response_code(201);
+            echo json_encode($result);
+        }  
+    break;
     }
 }
 ?>

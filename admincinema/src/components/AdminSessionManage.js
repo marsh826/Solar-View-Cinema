@@ -9,6 +9,14 @@ import DateFnsUtils from '@date-io/date-fns';
 import {MuiPickersUtilsProvider, DatePicker, TimePicker} from '@material-ui/pickers';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import TablePagination from '@material-ui/core/TablePagination';
+import Paper from '@material-ui/core/Paper';
 
 // React const that sets up style customisation for Material UI components
 const useStyles = makeStyles((theme) => ({
@@ -39,6 +47,25 @@ export default function MovieSession() {
         }
         setOpenSnackBar(false);
     };
+
+    // React Const Movie Session set up empty array to store data that is successfully fetched
+    const [movieSession, setMovieSession] = useState([]);
+
+    // React Const for Setting Pages
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+        };
+    
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
+
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, movieSession.length - page * rowsPerPage);
+    
     
 
     // React Const for Material UI Date Picker with initial state value of null. 
@@ -57,7 +84,7 @@ export default function MovieSession() {
         setSelectedTime(date);
     };
 
-    // React Const for Material UI Time Picker with initial state value of null. 
+    // React Const Movie set up empty array to store data that is successfully fetched
     const [movie, setMovie] = useState([]);
 
     const [movieSelected, setMovieSelected] = useState('');
@@ -77,6 +104,7 @@ export default function MovieSession() {
 
     useEffect(() => {
         postPresetMovieData();
+        postAdminDisplaySession();
     }, [])
 // -------------------------------------------------------Preset Movie Data--------------------------------------------------------------------------------------------------------
     function postPresetMovieData() {
@@ -118,6 +146,54 @@ export default function MovieSession() {
                 return;
             }
         })
+    }
+// -----------------------------------------------Display Movie Sessions in Admin Movie Session Management Section-----------------------------------------------------------------
+    function postAdminDisplaySession() {
+        fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=admindisplaysession",{
+            method: "GET",
+            credentials: 'include'
+        })
+        .then((res) => {
+
+            // Successfully display movie session when selecting a movie
+            if (res.status === 204) {
+                console.log('no content');
+                setMovieSession([]);
+                setMessage("Error: Movie sessions are unavailable for this movie");
+                setOpenSnackBar(true);
+                setSeverity("warning");
+                return;
+            }
+
+            // Unsuccessfully display movie session when selecting a movie
+            if (res.status === 201) {
+                console.log('created');
+                res.json().then((data) => {
+                    setMovieSession(data);
+                    console.log(data);
+                });
+                return;
+            }
+
+            // When daily request limit exceeded
+            if (res.status === 422) {
+                console.log('Request limit exceeded within 24 hours');
+                setMessage("Error: Request limit exceeded within 24 hours");
+                setOpenSnackBar(true);
+                setSeverity("error");
+                return;
+            }
+
+            // When Rate Limit per second exceeded
+            if (res.status === 429) {
+                console.log('Exceeded Rate Limit');
+                setMessage("Error: Exceeded Rate Limit");
+                setOpenSnackBar(true);
+                setSeverity("error");
+                return;
+            }
+        })
+        return false;
     }
 // ------------------------------------------------------Add A Movie Session-------------------------------------------------------------------------------------------------------
     function postAddSession() {
@@ -188,7 +264,43 @@ export default function MovieSession() {
 
             {
                 toggleAddSession ?
-                    <div id="session-manage">Display Some Movies</div>
+                    <div id="session-manage">
+                        <TableContainer component={Paper}>
+                            <Table 
+                                className={classes.table} 
+                                size="medium"
+                                aria-label="simple table" 
+                            >
+                                <TableHead>
+                                <TableRow>
+                                    <TableCell>MovieSessionID</TableCell>
+                                    <TableCell>Session Date</TableCell>
+                                    <TableCell>Time Start</TableCell>
+                                    <TableCell>Time Start</TableCell>
+                                    <TableCell>Movie ID</TableCell>
+                                </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                {movieSession.map((movieSession, index) => (
+                                    <TableRow key={movieSession.MovieSessionID}>
+                                        <TableCell component="th" scope="row">
+                                            {movieSession.MovieSessionID}
+                                        </TableCell>
+                                        <TableCell>{movieSession.SessionDate}</TableCell>
+                                        <TableCell>{movieSession.TimeStart}</TableCell>
+                                        <TableCell>{movieSession.TimeStart}</TableCell>
+                                        <TableCell>{movieSession.MovieID}</TableCell>
+                                    </TableRow>
+                                ))}
+                                {emptyRows > 0 && (
+                                    <TableRow style={{ height: 53 * emptyRows }}>
+                                        <TableCell colSpan={6} />
+                                    </TableRow>
+                                )}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </div>
                     :
                     <div id="add-session">
                         <form id="movieform" autoComplete="off" onSubmit={handleSubmit(postAddSession)}>

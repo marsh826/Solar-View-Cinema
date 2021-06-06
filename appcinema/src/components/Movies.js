@@ -244,7 +244,7 @@ export default function MovieDisplay() {
             }
         })
         return false;
-}
+    }
 //-------------------------------------------------------Display All Seats Available-----------------------------------------------------------------------------------------------
     function postDisplaySeats(id) {
         // Turn on loading

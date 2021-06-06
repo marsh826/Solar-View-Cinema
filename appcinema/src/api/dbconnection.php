@@ -324,8 +324,19 @@ class databaseOBJ {
             $mysql = "SELECT * FROM activitylog";
             $stmt = $this->dbconn->prepare($mysql);
             $stmt->execute();
-            $result = $stmt->fetchAll();
-            return $result;
+            $data = $stmt->fetchAll();
+            $result = array();
+            foreach($data as $moviedata) {
+                $jsonformat["ActivityLogID"] = $moviedata["ActivityLogID"];
+                $jsonformat["IpAddress"] = $moviedata["IpAddress"];
+                $jsonformat["DateAndTime"] = $moviedata["DateAndTime"];
+                $jsonformat["BrowserType"] = $moviedata["BrowserType"];
+                $jsonformat["Action"] = $moviedata["Action"];
+                $jsonformat["UserID"] = $moviedata["UserID"];
+                array_push($result, $jsonformat);
+            }
+            return $result;  
+            return true;
         }
         catch (PDOException $ex) {
             throw $ex;
@@ -344,9 +355,10 @@ class databaseOBJ {
             throw $ex;
         }
     }
+    // Display Movies in Admin Movie Management Section
     function admindisplayMovies() {
         try {
-            $mysql = "SELECT * FROM movie WHERE MovieID = 1";
+            $mysql = "SELECT * FROM movie";
             $stmt = $this->dbconn->prepare($mysql);
             $stmt->execute();
             $data = $stmt->fetchAll();
@@ -358,6 +370,28 @@ class databaseOBJ {
                 $jsonformat["MovieDescription"] = $moviedata["MovieDescription"];
                 $jsonformat["Genre"] = $moviedata["Genre"];
                 $jsonformat["MovieImage"] = $moviedata["MovieImage"];
+                array_push($result, $jsonformat);
+            }
+            return $result;  
+            return true;
+        }
+        catch (PDOException $ex) { 
+            throw $ex;
+        }
+    }
+    // Display Movie Session in Admin Movie Session Management Section
+    function admindisplaySession() {
+        try {
+            $mysql = "SELECT * FROM moviesession";
+            $stmt = $this->dbconn->prepare($mysql);
+            $stmt->execute();
+            $data = $stmt->fetchAll();
+            $result = array();
+            foreach($data as $moviedata) {
+                $jsonformat["MovieSessionID"] = $moviedata["MovieSessionID"];
+                $jsonformat["SessionDate"] = $moviedata["SessionDate"];
+                $jsonformat["TimeStart"] = $moviedata["TimeStart"];
+                $jsonformat["MovieID"] = $moviedata["MovieID"];
                 array_push($result, $jsonformat);
             }
             return $result;  

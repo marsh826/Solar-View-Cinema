@@ -7,7 +7,14 @@ import Alert from '@material-ui/lab/Alert';
 import { useForm } from 'react-hook-form';
 import DateFnsUtils from '@date-io/date-fns';
 import {MuiPickersUtilsProvider, DatePicker} from '@material-ui/pickers';
-import { DataGrid } from '@material-ui/data-grid';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import TablePagination from '@material-ui/core/TablePagination';
+import Paper from '@material-ui/core/Paper';
 
 // React const that sets up style customisation for Material UI components
 const useStyles = makeStyles((theme) => ({
@@ -15,15 +22,6 @@ const useStyles = makeStyles((theme) => ({
       margin: theme.spacing(1),
     },
 }));
-
-const columns = [
-    { field: 'MovieID', headerName: 'MovieID', width: 135 },
-    { field: 'MovieName', headerName: 'Movie Name', width: 190 },
-    { field: 'ReleaseDate', headerName: 'Release Date', width: 190 },
-    { field: 'MovieDescription', headerName: 'Movie Description', width: 190 },
-    { field: 'Genre', headerName: 'Genre', width: 170 },
-    { field: 'MovieImage', headerName: 'Movie Image Link', width: 190 }
-];
 
 export default function ManageMovie() {
     // A React const that is assigned with Material UI Component Style Const
@@ -61,6 +59,31 @@ export default function ManageMovie() {
 
     // Toggle between Admin Movie Management and Admin Add Movie section
     const [toggleAddMovie, setToggleAddMovie ] = useState(true);
+
+    // React Const for Setting Pages
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+      };
+    
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
+
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, movies.length - page * rowsPerPage);
+
+    const ellipsisStyle = {
+        // whiteSpace: 'nowrap',
+        // textOverflow: 'ellipsis',
+        // overflow: 'hidden',
+        // width: '350px',
+        // maxWidth: '350px' 
+        whiteSpace: 'normal',
+        wordBreak: 'break-word',
+    }
 
     useEffect(() => {
         postDisplayMovies();
@@ -173,14 +196,47 @@ export default function ManageMovie() {
             {
                 toggleAddMovie ?
                     <div id="movie-manage">
-                        Display Some Movies
-                        <div style={{ height: 400, width: '100%' }}>
-                            <DataGrid 
-                                rows={movies}
-                                columns={columns}
-                                pageSize={10}
-                            />
-                        </div>
+                        <TableContainer component={Paper}>
+                            <Table 
+                                className={classes.table} 
+                                size="medium"
+                                aria-label="simple table" 
+                            >
+                                <TableHead>
+                                <TableRow>
+                                    <TableCell>MovieID</TableCell>
+                                    <TableCell>Movie Name</TableCell>
+                                    <TableCell>Release Date</TableCell>
+                                    <TableCell>Movie Description</TableCell>
+                                    <TableCell>Genre</TableCell>
+                                    <TableCell>Movie Image</TableCell>
+                                </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                {movies.map((movies, index) => (
+                                    <TableRow 
+                                        key={movies.MovieID}
+                                        style={{height: 10}}
+                                        tabIndex={-1}
+                                    >
+                                        <TableCell component="th" scope="row">
+                                            {movies.MovieID}
+                                        </TableCell>
+                                        <TableCell style={ellipsisStyle}>{movies.MovieName}</TableCell>
+                                        <TableCell style={ellipsisStyle}>{movies.ReleaseDate}</TableCell>
+                                        <TableCell style={ellipsisStyle}>{movies.MovieDescription}</TableCell>
+                                        <TableCell style={ellipsisStyle}>{movies.Genre}</TableCell>
+                                        <TableCell style={ellipsisStyle}>{movies.MovieImage}</TableCell>
+                                    </TableRow>
+                                ))}
+                                {emptyRows > 0 && (
+                                    <TableRow style={{ height: 53 * emptyRows }}>
+                                        <TableCell colSpan={6} />
+                                    </TableRow>
+                                )}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
                     </div>
                     :
                     <div id="add-movie">
