@@ -91,7 +91,6 @@ export default function FavouriteMovies() {
             credentials: 'include'
         }).then((res) => {
             setLoading(false);
-
             // Unsuccessfully displaying movies in favourite list
             if (res.status === 204) {
                 console.log('no content');
@@ -101,7 +100,6 @@ export default function FavouriteMovies() {
                 setSeverity("warning");
                 return;
             }
-            
             // Successfully displaying movies in favourite list
             if (res.status === 201) {
                 console.log('created');
@@ -111,7 +109,6 @@ export default function FavouriteMovies() {
                 });
                 return;
             }
-
             // When daily request limit exceeded
             if (res.status === 422) {
                 console.log('Request limit exceeded within 24 hours');
@@ -120,7 +117,6 @@ export default function FavouriteMovies() {
                 setSeverity("error");
                 return;
             }
-
             // When Rate Limit per second exceeded
             if (res.status === 429) {
                 console.log('Exceeded Rate Limit');

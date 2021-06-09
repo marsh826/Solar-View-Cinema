@@ -195,7 +195,6 @@ export default function Profile() {
             credentials: 'include'
         })
         .then(function(response){
-
             if(response.status === 406) {
                 // Will not accept the new update information if they are not filled fully or correctly
                 console.log('unaccepted');
@@ -204,7 +203,6 @@ export default function Profile() {
                 setSeverity("error");
                 return;
             } 
-
             if(response.status === 202) {
                 console.log('success');
                 // Upon successful update, the profile page will be refreshed by reusing the display profile function
@@ -215,7 +213,6 @@ export default function Profile() {
                 postDisplayProfile();
                 return;
             } 
-
             // When daily request limit exceeded
             if(response.status === 422) {
                 console.log('Request limit exceeded within 24 hours');
@@ -224,7 +221,6 @@ export default function Profile() {
                 setSeverity("error");
                 return;
             }
-
             // When Rate Limit per second exceeded
             if(response.status === 429) {
                 console.log('Exceeded Rate Limit');
@@ -249,7 +245,6 @@ export default function Profile() {
         })
         .then(function(response) {    
             console.log(response);
-
             // Unsuccessfully deleting account 
             if(response.status === 501){
                 console.log('not implemented');
@@ -258,7 +253,6 @@ export default function Profile() {
                 setSeverity("error");
                 return;
             }
-
             // Successfully deleting account
             if(response.status === 202) {
                 // if success, local storage items will be removed and user will be sent back to the index page
@@ -270,7 +264,6 @@ export default function Profile() {
                 history.push("/Home");        
                 return;
             }
-
             // When daily request limit exceeded
             if (response.status === 422) {
                 console.log('Request limit exceeded within 24 hours');
@@ -279,7 +272,6 @@ export default function Profile() {
                 setSeverity("error");
                 return;
             }
-
             // When Rate Limit per second exceeded
             if (response.status === 429) {
                 console.log('Exceeded Rate Limit');
@@ -298,7 +290,6 @@ export default function Profile() {
             credentials: 'include'
         })
         .then(function(response){ 
-            
             // Successfully logging user out
             if(response.status === 202) {
                 console.log('success');      
@@ -307,7 +298,6 @@ export default function Profile() {
                 history.push("/Home");
                 return;
             }
-
             // When daily request limit exceeded
             if (response.status === 422) {
                 console.log('Request limit exceeded within 24 hours');
@@ -316,7 +306,6 @@ export default function Profile() {
                 setSeverity("error");
                 return;
             }
-
             // When Rate Limit per second exceeded
             if (response.status === 429) {
                 console.log('Exceeded Rate Limit');
@@ -451,7 +440,7 @@ export default function Profile() {
 
                                 <div className="formgroup">
                                     <label for="dateofbirth">Date of Birth</label>
-                                    {/* Date of Birth field requires value and must in correct data format in order to proceed with the register process */}
+                                    {/* Date of Birth field requires value and must in correct data format in order to proceed with the update process */}
                                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                         <DatePicker
                                             animateYearScrolling
@@ -465,9 +454,6 @@ export default function Profile() {
                                             format="yyyy-MM-dd"
                                             value={selectedDate}
                                             onChange={handleDateChange}
-                                            KeyboardButtonProps={{
-                                                'aria-label': 'change date',
-                                            }}
                                         />
                                     </MuiPickersUtilsProvider>
                                 </div>  

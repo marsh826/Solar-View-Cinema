@@ -42,6 +42,7 @@ export default function App () {
     }
   }
 
+  // Set the Background Image by checking for Background Image status
   function backgroundIMGCheck() {
     if(localStorage.getItem("BackgroundImage") === "Enabled") {
       document.body.classList.add("backgroundIMG");
@@ -50,6 +51,7 @@ export default function App () {
     }
   }
 
+  // Set the Component to Background Colour 2 by checking for Background Colour 2 status
   function backgroundColourCheck() {
     if(localStorage.getItem("BackgroundColour") === "Enabled") {
       document.body.classList.add("backgroundColour2");
@@ -71,6 +73,7 @@ export default function App () {
     setOpenSnackBar(false);
   };
 
+  // When component is loaded, various JavaScript functions are called to check for the user's login status and preferences on app setting  
   useEffect(() => {
     checkLoginStatus();
     DarkModeCheck();
@@ -78,28 +81,47 @@ export default function App () {
     backgroundIMGCheck();
   }, []);
 
+// --------------------------------------------------------------Check for Login Status--------------------------------------------------------------------------------------------
   function checkLoginStatus(){
     fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=loginstatus",{
       method: 'GET',
       credentials: "include",
     }).then(function(response){
+        // If the user is still logged in
         if(response.status === 202){
-            console.log('Status: Logged In');
-            localStorage.setItem('UserStatus', 'Logged In');
-            setOpenSnackBar(true);
-            setSeverity("success");
-            setMessage("Welcome back!");
-            
+          console.log('Status: Logged In');
+          localStorage.setItem('UserStatus', 'Logged In');
+          setOpenSnackBar(true);
+          setSeverity("success");
+          setMessage("Welcome back!");
         }
+        // If the user is not logged in
         if(response.status === 401) {
-            console.log('Status: Logged Out');
-            localStorage.setItem('UserStatus', 'Logged Out');
-            setOpenSnackBar(true);
-            setSeverity("warning");
-            setMessage("You are not logged in.");
+          console.log('Status: Logged Out');
+          localStorage.setItem('UserStatus', 'Logged Out');
+          setOpenSnackBar(true);
+          setSeverity("warning");
+          setMessage("You are not logged in.");
+        }
+          // When daily request limit exceeded
+        if (response.status === 422) {
+          console.log('Request limit exceeded within 24 hours');
+          setMessage("Error: Request limit exceeded within 24 hours");
+          setOpenSnackBar(true);
+          setSeverity("error");
+          return;
+        }
+        // When Rate Limit per second exceeded
+        if (response.status === 429) {
+          console.log('Exceeded Rate Limit');
+          setMessage("Warning: Exceeded Rate Limit");
+          setOpenSnackBar(true);
+          setSeverity("warning");
+          return;
         }
     })
   }
+// --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
   return (
     <div className="page-container">
       <div className="content-wrap">

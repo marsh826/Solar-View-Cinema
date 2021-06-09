@@ -64,7 +64,6 @@ export default function Login() {
             credentials: 'include',
         })
         .then(function(response){    
-
             // When the user login unsuccessfully, alert error message
             if(response.status === 403) {
                 console.log(response);
@@ -74,7 +73,6 @@ export default function Login() {
                 setMessage("Error: Invalid Username or Password.");
                 return;
             }
-
             // When the user login successfully, redirect to Profile page
             if(response.status === 202) {
                 console.log(response);
@@ -85,7 +83,6 @@ export default function Login() {
                 history.push("/Profile");
                 return;
             }
-
             // When daily request limit exceeded
             if (response.status === 422) {
                 console.log('Request limit exceeded within 24 hours');
@@ -94,7 +91,6 @@ export default function Login() {
                 setSeverity("error");
                 return;
             }
-
             // When Rate Limit per second exceeded
             if (response.status === 429) {
                 console.log('Exceeded Rate Limit');
@@ -106,6 +102,7 @@ export default function Login() {
         })
         return false;
     }
+// --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     return(
         // Material UI Container component for centering the login form
         <Container maxWidth="sm" >

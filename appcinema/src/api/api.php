@@ -374,7 +374,7 @@ if(!isset($_GET['action'])) {
         if($_SESSION['session']->logged_in_check()) {
             if($result == false) {
                 // Failed fetch all ticket from the database
-                http_response_code(404);
+                http_response_code(204);
             } else {
                 // Successfully fetching all ticket from the database
                 http_response_code(201);
@@ -560,7 +560,7 @@ if(!isset($_GET['action'])) {
         }
     break;
 // -----------------------------------Update A Movie-------------------------------------------------------------------
-    case 'adminaddmovie':
+    case 'adminupdatemovie':
         // A super global variable which is used to collect data from REQUEST METHOD that is POST
         $_SERVER['REQUEST_METHOD'] == 'POST';
         $objreg = json_decode(file_get_contents("php://input"), true);
@@ -569,9 +569,10 @@ if(!isset($_GET['action'])) {
         $movieDescriptionUPDT = testInput($objreg['MovieDescriptionUpdt']);
         $genreUPDT = testInput($objreg['GenreUpdt']);
         $movieIMGUPDT = testInput($objreg['MovieIMGUpdt']);
-        $movieIMGUPDT = testInput($objreg['MovieIDupdt']);
+        $movieIDUPDT = testInput($objreg['MovieIDUpdt']);
         if($_SESSION['session']->logged_in_check()){
-            if($db->adminUpdateMovie($movieNameUPDT, $releaseDateUPDT, $movieDescriptionUPDT, $genreUPDT, $movieIMGUPDT, $movieIDUPDT)) {
+            if($db->adminUpdateMovie($movieNameUPDT, $releaseDateUPDT, $movieDescriptionUPDT, 
+            $genreUPDT, $movieIMGUPDT, $movieIDUPDT)) {
                 // Successfully updated a movie
                 http_response_code(202);
             } else {
@@ -591,15 +592,79 @@ if(!isset($_GET['action'])) {
             $objreg = json_decode(file_get_contents("php://input"), true);
             $movieDelete = testInput(($objreg['movieid']));
             if($db->admindeleteMovie($movieDelete)){
-                // After successful account delete, activate logout function to destroy the current session
+                // Successfully delete a movie
                 http_response_code(202);
             } else {
-                http_response_code(501);
+                // Unsuccessfully delete a movie
+                http_response_code(406);
             }
         } else {
             // If the Admin is not logged in
             http_response_code(403);
         }
+    break;
+// ----------------------------------Add Movie Session-----------------------------------------------------------------
+    case 'adminaddsession':
+        // A super global variable which is used to collect data from REQUEST METHOD that is POST
+        $_SERVER['REQUEST_METHOD'] == 'POST';
+        $objreg = json_decode(file_get_contents("php://input"), true);
+        $sessionDate = testInput($objreg['SessionDate']);
+        $sessionTime = testInput($objreg['SessionTime']);
+        $movie = testInput($objreg['MovieID']);
+        if($_SESSION['session']->logged_in_check()){
+            if($db->adminAddSession($sessionDate, $sessionTime, $movie)) {
+                // Successfully added a movie
+                http_response_code(202);
+            } else {
+                // Unsuccessfully added a movie
+                http_response_code(406);
+            }  
+        } else {
+            // If the user is not logged in
+            http_response_code(403);
+        }
+    break;
+// ----------------------------------Add Movie Session-----------------------------------------------------------------
+    case 'adminupdatesession':
+        // A super global variable which is used to collect data from REQUEST METHOD that is POST
+        $_SERVER['REQUEST_METHOD'] == 'POST';
+        $objreg = json_decode(file_get_contents("php://input"), true);
+        $sessionDateUPDT = testInput($objreg['SessionDateUpdt']);
+        $sessionTimeUPDT = testInput($objreg['SessionTimeUpdt']);
+        $movieUPDT = testInput($objreg['MovieIDUpdt']);
+        $movieSessionUPDT = testInput($objreg['MovieSessionIDUpdt']);
+        if($_SESSION['session']->logged_in_check()){
+            if($db->adminUpdateSession($sessionDateUPDT, $sessionTimeUPDT, $movieUPDT, $movieSessionUPDT)) {
+                // Successfully added a movie session
+                http_response_code(202);
+            } else {
+                // Unsuccessfully added a movie session
+                http_response_code(406);
+            }  
+        } else {
+            // If the user is not logged in
+            http_response_code(403);
+        }
+    break;
+// -----------------------------------Delete A Movie-------------------------------------------------------------------
+    case 'admindeletesession':
+        // A super global variable which is used to collect data from REQUEST METHOD that is POST
+        $_SERVER['REQUEST_METHOD'] == 'POST';
+        if($_SESSION['session']->logged_in_check()) {
+            $objreg = json_decode(file_get_contents("php://input"), true);
+            $sessionDelete = testInput(($objreg['moviesessionid']));
+            if($db->admindeleteSession($sessionDelete)){
+                // Successfully delete a movie session
+                http_response_code(202);
+            } else {
+                // Unsuccessfully delete a movie session
+                http_response_code(406);
+            }
+        } else {
+            // If the Admin is not logged in
+            http_response_code(403);
+        }
+    break;
     }
 }
 ?>

@@ -39,6 +39,13 @@ const useStyles = makeStyles((theme) => ({
     backdrop: {
         zIndex: theme.zIndex.drawer + 1,
         color: '#fff',
+    },
+    loadingcontent: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        textAlign: 'center',
     }
 }));
 
@@ -48,11 +55,15 @@ export default function Reservations() {
 
     // React Const for loading screen before rendering
     const [loading, setLoading] = useState(false);
+    const [loading2, setLoading2] = useState(false);
+    const [loading3, setLoading3] = useState(false);
+    const [loading4, setLoading4] = useState(false);
 
     // React const set up for Snackbar Alert messages
     const [openSnackbar, setOpenSnackBar] = useState(false);
     const [severity, setSeverity] = useState("info");
     const [message, setMessage] = useState("");
+    const [dialog, setDialog] = useState("all_movie_sessions") // all_movie_sessions or seat_display
 
     // On clickaway, close Snackbar Alert
     const closeSnackbar = (event, reason) => {
@@ -61,6 +72,7 @@ export default function Reservations() {
         }
         setOpenSnackBar(false);
     };
+
     // React Const Booked Ticket set up empty array to store data that is successfully fetched
     const [ticket, setTicket] = useState([]);
 
@@ -75,7 +87,7 @@ export default function Reservations() {
         setRadioValue([]);
         setSeatSelected([]);
         setTicketSelected([]);
-        closeSeatDisplay();
+        setDialog("all_movie_sessions");
     };
 
     // React const and functions set up for Dialog Alert when user is deleting booked ticket
@@ -100,7 +112,10 @@ export default function Reservations() {
     const [seatSelected, setSeatSelected] = useState([]);
 
     // React Const for Selected Ticket Field
-    const [ticketSelected, setTicketSelected] = useState([])
+    const [ticketSelected, setTicketSelected] = useState([]);
+
+    // React Const Seat Highlighted when Selected
+    const [seatHighlight, setSeatHighlight] = useState([]);    
 
     // React Const for Material UI Radio button that is used for Ticket Type Field
     const [radioValue, setRadioValue] = useState([]);
@@ -112,6 +127,8 @@ export default function Reservations() {
     useEffect(() => {
         setLoading(true);
         postDisplayTicket();
+        setRadioValue([]);
+        setSeatHighlight([]);
     }, [])
 
 // --------------------------------------Storing Ticket Values into Hidden Input Form for Ticket Update----------------------------------------------------------------------------
@@ -122,24 +139,16 @@ export default function Reservations() {
     function transferTicketID(id) {
         setTicketSelected(id);
     }
-//-------------------------------------------------------Open and Close Seat Display-----------------------------------------------------------------------------------------------
-    function closeSeatDisplay() {
-        document.getElementById("all-movie-sessions").style.display = "block";
-        document.getElementById("seat-display").style.display = "none";
-    }
-    function openSeatDisplay() {
-        document.getElementById("all-movie-sessions").style.display = "none";
-        document.getElementById("seat-display").style.display = "block";
-    }
 // -------------------------------------------------Display The User's List Of Booked Movie Session--------------------------------------------------------------------------------
     function postDisplayTicket() {
+        setLoading(true);
         fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=displayticket",{
             method: "GET",
             credentials: "include"
         })
         .then((res) => {
+            // Turns off loading screen
             setLoading(false);
-
             // Successfully displaying a list of booked tickets 
             if (res.status === 204) {
                 console.log('no content');
@@ -149,7 +158,6 @@ export default function Reservations() {
                 setSeverity("Error");   
                 return; 
             }
-
             // Unsuccessfully displaying a list of booked tickets
             if (res.status === 201) {
                 console.log('created');
@@ -159,7 +167,6 @@ export default function Reservations() {
                 })
                 return;
             }
-
             // When daily request limit exceeded
             if (res.status === 422) {
                 console.log('Request limit exceeded within 24 hours');
@@ -168,7 +175,6 @@ export default function Reservations() {
                 setSeverity("error");
                 return;
             }
-
             // When Rate Limit per second exceeded
             if (res.status === 429) {
                 console.log('Exceeded Rate Limit');
@@ -182,12 +188,13 @@ export default function Reservations() {
     }
 //------------------------------------------------------------Display Movie Sessions------------------------------------------------------------------------------------------------
     function postDisplayAllSessions() {
+        setLoading2(true);
         fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=displayallsessions",{
             method: "GET",
             credentials: "include"
         })
         .then((res) => {
-
+            setLoading2(false);
             // Successfully displaying all movie sessions
             if (res.status === 204) {
                 console.log('no content');
@@ -197,7 +204,6 @@ export default function Reservations() {
                 setSeverity("warning");
                 return;
             }
-
             // Unsuccessfully displaying all movie sessions
             if (res.status === 201) {
                 console.log('created');
@@ -207,7 +213,6 @@ export default function Reservations() {
                 });
                 return;
             }
-
             // When daily request limit exceeded
             if (res.status === 422) {
                 console.log('Request limit exceeded within 24 hours');
@@ -216,7 +221,6 @@ export default function Reservations() {
                 setSeverity("error");
                 return;
             }
-
             // When Rate Limit per second exceeded
             if (res.status === 429) {
                 console.log('Exceeded Rate Limit');
@@ -229,65 +233,63 @@ export default function Reservations() {
         return false;
     }
 //-------------------------------------------------------Display All Seats Available-----------------------------------------------------------------------------------------------
-function postDisplaySeats(id) {
-    var moviesession = {
-        'moviesessionid' : id
+    function postDisplaySeats(id) {
+        setLoading3(true);
+        var moviesession = {
+            'moviesessionid' : id
+        }
+        fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=displayseats",{
+            method: "POST",
+            body: JSON.stringify(moviesession),
+            credentials: 'include'
+        })
+        .then((res) => {
+            setLoading3(false);
+            // Successfully displaying seats when selecting a specific movie sessions
+            if (res.status === 204) {
+                console.log('no content');
+                setSeat([]);
+                setMessage("Error: Unable to display seats for this movie session");
+                setOpenSnackBar(true);
+                setSeverity("Error");    
+                return;
+            }
+            // Unsuccessfully displaying seats when selecting a specific movie sessions
+            if (res.status === 201) {
+                console.log('created');
+                res.json().then((data) => {
+                    setSeat(data);
+                    console.log(data);
+                });
+                return;
+            }
+            // When daily request limit exceeded
+            if (res.status === 422) {
+                console.log('Request limit exceeded within 24 hours');
+                setMessage("Error: Request limit exceeded within 24 hours");
+                setOpenSnackBar(true);
+                setSeverity("error");
+                return;
+            }
+            // When Rate Limit per second exceeded
+            if (res.status === 429) {
+                console.log('Exceeded Rate Limit');
+                setMessage("Error: Exceeded Rate Limit");
+                setOpenSnackBar(true);
+                setSeverity("error");
+                return;
+            }
+        })
     }
-    fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=displayseats",{
-        method: "POST",
-        body: JSON.stringify(moviesession),
-        credentials: 'include'
-    })
-    .then((res) => {
-        openSeatDisplay();
-
-        // Successfully displaying seats when selecting a specific movie sessions
-        if (res.status === 204) {
-            console.log('no content');
-            setSeat([]);
-            setMessage("Error: Unable to display seats for this movie session");
-            setOpenSnackBar(true);
-            setSeverity("Error");    
-            return;
-        }
-
-        // Unsuccessfully displaying seats when selecting a specific movie sessions
-        if (res.status === 201) {
-            console.log('created');
-            res.json().then((data) => {
-                setSeat(data);
-                console.log(data);
-            });
-            return;
-        }
-
-        // When daily request limit exceeded
-        if (res.status === 422) {
-            console.log('Request limit exceeded within 24 hours');
-            setMessage("Error: Request limit exceeded within 24 hours");
-            setOpenSnackBar(true);
-            setSeverity("error");
-            return;
-        }
-
-        // When Rate Limit per second exceeded
-        if (res.status === 429) {
-            console.log('Exceeded Rate Limit');
-            setMessage("Error: Exceeded Rate Limit");
-            setOpenSnackBar(true);
-            setSeverity("error");
-            return;
-        }
-    })
-}
 //---------------------------------------------------------Displaying Ticket Type--------------------------------------------------------------------------------------------------
     function postTicketTypes() {
+        setLoading4(true);
         fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=displaytickettype",{
             method: "GET",
             credentials: "include"
         })
         .then((res) => {
-
+            setLoading4(false);
             // Unsuccessfully displaying ticket types in ticket booking field
             if (res.status === 204) {
                 console.log('no content');
@@ -297,7 +299,6 @@ function postDisplaySeats(id) {
                 setSeverity("error");    
                 return;
             }
-
             // Successfullly displaying ticket types in ticket booking field 
             if (res.status === 201) {
                 console.log('created');
@@ -307,7 +308,6 @@ function postDisplaySeats(id) {
                 });
                 return;
             }
-
             // When daily request limit exceeded
             if (res.status === 422) {
                 console.log('Request limit exceeded within 24 hours');
@@ -316,7 +316,6 @@ function postDisplaySeats(id) {
                 setSeverity("error");
                 return;
             }
-
             // When Rate Limit per second exceeded
             if (res.status === 429) {
                 console.log('Exceeded Rate Limit');
@@ -327,6 +326,18 @@ function postDisplaySeats(id) {
             }
         })
         return false;
+    }
+// ------------------------------------------Upon Selecting, the selected seat will be highlighted green---------------------------------------------------------------------------
+    function seatToggleActive(id) {
+        setSeatHighlight(id);
+    }
+
+    function seatToggleStyles(id) {
+        if (id === seatHighlight) {
+            return "seatSelected";
+        } else {
+            return "seatNotSelected";
+        }
     }
 // ---------------------------------------------------------------Update Booked Ticket---------------------------------------------------------------------------------------------
     function postUpdateTicket() {
@@ -358,7 +369,6 @@ function postDisplaySeats(id) {
                 setSeverity("error");
                 return;
             }
-
             // When daily request limit exceeded
             if (response.status === 422) {
                 console.log('Request limit exceeded within 24 hours');
@@ -367,7 +377,6 @@ function postDisplaySeats(id) {
                 setSeverity("error");
                 return;
             }
-
             // When Rate Limit per second exceeded
             if (response.status === 429) {
                 console.log('Exceeded Rate Limit');
@@ -401,7 +410,6 @@ function postDisplaySeats(id) {
                 postDisplayTicket();
                 return;
             }
-
             // Unsuccessfully delete booked ticket from user's reservation list
             if(response.status === 501) {
                 console.log('not implemented');
@@ -410,7 +418,6 @@ function postDisplaySeats(id) {
                 setSeverity("error");
                 return;
             }
-
             // When daily request limit exceeded
             if (response.status === 422) {
                 console.log('Request limit exceeded within 24 hours');
@@ -419,7 +426,6 @@ function postDisplaySeats(id) {
                 setSeverity("error");
                 return;
             }
-
             // When Rate Limit per second exceeded
             if (response.status === 429) {
                 console.log('Exceeded Rate Limit');
@@ -454,7 +460,7 @@ function postDisplaySeats(id) {
             <div id="reservation-display">
                 <h1>Your Ticket(s)</h1>
                 <Grid id="grid2">
-                    {ticket.map((ticket, index) => 
+                    {ticket.map((ticket, index) => (
                         <div id="ticket-display-container">
                             <FormControl component="fieldset">
                                 <div className="ticket-title">
@@ -479,7 +485,12 @@ function postDisplaySeats(id) {
                                         variant="contained" 
                                         color="primary"
                                         className={classes.margin}
-                                        onClick={() => {openDialogUpdate(); postDisplayAllSessions(); transferTicketID(ticket.TicketID); }}
+                                        onClick={() => 
+                                            {   
+                                                openDialogUpdate(); 
+                                                postDisplayAllSessions(); 
+                                                transferTicketID(ticket.TicketID); 
+                                            }}
                                     >
                                         Update Ticket
                                     </Button>
@@ -492,98 +503,128 @@ function postDisplaySeats(id) {
                                         <DialogTitle id="alert-update-dialog-title">{"Changing Ticket"}</DialogTitle>
                                         <DialogContent>
                                         <DialogContentText id="alert-update-dialog-description">
-                                        <div id="all-movie-sessions">
-                                            {movieSession.map((movieSession, index) =>
-                                                // The View Movie Seats button will be disabled if the user is not logged in
-                                                <div id="movie-session-content">
-                                                    <div>
-                                                        <strong>{movieSession.MovieName}</strong>
+                                        <div id="sessions-change">
+                                            {dialog == "all_movie_sessions" ? (
+                                            <div id="all-movie-sessions">
+                                                <h3>Available Sessions</h3>
+                                                {loading2 ? (
+                                                    <div className={classes.loadingcontent}>
+                                                        <CircularProgress color="inherit" />
                                                     </div>
-                                                    <div>{movieSession.SessionDate}</div>
-                                                    <div>{movieSession.TimeStart}</div>
-                                                    <Button
-                                                        endIcon={<EventSeat />}
-                                                        onClick={() => {postDisplaySeats(movieSession.MovieSessionID); postTicketTypes();}}
-                                                        variant="contained" 
-                                                        color="primary"
-                                                        className={classes.margin}>
-                                                        View Seats
-                                                    </Button>
-                                                </div>
-                                            )}    
-                                        </div>
-
-                                        <div id="seat-display" style={{display: "none"}}>
-                                            <h3>Available Seats</h3>
-                                            <div id="seat-items-container">
-                                            {/* Rendering a list of data from seat const in Material UI Dialog */}
-                                                {seat.map((seat, index) =>
-                                                    <div className={classes.iconButton}>
-                                                        <div id="seats">
-                                                            <IconButton
-                                                                disabled={seat.ReservationStatus}
-                                                                classes={{label: classes.iconButtonLabel}}
-                                                                onClick={() => {transferSeatValueUpdt(seat.SeatBySessionID);}}>
-                                                                <EventSeat />
-                                                                <div>{seat.SeatNumber}</div>
-                                                            </IconButton>
-                                                        </div>                                           
-                                                    </div>                                     
-                                                )} 
-                                            </div>
-                                            
-                                            {/* Seat Colour Indicator */}
-                                            <div className="colour-indicator">
-                                                <h4>Colour Indicator</h4>
-                                                <p>Grey: Available</p>
-                                                <p style={{color: "green" }}>Green: Selected</p>
-                                                <p style={{color: "red" }}>Red: Booked</p>
-                                            </div>
-
-                                            <Divider />
-
-                                            <h4>Ticket Types</h4>
-                                            {/* Rendering a list of data from ticketType const in Material UI Dialog */}
-                                            <FormControl component="fieldset">
-                                            <RadioGroup 
-                                                aria-label="tickettype" 
-                                                name="tickettype1" 
-                                                value={radioValue} 
-                                                onChange={handleRadioChange}
-                                            >
-                                                {ticketType.map((ticketType, index) =>
+                                                ) : (
                                                     <div>
-                                                    <FormControlLabel
-                                                        control={
-                                                            <Radio
-                                                            value={ticketType.TicketTypeID.toString()} 
-                                                        />} 
-                                                        label={ticketType.Name}
-                                                    />
-                                                    <div>${ticketType.Price}</div>     
-                                                    </div>   
-                                                )} 
-                                                <p>If you are paying for the 'Student' price, you are required to present your Student ID before entering the cinema room.</p>   
-                                            </RadioGroup>
-                                            </FormControl>
+                                                    {movieSession.map((movieSession, index) =>
+                                                        // The View Movie Seats button will be disabled if the user is not logged in
+                                                        <div id="movie-session-content">
+                                                            <div>
+                                                                <strong>{movieSession.MovieName}</strong>
+                                                            </div>
+                                                            <div>{movieSession.SessionDate}</div>
+                                                            <div>{movieSession.TimeStart}</div>
+                                                            <Button
+                                                                endIcon={<EventSeat />}
+                                                                onClick={() => { postDisplaySeats(movieSession.MovieSessionID); setDialog("display_seats"); postTicketTypes(); }}
+                                                                variant="contained" 
+                                                                color="primary"
+                                                                className={classes.margin}>
+                                                                View Seats
+                                                            </Button>
+                                                        </div>
+                                                    )} 
+                                                    </div>
+                                                )}   
+                                            </div>
+                                            ) : (
+                                            <div id="seat-display">
+                                                <h3>Available Seats</h3>
+                                                {loading3 ? (
+                                                    <div className={classes.loadingcontent}>
+                                                        <CircularProgress color="inherit" />
+                                                    </div>
+                                                ) : (
+                                                <div id="seat-items-container">
+                                                {/* Rendering a list of data from seat const in Material UI Dialog */}
+                                                    {seat.map((seat, index) =>
+                                                        <div className={classes.iconButton}>
+                                                            <div id="seats">
+                                                                <IconButton
+                                                                    disabled={seat.ReservationStatus}
+                                                                    classes={{label: classes.iconButtonLabel}}
+                                                                    onClick={() => 
+                                                                        {
+                                                                            transferSeatValueUpdt(seat.SeatBySessionID); 
+                                                                            seatToggleActive(seat.SeatBySessionID);
+                                                                        }}
+                                                                >
+                                                                    <EventSeat className={seatToggleStyles(seat.SeatBySessionID)} />
+                                                                    <div>{seat.SeatNumber}</div>
+                                                                </IconButton>
+                                                            </div>                                           
+                                                        </div>                                     
+                                                    )} 
+                                                </div>
+                                                )}
                                                 
-                                            {/* Hidden Form that allow seatID and ticketTypeID to be filled and prepare for reservation */}
-                                            <form id="seat-booking">
-                                                <input id="seat-id-update" value={seatSelected} readOnly />
-                                                <input id="ticket-type-update" value={radioValue} readOnly />   
-                                                <input id="ticket-id" value={ticketSelected} readOnly />
-                                            </form>
-                                            <Button
-                                                endIcon={<Check />}
-                                                type="button"
-                                                variant="contained" 
-                                                color="primary"
-                                                className={classes.margin}
-                                                onClick={() => { postUpdateTicket(); closeDialogUpdate();}}
-                                            >
-                                                Reserve
-                                            </Button>
-                                        </div> 
+                                                {/* Seat Colour Indicator */}
+                                                <div className="colour-indicator">
+                                                    <h4>Colour Indicator</h4>
+                                                    <p>Grey: Available</p>
+                                                    <p style={{color: "green" }}>Green: Selected</p>
+                                                    <p style={{color: "red" }}>Red: Booked</p>
+                                                </div>
+
+                                                <Divider />
+
+                                                <h4>Ticket Types</h4>
+                                                {/* Rendering a list of data from ticketType const in Material UI Dialog */}
+                                                {loading4 ? (
+                                                    <div className={classes.loadingcontent}>
+                                                        <CircularProgress color="inherit" />
+                                                    </div> 
+                                                ) : (
+                                                    <FormControl component="fieldset">
+                                                    <RadioGroup 
+                                                        aria-label="tickettype" 
+                                                        name="tickettype1" 
+                                                        value={radioValue} 
+                                                        onChange={handleRadioChange}
+                                                    >
+                                                        {ticketType.map((ticketType, index) =>
+                                                            <div>
+                                                            <FormControlLabel
+                                                                control={
+                                                                    <Radio
+                                                                    value={ticketType.TicketTypeID.toString()} 
+                                                                />} 
+                                                                label={ticketType.Name}
+                                                            />
+                                                            <div>${ticketType.Price}</div>     
+                                                            </div>   
+                                                        )} 
+                                                        <p>If you are paying for the 'Student' price, you are required to present your Student ID before entering the cinema room.</p>   
+                                                    </RadioGroup>
+                                                    </FormControl>
+                                                )}
+                                                    
+                                                {/* Hidden Form that allow seatID and ticketTypeID to be filled and prepare for reservation */}
+                                                <form id="seat-booking">
+                                                    <input id="seat-id-update" value={seatSelected} readOnly />
+                                                    <input id="ticket-type-update" value={radioValue} readOnly />   
+                                                    <input id="ticket-id" value={ticketSelected} readOnly />
+                                                </form>
+                                                <Button
+                                                    endIcon={<Check />}
+                                                    type="button"
+                                                    variant="contained" 
+                                                    color="primary"
+                                                    className={classes.margin}
+                                                    onClick={() => { postUpdateTicket(); closeDialogUpdate();}}
+                                                >
+                                                    Reserve
+                                                </Button>
+                                            </div>
+                                            )}     
+                                        </div>
                                         </DialogContentText>
                                         </DialogContent>
                                         <DialogActions>
@@ -594,6 +635,7 @@ function postDisplaySeats(id) {
                                     </Dialog>
                                 </div>
 
+{/* -------------------------------------------------Delete Selected Ticket that was booked prior---------------------------------------------------------------------------------- */}
                                 <div className="displayticket-bttns">
                                     <Button
                                         type="button"
@@ -631,7 +673,7 @@ function postDisplaySeats(id) {
                                 </div>
                             </div>
                         </div>
-                    )}
+                    ))}
                 </Grid>
             </div>
             )}

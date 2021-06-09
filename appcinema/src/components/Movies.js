@@ -24,24 +24,24 @@ import FormControl from '@material-ui/core/FormControl';
 // React const that sets up style customisation for Material UI components
 const useStyles = makeStyles((theme) => ({
     margin: {
-      margin: theme.spacing(1),
+        margin: theme.spacing(1),
     },
     extendedIcon: {
-      marginRight: theme.spacing(1),
+        marginRight: theme.spacing(1),
     },
     root: {
         width: "100%",
         "& > * + *": {
-          marginTop: theme.spacing(2)
+            marginTop: theme.spacing(2)
         },
         '& > *': {
-          margin: theme.spacing(1),
+            margin: theme.spacing(1),
         }
     },
-    iconButton:{
+    iconButton: {
         '& > *': {
             margin: theme.spacing(1),
-          }
+        }
     },
     iconButtonLabel: {
         display: "flex",
@@ -92,29 +92,13 @@ export default function MovieDisplay() {
 
     // React Const Movie Session set up empty array to store data that is successfully fetched
     const [movieSession, setMovieSession] = useState([]);
-    
+
     // React Const Selected Movie set up empty array to 
     // store data of a specific movie selected to display in dialog
     const [currentMovie, setCurrentMovie] = useState([]);
 
     // React const set up for Dialog
     const [movieDisplay, setMovieDisplay] = useState(false);
-
-    // Functions for open and close Dialog
-    function openMovieDisplay(movie) {
-        setMovieDisplay(true);
-        setCurrentMovie(movie);
-        console.log(movie);
-    };
-    
-    function closeMovieDisplay() {
-        // Upon closing the Movie Dialog, reset seat booking fields
-        setMovieDisplay(false);
-        setSeatSelected([]);
-        setRadioValue([]);
-        setSeatHighlight([]);
-        closeSeatDisplay();
-    };
 
     // React Const Seat set up empty array to store data that is succesfully fetched 
     const [seat, setSeat] = useState([]);
@@ -134,8 +118,24 @@ export default function MovieDisplay() {
         setRadioValue(event.target.value);
     };
 
+    // Functions for open and close Dialog
+    function openMovieDisplay(movie) {
+        setMovieDisplay(true);
+        setCurrentMovie(movie);
+        console.log(movie);
+    };
+
+    function closeMovieDisplay() {
+        // Upon closing the Movie Dialog, reset seat booking fields
+        setMovieDisplay(false);
+        setSeatSelected([]);
+        setRadioValue([]);
+        setSeatHighlight([]);
+        closeSeatDisplay();
+    };
+
     // React Const for loading screen before rendering
-    const [loading, setLoading] = useState(false); 
+    const [loading, setLoading] = useState(false);
     const [loading2, setLoading2] = useState(false);
     const [loading3, setLoading3] = useState(false);
 
@@ -144,16 +144,15 @@ export default function MovieDisplay() {
         setLoading(true);
         postDisplayMovies();
     }, []);
-     
+
 //-----------------------------------------------------------Display Movies on Home Page-------------------------------------------------------------------------------------------
     function postDisplayMovies() {
-        fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=displaymovies",{
+        fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=displaymovies", {
             method: "GET",
             redirect: "error",
             credentials: 'include'
         }).then((res) => {
             setLoading(false);
-
             // Successfully displaying movies 
             if (res.status === 204) {
                 console.log('no content');
@@ -163,7 +162,6 @@ export default function MovieDisplay() {
                 setSeverity("Error");
                 return;
             }
-            
             // Unsuccessfully displaying movies
             if (res.status === 201) {
                 console.log('created');
@@ -173,7 +171,6 @@ export default function MovieDisplay() {
                 });
                 return;
             }
-
             // When daily request limit exceeded
             if (res.status === 422) {
                 console.log('Request limit exceeded within 24 hours');
@@ -182,7 +179,6 @@ export default function MovieDisplay() {
                 setSeverity("error");
                 return;
             }
-
             // When Rate Limit per second exceeded
             if (res.status === 429) {
                 console.log('Exceeded Rate Limit');
@@ -191,58 +187,54 @@ export default function MovieDisplay() {
                 setSeverity("error");
                 return;
             }
-        })   
+        })
     }
 //------------------------------------------------------------Display Movie Sessions------------------------------------------------------------------------------------------------
     function postDisplaySession(id) {
         var movie = {
-            'movieid' : id
+            'movieid': id
         }
-        fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=displaymoviesession",{
+        fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=displaymoviesession", {
             method: "POST",
             body: JSON.stringify(movie),
             credentials: 'include'
         })
-        .then((res) => {
-
-            // Successfully display movie session when selecting a movie
-            if (res.status === 204) {
-                console.log('no content');
-                setMovieSession([]);
-                setMessage("Error: Movie sessions are unavailable for this movie");
-                setOpenSnackBar(true);
-                setSeverity("warning");
-                return;
-            }
-
-            // Unsuccessfully display movie session when selecting a movie
-            if (res.status === 201) {
-                console.log('created');
-                res.json().then((data) => {
-                    setMovieSession(data);
-                    console.log(data);
-                });
-                return;
-            }
-
-            // When daily request limit exceeded
-            if (res.status === 422) {
-                console.log('Request limit exceeded within 24 hours');
-                setMessage("Error: Request limit exceeded within 24 hours");
-                setOpenSnackBar(true);
-                setSeverity("error");
-                return;
-            }
-
-            // When Rate Limit per second exceeded
-            if (res.status === 429) {
-                console.log('Exceeded Rate Limit');
-                setMessage("Error: Exceeded Rate Limit");
-                setOpenSnackBar(true);
-                setSeverity("error");
-                return;
-            }
-        })
+            .then((res) => {
+                // Successfully display movie session when selecting a movie
+                if (res.status === 204) {
+                    console.log('no content');
+                    setMovieSession([]);
+                    setMessage("Error: Movie sessions are unavailable for this movie");
+                    setOpenSnackBar(true);
+                    setSeverity("warning");
+                    return;
+                }
+                // Unsuccessfully display movie session when selecting a movie
+                if (res.status === 201) {
+                    console.log('created');
+                    res.json().then((data) => {
+                        setMovieSession(data);
+                        console.log(data);
+                    });
+                    return;
+                }
+                // When daily request limit exceeded
+                if (res.status === 422) {
+                    console.log('Request limit exceeded within 24 hours');
+                    setMessage("Error: Request limit exceeded within 24 hours");
+                    setOpenSnackBar(true);
+                    setSeverity("error");
+                    return;
+                }
+                // When Rate Limit per second exceeded
+                if (res.status === 429) {
+                    console.log('Exceeded Rate Limit');
+                    setMessage("Error: Exceeded Rate Limit");
+                    setOpenSnackBar(true);
+                    setSeverity("error");
+                    return;
+                }
+            })
         return false;
     }
 //-------------------------------------------------------Display All Seats Available-----------------------------------------------------------------------------------------------
@@ -251,54 +243,51 @@ export default function MovieDisplay() {
         setLoading2(true);
         openSeatDisplay();
         var moviesession = {
-            'moviesessionid' : id
+            'moviesessionid': id
         }
-        fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=displayseats",{
+        fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=displayseats", {
             method: "POST",
             body: JSON.stringify(moviesession),
             credentials: 'include'
         })
-        .then((res) => {
-            // Turn off loading
-            setLoading2(false);
-            // Successfully display seats when selecting a specific movie session 
-            if (res.status === 204) {
-                console.log('no content');
-                setSeat([]);
-                setMessage("Error: Unable to display seats for this movie session");
-                setOpenSnackBar(true);
-                setSeverity("Error");  
-                return;  
-            }
-
-            // Unsuccessfully display seats when selecting a specific movie session
-            if (res.status === 201) {
-                console.log('created');
-                res.json().then((data) => {
-                    setSeat(data);
-                    console.log(data);
-                });
-                return;
-            }
-
-            // When daily request limit exceeded
-            if (res.status === 422) {
-                console.log('Request limit exceeded within 24 hours');
-                setMessage("Error: Request limit exceeded within 24 hours");
-                setOpenSnackBar(true);
-                setSeverity("error");
-                return;
-            }
-
-            // When Rate Limit per second exceeded
-            if (res.status === 429) {
-                console.log('Exceeded Rate Limit');
-                setMessage("Error: Exceeded Rate Limit");
-                setOpenSnackBar(true);
-                setSeverity("error");
-                return;
-            }
-        })
+            .then((res) => {
+                // Turn off loading
+                setLoading2(false);
+                // Successfully display seats when selecting a specific movie session 
+                if (res.status === 204) {
+                    console.log('no content');
+                    setSeat([]);
+                    setMessage("Error: Unable to display seats for this movie session");
+                    setOpenSnackBar(true);
+                    setSeverity("Error");
+                    return;
+                }
+                // Unsuccessfully display seats when selecting a specific movie session
+                if (res.status === 201) {
+                    console.log('created');
+                    res.json().then((data) => {
+                        setSeat(data);
+                        console.log(data);
+                    });
+                    return;
+                }
+                // When daily request limit exceeded
+                if (res.status === 422) {
+                    console.log('Request limit exceeded within 24 hours');
+                    setMessage("Error: Request limit exceeded within 24 hours");
+                    setOpenSnackBar(true);
+                    setSeverity("error");
+                    return;
+                }
+                // When Rate Limit per second exceeded
+                if (res.status === 429) {
+                    console.log('Exceeded Rate Limit');
+                    setMessage("Error: Exceeded Rate Limit");
+                    setOpenSnackBar(true);
+                    setSeverity("error");
+                    return;
+                }
+            })
     }
 // ------------------------------------------Upon Selecting, the selected seat will be highlighted green---------------------------------------------------------------------------
     function seatToggleActive(id) {
@@ -306,10 +295,10 @@ export default function MovieDisplay() {
     }
 
     function seatToggleStyles(id) {
-        if(id === seatHighlight) {
+        if (id === seatHighlight) {
             return "seatSelected";
         } else {
-            return  "seatNotSelected";
+            return "seatNotSelected";
         }
     }
 // --------------------------------------Storing Ticket Values into Hidden Input Form for Ticket Reservation-----------------------------------------------------------------------
@@ -331,50 +320,46 @@ export default function MovieDisplay() {
     }
 //---------------------------------------------------------Displaying Ticket Type--------------------------------------------------------------------------------------------------
     function postTicketTypes() {
-        setLoading3(true);
-        fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=displaytickettype",{
+        fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=displaytickettype", {
             method: "GET",
             credentials: "include"
         })
-        .then((res) => {
-            setLoading3(false);
-            // Unsuccessfully display ticket types
-            if (res.status === 204) {
-                console.log('no content');
-                setMovieSession([]);
-                setMessage("Error: Unable to fetch ticket type");
-                setOpenSnackBar(true);
-                setSeverity("error");    
-            }
-
-            // Successfully display ticket types
-            if (res.status === 201) {
-                console.log('created');
-                res.json().then((data) => {
-                    setTicketType(data);
-                    console.log(data);
-                });
-                return;
-            }
-
-            // When daily request limit exceeded
-            if (res.status === 422) {
-                console.log('Request limit exceeded within 24 hours');
-                setMessage("Error: Request limit exceeded within 24 hours");
-                setOpenSnackBar(true);
-                setSeverity("error");
-                return;
-            }
-
-            // When Rate Limit per second exceeded
-            if (res.status === 429) {
-                console.log('Exceeded Rate Limit');
-                setMessage("Error: Exceeded Rate Limit");
-                setOpenSnackBar(true);
-                setSeverity("error");
-                return;
-            }
-        })
+            .then((res) => {
+                setLoading3(false);
+                // Unsuccessfully display ticket types
+                if (res.status === 204) {
+                    console.log('no content');
+                    setMovieSession([]);
+                    setMessage("Error: Unable to fetch ticket type");
+                    setOpenSnackBar(true);
+                    setSeverity("error");
+                }
+                // Successfully display ticket types
+                if (res.status === 201) {
+                    console.log('created');
+                    res.json().then((data) => {
+                        setTicketType(data);
+                        console.log(data);
+                    });
+                    return;
+                }
+                // When daily request limit exceeded
+                if (res.status === 422) {
+                    console.log('Request limit exceeded within 24 hours');
+                    setMessage("Error: Request limit exceeded within 24 hours");
+                    setOpenSnackBar(true);
+                    setSeverity("error");
+                    return;
+                }
+                // When Rate Limit per second exceeded
+                if (res.status === 429) {
+                    console.log('Exceeded Rate Limit');
+                    setMessage("Error: Exceeded Rate Limit");
+                    setOpenSnackBar(true);
+                    setSeverity("error");
+                    return;
+                }
+            })
         return false;
     }
 //------------------------------------------------------------Reserve Seat on Submit-----------------------------------------------------------------------------------------------
@@ -383,48 +368,46 @@ export default function MovieDisplay() {
             'seatbysessionid': document.getElementById("seat-id").value,
             'tickettypeid': document.getElementById("ticket-type").value
         }
-        fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=seatreserve",{
+        fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=seatreserve", {
             method: "POST",
             body: JSON.stringify(seatbookinginfo),
             credentials: "include"
         })
-        .then(function(response) {
-            // If the seat booking process was successful
-            if(response.status === 202) {
-                console.log('success');
-                document.getElementById("seat-booking").rest();
-                setMessage("Ticket Booked Successfully!");
-                setOpenSnackBar(true);
-                setSeverity("success");
-                return;    
-            }
-            // If the seat booking process was unsuccessful
-            if(response.status === 406) {
-                console.log('unaccepted');
-                setMessage("Error: Booking Failed.");
-                setOpenSnackBar(true);
-                setSeverity("error");
-                return;
-            }
-
-            // When daily request limit exceeded
-            if (response.status === 422) {
-                console.log('Request limit exceeded within 24 hours');
-                setMessage("Error: Request limit exceeded within 24 hours");
-                setOpenSnackBar(true);
-                setSeverity("error");
-                return;
-            }
-
-            // When Rate Limit per second exceeded
-            if (response.status === 429) {
-                console.log('Exceeded Rate Limit');
-                setMessage("Error: Exceeded Rate Limit");
-                setOpenSnackBar(true);
-                setSeverity("error");
-                return;
-            }
-        })
+            .then(function (response) {
+                // If the seat booking process was successful
+                if (response.status === 202) {
+                    console.log('success');
+                    document.getElementById("seat-booking").reset();
+                    setMessage("Ticket Booked Successfully!");
+                    setOpenSnackBar(true);
+                    setSeverity("success");
+                    return;
+                }
+                // If the seat booking process was unsuccessful
+                if (response.status === 406) {
+                    console.log('unaccepted');
+                    setMessage("Error: Booking Failed.");
+                    setOpenSnackBar(true);
+                    setSeverity("error");
+                    return;
+                }
+                // When daily request limit exceeded
+                if (response.status === 422) {
+                    console.log('Request limit exceeded within 24 hours');
+                    setMessage("Error: Request limit exceeded within 24 hours");
+                    setOpenSnackBar(true);
+                    setSeverity("error");
+                    return;
+                }
+                // When Rate Limit per second exceeded
+                if (response.status === 429) {
+                    console.log('Exceeded Rate Limit');
+                    setMessage("Error: Exceeded Rate Limit");
+                    setOpenSnackBar(true);
+                    setSeverity("error");
+                    return;
+                }
+            })
         return false;
     }
 //-------------------------------------------------------Add Selected Movies to Favourite------------------------------------------------------------------------------------------
@@ -432,64 +415,60 @@ export default function MovieDisplay() {
         var favouritemovie = {
             "movieid": id
         }
-        fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=addfavouritemovie",{
+        fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=addfavouritemovie", {
             method: "POST",
             body: JSON.stringify(favouritemovie),
             credentials: "include"
         })
-        .then(function(response){
-            console.log(response);
-
-            // Successfully adding selected movie into favourite list
-            if(response.status === 202) {
-                console.log('success');
-                setMessage("The movie is added to your Favourite list");
-                setOpenSnackBar(true);
-                setSeverity("success");
-                return;
-            }
-
-            // Unsuccessfully adding selected movie into favourite list
-            if(response.status === 501) {
-                console.log('not implemented');
-                setMessage("The movie is already in your Favourite list");
-                setOpenSnackBar(true);
-                setSeverity("warning");
-                return;
-            }
-
-            // When daily request limit exceeded
-            if (response.status === 422) {
-                console.log('Request limit exceeded within 24 hours');
-                setMessage("Error: Request limit exceeded within 24 hours");
-                setOpenSnackBar(true);
-                setSeverity("error");
-                return;
-            }
-
-            // When Rate Limit per second exceeded
-            if (response.status === 429) {
-                console.log('Exceeded Rate Limit');
-                setMessage("Error: Exceeded Rate Limit");
-                setOpenSnackBar(true);
-                setSeverity("error");
-                return;
-            }            
-        })
+            .then(function (response) {
+                console.log(response);
+                // Successfully adding selected movie into favourite list
+                if (response.status === 202) {
+                    console.log('success');
+                    setMessage("The movie is added to your Favourite list");
+                    setOpenSnackBar(true);
+                    setSeverity("success");
+                    return;
+                }
+                // Unsuccessfully adding selected movie into favourite list
+                if (response.status === 501) {
+                    console.log('not implemented');
+                    setMessage("The movie is already in your Favourite list");
+                    setOpenSnackBar(true);
+                    setSeverity("warning");
+                    return;
+                }
+                // When daily request limit exceeded
+                if (response.status === 422) {
+                    console.log('Request limit exceeded within 24 hours');
+                    setMessage("Error: Request limit exceeded within 24 hours");
+                    setOpenSnackBar(true);
+                    setSeverity("error");
+                    return;
+                }
+                // When Rate Limit per second exceeded
+                if (response.status === 429) {
+                    console.log('Exceeded Rate Limit');
+                    setMessage("Error: Exceeded Rate Limit");
+                    setOpenSnackBar(true);
+                    setSeverity("error");
+                    return;
+                }
+            })
         return false;
-    }   
+    }
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     return (
         <div id="moviepage">
-        {/* Render Movies that are fetched from the database through API  */}
+            {/* Render Movies that are fetched from the database through API  */}
 
             {/* Snack Bar Alert that will display messages when user perform certain actions*/}
             <div className={classes.root}>
-            <Snackbar open={openSnackbar} autoHideDuration={4000} onClose={closeSnackbar}>
-                <Alert variant="filled" onClose={closeSnackbar} severity={severity}>
-                    {message}
-                </Alert>
-            </Snackbar>
+                <Snackbar open={openSnackbar} autoHideDuration={4000} onClose={closeSnackbar}>
+                    <Alert variant="filled" onClose={closeSnackbar} severity={severity}>
+                        {message}
+                    </Alert>
+                </Snackbar>
             </div>
 
             {/* Material UI loading Screen before page render */}
@@ -498,216 +477,218 @@ export default function MovieDisplay() {
                     <CircularProgress color="inherit" />
                 </Backdrop>
             ) : (
-            <div id="moviedisplay">
-                {movie.map((movie, index) => (
-                    <div id="moviecontents">
-                        <div id ="movie-image">
-                        <img 
-                        width='300px'
-                        height='480px'
-                        src={movie.MovieImage}/>
-                        </div>
-
-                        {/* View Movie Session Button */}
-                        <Button
-                            onClick={() => {openMovieDisplay([movie]); postDisplaySession(movie.MovieID);}}
-                            variant="contained" 
-                            color="primary"
-                            className={classes.margin}>
-                            View Sessions
-                        </Button>
-    
-
-                        {/* Add Favourite Movie Button */}
-                        <Button
-                            onClick={() => postAddFavouriteMovie(movie.MovieID)}
-                            variant="contained" 
-                            color="primary"
-                            className={classes.margin}>
-                            Add Favourite
-                        </Button> 
-                    </div>
-                ))}
-
-                {/* Rendering a list of data from currentMovie const in Material UI Dialog */}
-                {currentMovie.map((currentMovie, index) => (
-                    <Dialog
-                        open={movieDisplay}
-                        TransitionComponent={Transition}
-                        keepMounted
-                        onClose={closeMovieDisplay}
-                        aria-labelledby="alert-dialog-slide-title"
-                        aria-describedby="alert-dialog-slide-description"
-                    >
-                    <DialogTitle 
-                        id="alert-dialog-slide-title">
-                            {currentMovie.MovieName}
-                    </DialogTitle>
-                        <DialogContent>
-                        <DialogContentText id="alert-dialog-slide-description">
-                            <div id="display-movie">
-                                <div id="imgMovieDisplay">
-                                    <Grid id="grid-MovieIMG">
-                                        <img          
-                                            className="movie-img-cover"                                 
-                                            src={currentMovie.MovieImage}
-                                        />    
-                                    </Grid>
-                                </div>    
-                                
-                                <Divider />
-                                
-                                {/* Render Movie Details in Material UI Dialog */}
-                                <div id="movie-details">
-                                    <div>
-                                        {currentMovie.MovieDescription}
-                                    </div>
-                                    <Divider />
-                                    <div>
-                                        <strong>Genre:</strong> {currentMovie.Genre}
-                                    </div>
-                                    <div>
-                                        <strong>Release Date:</strong> {currentMovie.ReleaseDate}
-                                    </div>
-
-                                    <Divider />
-
-                                    {/* Render Movie Sessions in Material UI Dialog*/}
-                                    <div id="sessiondisplay">
-                                        <h3>Available Sessions</h3>
-                                        {/* Rendering a list of data from movieSession const in Material UI Dialog */}
-                                        {movieSession.map((movieSession, index) =>
-                                            // The View Movie Seats button will be disabled if the user is not logged in
-                                            {if(localStorage.getItem('UserStatus') === "Logged Out"){
-                                                return(
-                                                    <div id="movie-session-content">
-                                                        <div>{movieSession.SessionDate}</div>
-                                                        <div>{movieSession.TimeStart}</div>
-                                                        <Button
-                                                            disabled
-                                                            endIcon={<EventSeat />}
-                                                            variant="contained" 
-                                                            color="primary"
-                                                            className={classes.margin}>
-                                                            Please log in to book a seat
-                                                        </Button>
-                                                    </div>
-                                                )
-                                            } else {
-                                                return(
-                                                    <div id="movie-session-content">
-                                                        <div>{movieSession.SessionDate}</div>
-                                                        <div>{movieSession.TimeStart}</div>
-                                                        <Button
-                                                            endIcon={<EventSeat />}
-                                                            onClick={() => {postDisplaySeats(movieSession.MovieSessionID); postTicketTypes();}}
-                                                            variant="contained" 
-                                                            color="primary"
-                                                            className={classes.margin}>
-                                                            View Seats
-                                                        </Button>
-                                                    </div>    
-                                                )}
-                                            }
-                                        )}
-                                    </div>
-                                </div>
-
-                                {/* Render Seats in Material UI Dialog */}
-                                <div id="seat-display" style={{display: "none"}}>
-                                    <h3>Available Seats</h3>
-                                        {loading2 ? (
-                                            <div className={classes.loadingcontent}>
-                                                <CircularProgress color="inherit" />
-                                            </div>
-                                        ) : (
-                                        <div id="seat-items-container">
-                                        {/* Rendering a list of data from seat const in Material UI Dialog */}
-                                            {seat.map((seat, index) =>
-                                                <div className={classes.iconButton}>
-                                                    <div id="seats">
-                                                        <IconButton
-                                                            disabled={seat.ReservationStatus}
-                                                            classes={{label: classes.iconButtonLabel}}
-                                                            onClick={() => {transferSeatValue(seat.SeatBySessionID); seatToggleActive(seat.SeatBySessionID);}}>
-                                                            <EventSeat className={seatToggleStyles(seat.SeatBySessionID)}/>
-                                                            <div>{seat.SeatNumber}</div>
-                                                        </IconButton>
-                                                    </div>                                           
-                                                </div>                                     
-                                            )} 
-                                        </div>
-                                        )}
-                                        
-                                        {/* Seat Colour Indicator */}
-                                        <div className="colour-indicator">
-                                            <h4>Colour Indicator</h4>
-                                            <p>Grey: Available</p>
-                                            <p style={{color: "green" }}>Green: Selected</p>
-                                            <p style={{color: "red" }}>Red: Booked</p>
-                                        </div>
-
-                                    <Divider />
-
-                                    <h4>Ticket Types</h4>
-                                    {/* Rendering a list of data from ticketType const in Material UI Dialog */}
-                                    {loading3 ? (
-                                        <div className={classes.loadingcontent}>
-                                            <CircularProgress color="inherit" />
-                                        </div>
-                                    ) : (
-                                    <FormControl component="fieldset">
-                                    <RadioGroup 
-                                        aria-label="tickettype" 
-                                        name="tickettype1" 
-                                        value={radioValue} 
-                                        onChange={handleRadioChange}
-                                    >
-                                        {ticketType.map((ticketType, index) =>
-                                            <div>
-                                            <FormControlLabel
-                                                control={<Radio
-                                                    value={ticketType.TicketTypeID.toString()} />} 
-                                                label={ticketType.Name}
-                                            /> 
-                                            <div>${ticketType.Price}</div>     
-                                            </div>   
-                                        )} 
-                                        <p>If you are paying for the 'Student' price, you are required to present your Student ID before entering the cinema room.</p>   
-                                    </RadioGroup>
-                                    </FormControl>
-                                    )}
-                                            
-                                    {/* Hidden Form that allow seatID and ticketTypeID to be filled and prepare for reservation */}
-                                    <form id="seat-booking" style={{display: 'none'}}>
-                                        <input id="seat-id" value={seatSelected} readOnly />
-                                        <input id="ticket-type" value={radioValue} readOnly />    
-                                    </form>
-                                    <Button
-                                        endIcon={<Check />}
-                                        type="button"
-                                        variant="contained" 
-                                        color="primary"
-                                        className={classes.margin}
-                                        onClick={() => { postSeatBooking(); closeMovieDisplay();}}
-                                    >
-                                        Reserve
-                                    </Button>
-                                </div> 
+                <div id="moviedisplay">
+                    {movie.map((movie, index) => (
+                        <div id="moviecontents">
+                            <div id="movie-image">
+                                <img
+                                    width='300px'
+                                    height='480px'
+                                    src={movie.MovieImage} />
                             </div>
-                        </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button 
-                                onClick={() => {closeMovieDisplay()}} 
+
+                            {/* View Movie Session Button */}
+                            <Button
+                                onClick={() => { openMovieDisplay([movie]); postDisplaySession(movie.MovieID); }}
+                                variant="contained"
                                 color="primary"
-                            >
-                                Close
+                                className={classes.margin}>
+                                View Sessions
                             </Button>
-                        </DialogActions>
-                    </Dialog>
-                ))}
-            </div>
+
+
+                            {/* Add Favourite Movie Button */}
+                            <Button
+                                onClick={() => postAddFavouriteMovie(movie.MovieID)}
+                                variant="contained"
+                                color="primary"
+                                className={classes.margin}>
+                                Add Favourite
+                            </Button>
+                        </div>
+                    ))}
+
+                    {/* Rendering a list of data from currentMovie const in Material UI Dialog */}
+                    {currentMovie.map((currentMovie, index) => (
+                        <Dialog
+                            open={movieDisplay}
+                            TransitionComponent={Transition}
+                            keepMounted
+                            onClose={closeMovieDisplay}
+                            aria-labelledby="alert-dialog-slide-title"
+                            aria-describedby="alert-dialog-slide-description"
+                        >
+                            <DialogTitle
+                                id="alert-dialog-slide-title">
+                                {currentMovie.MovieName}
+                            </DialogTitle>
+                            <DialogContent>
+                                <DialogContentText id="alert-dialog-slide-description">
+                                    <div id="display-movie">
+                                        <div id="imgMovieDisplay">
+                                            <Grid id="grid-MovieIMG">
+                                                <img
+                                                    className="movie-img-cover"
+                                                    src={currentMovie.MovieImage}
+                                                />
+                                            </Grid>
+                                        </div>
+
+                                        <Divider />
+
+                                        {/* Render Movie Details in Material UI Dialog */}
+                                        <div id="movie-details">
+                                            <div>
+                                                {currentMovie.MovieDescription}
+                                            </div>
+                                            <Divider />
+                                            <div>
+                                                <strong>Genre:</strong> {currentMovie.Genre}
+                                            </div>
+                                            <div>
+                                                <strong>Release Date:</strong> {currentMovie.ReleaseDate}
+                                            </div>
+
+                                            <Divider />
+
+                                            {/* Render Movie Sessions in Material UI Dialog*/}
+                                            <div id="sessiondisplay">
+                                                <h3>Available Sessions</h3>
+                                                {/* Rendering a list of data from movieSession const in Material UI Dialog */}
+                                                {movieSession.map((movieSession, index) =>
+                                                // The View Movie Seats button will be disabled if the user is not logged in
+                                                {
+                                                    if (localStorage.getItem('UserStatus') === "Logged Out") {
+                                                        return (
+                                                            <div id="movie-session-content">
+                                                                <div>{movieSession.SessionDate}</div>
+                                                                <div>{movieSession.TimeStart}</div>
+                                                                <Button
+                                                                    disabled
+                                                                    endIcon={<EventSeat />}
+                                                                    variant="contained"
+                                                                    color="primary"
+                                                                    className={classes.margin}>
+                                                                    Please log in to book a seat
+                                                        </Button>
+                                                            </div>
+                                                        )
+                                                    } else {
+                                                        return (
+                                                            <div id="movie-session-content">
+                                                                <div>{movieSession.SessionDate}</div>
+                                                                <div>{movieSession.TimeStart}</div>
+                                                                <Button
+                                                                    endIcon={<EventSeat />}
+                                                                    onClick={() => { postDisplaySeats(movieSession.MovieSessionID); postTicketTypes(); }}
+                                                                    variant="contained"
+                                                                    color="primary"
+                                                                    className={classes.margin}>
+                                                                    View Seats
+                                                                </Button>
+                                                            </div>
+                                                        )
+                                                    }
+                                                }
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        {/* Render Seats in Material UI Dialog */}
+                                        <div id="seat-display" style={{ display: "none" }}>
+                                            <h3>Available Seats</h3>
+                                            {loading2 ? (
+                                                <div className={classes.loadingcontent}>
+                                                    <CircularProgress color="inherit" />
+                                                </div>
+                                            ) : (
+                                                <div id="seat-items-container">
+                                                    {/* Rendering a list of data from seat const in Material UI Dialog */}
+                                                    {seat.map((seat, index) =>
+                                                        <div className={classes.iconButton}>
+                                                            <div id="seats">
+                                                                <IconButton
+                                                                    disabled={seat.ReservationStatus}
+                                                                    classes={{ label: classes.iconButtonLabel }}
+                                                                    onClick={() => { transferSeatValue(seat.SeatBySessionID); seatToggleActive(seat.SeatBySessionID); }}>
+                                                                    <EventSeat className={seatToggleStyles(seat.SeatBySessionID)} />
+                                                                    <div>{seat.SeatNumber}</div>
+                                                                </IconButton>
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
+
+                                            {/* Seat Colour Indicator */}
+                                            <div className="colour-indicator">
+                                                <h4>Colour Indicator</h4>
+                                                <p>Grey: Available</p>
+                                                <p style={{ color: "green" }}>Green: Selected</p>
+                                                <p style={{ color: "red" }}>Red: Booked</p>
+                                            </div>
+
+                                            <Divider />
+
+                                            <h4>Ticket Types</h4>
+                                            {/* Rendering a list of data from ticketType const in Material UI Dialog */}
+                                            {loading3 ? (
+                                                <div className={classes.loadingcontent}>
+                                                    <CircularProgress color="inherit" />
+                                                </div>
+                                            ) : (
+                                                <FormControl component="fieldset">
+                                                    <RadioGroup
+                                                        aria-label="tickettype"
+                                                        name="tickettype1"
+                                                        value={radioValue}
+                                                        onChange={handleRadioChange}
+                                                    >
+                                                        {ticketType.map((ticketType, index) =>
+                                                            <div>
+                                                                <FormControlLabel
+                                                                    control={<Radio
+                                                                        value={ticketType.TicketTypeID.toString()} />}
+                                                                    label={ticketType.Name}
+                                                                />
+                                                                <div>${ticketType.Price}</div>
+                                                            </div>
+                                                        )}
+                                                        <p>If you are paying for the 'Student' price, you are required to present your Student ID before entering the cinema room.</p>
+                                                    </RadioGroup>
+                                                </FormControl>
+                                            )}
+
+                                            {/* Hidden Form that allow seatID and ticketTypeID to be filled and prepare for reservation */}
+                                            <form id="seat-booking" style={{ display: 'none' }}>
+                                                <input id="seat-id" value={seatSelected} readOnly />
+                                                <input id="ticket-type" value={radioValue} readOnly />
+                                            </form>
+                                            <Button
+                                                endIcon={<Check />}
+                                                type="button"
+                                                variant="contained"
+                                                color="primary"
+                                                className={classes.margin}
+                                                onClick={() => { postSeatBooking(); closeMovieDisplay(); }}
+                                            >
+                                                Reserve
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button
+                                    onClick={() => { closeMovieDisplay() }}
+                                    color="primary"
+                                >
+                                    Close
+                            </Button>
+                            </DialogActions>
+                        </Dialog>
+                    ))}
+                </div>
             )}
         </div>
     );

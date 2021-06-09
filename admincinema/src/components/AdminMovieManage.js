@@ -21,6 +21,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import IconButton from '@material-ui/core/IconButton';
+import Slide from '@material-ui/core/Slide';
 
 // React const that sets up style customisation for Material UI components
 const useStyles = makeStyles((theme) => ({
@@ -30,8 +31,19 @@ const useStyles = makeStyles((theme) => ({
     tableRow: {
         whiteSpace: 'normal',
         wordBreak: 'break-word'
-    }
+    },
+    root: {
+        width: '100%',
+        '& > * + *': {
+            marginTop: theme.spacing(2),
+        },
+    },
 }));
+
+// React consts set up for Dialog Animation
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
 
 export default function ManageMovie() {
     // A React const that is assigned with Material UI Component Style Const
@@ -74,33 +86,36 @@ export default function ManageMovie() {
     const [selectedMovie, setSelectedMovie] = useState([]);
 
     // React Const for Dialog Movie Update
-    const [dialogUpdate, setDialogUpdate] = useState(true);
+    const [dialogUpdate, setDialogUpdate] = useState(false);
 
     // React Functions for Opening and Closing Dialog Movie Update
     function openDialogUpdate(movies) {
-        setSelectedMovie(movies);
         setDialogUpdate(true);
+        setSelectedMovie(movies);
         console.log(movies);
     }
     function closeDialogUpdate() {
         setDialogUpdate(false);
-        // setSelectedMovie([]);
+        setSelectedMovie([]);
     }
 
     // React Const for Dialog Movie Delete
     const [dialogDelete, setDialogDelete] = useState(false);
 
+    // React Const movieDelete to store movies data value selected for delete
+    const [movieDelete, setMovieDelete] = useState([])
+
     // React Functions for Opening and Closing Dialog Movie Delete
     function openDialogDelete() {
         setDialogDelete(true);
-        setSelectedMovie(movies)
+        setMovieDelete(movies)
     }
     function closeDialogDelete() {
+        setMovieDelete([])
         setDialogDelete(false);
-        // setSelectedMovie([]);
     }
 
-
+    // When the Favourite page/component is loaded, useEffect will use a JavaScript Function to display movies in JSON output only once
     useEffect(() => {
         postDisplayMovies();
     }, []);
@@ -151,6 +166,7 @@ export default function ManageMovie() {
                 setMessage("A new movie is added");
                 setOpenSnackBar(true);
                 setSeverity("success");
+                postDisplayMovies();
                 return;
             }
             // Unsuccessfully add a movie
@@ -181,28 +197,36 @@ export default function ManageMovie() {
     }
 // ----------------------------------------------------------------------Update Movie----------------------------------------------------------------------------------------------
     function postUpdateMovie() {
-        var movie = {
-            "MovieNameUpdt" : document.getElementById("MovieNameUpdt").value,
-            "ReleaseDateUpdt" : document.getElementById("ReleaseDateUpdt").value,
-            "MovieDescriptionUpdt" : document.getElementById("MovieDescriptionUpdt").value,
-            "GenreUpdt" : document.getElementById("GenreUpdt").value,
-            "MovieIMGUpdt" : document.getElementById("MovieIMGUpdt").value,
-            "MovieIDUpdt" : document.getElementById("MovieIDUpdt").value
+        var movieUPDT = {
+            'MovieNameUpdt' : document.getElementById("MovieNameUpdt").value,
+            'ReleaseDateUpdt' : document.getElementById("ReleaseDateUpdt").value,
+            'MovieDescriptionUpdt' : document.getElementById("MovieDescriptionUpdt").value,
+            'GenreUpdt' : document.getElementById("GenreUpdt").value,
+            'MovieIMGUpdt' : document.getElementById("MovieIMGUpdt").value,
+            'MovieIDUpdt' : document.getElementById("MovieIDUpdt").value
         }
         fetch("http://localhost/Solar-View-Cinema/appcinema/src/api/api.php?action=adminupdatemovie", {
             method: "POST",
-            body: JSON.stringify(movie),
+            body: JSON.stringify(movieUPDT),
             credentials: "include"
         })
         .then((response) => {
             // Successfully update the movie
             if(response.status === 202) {
                 console.log('success');
+                closeDialogUpdate();
+                postDisplayMovies();
+                setMessage("The movie is updated successfully");
+                setOpenSnackBar(true);
+                setSeverity("success");
                 return;
             }
             // Unsuccessfully update the movie
-            if(response.status === 501) {
-                console.log('not implemented');
+            if(response.status === 406) {
+                console.log('forbidden');
+                setMessage("Form is not fully filled");
+                setOpenSnackBar(true);
+                setSeverity("error");
                 return;
             }
             // When daily request limit exceeded
@@ -241,6 +265,7 @@ export default function ManageMovie() {
                 setOpenSnackBar(true);
                 setSeverity("success");
                 setMessage("The movie is removed.");
+                postDisplayMovies();
                 return;
             }
             // Unsuccessfully removing Movie 
@@ -325,7 +350,7 @@ export default function ManageMovie() {
                                 <TableBody>
                                 {movies.map((movies, index) => (
                                     <TableRow 
-                                        key={movies.MovieID}
+                                        key={index}
                                         style={{height: 10}}
                                         tabIndex={-1}
                                     >
@@ -339,7 +364,7 @@ export default function ManageMovie() {
                                         <TableCell className={classes.tableRow}>{movies.MovieImage}</TableCell>
                                         <TableCell padding="default">
                                             <IconButton
-                                                onClick={() => {openDialogUpdate([movies])}}
+                                                onClick={() => openDialogUpdate([movies])}
                                             >
                                                 <Publish />
                                             </IconButton>
@@ -350,30 +375,153 @@ export default function ManageMovie() {
                                             >
                                                 <Delete />
                                             </IconButton>
-                                        </TableCell>
+                                        </TableCell>  
                                     </TableRow>
                                 ))}    
                                 </TableBody>
                             </Table>
                         </TableContainer>   
+                            {selectedMovie.map((selectedMovie, index) => (
+                                <Dialog
+                                    open={dialogUpdate}
+                                    TransitionComponent={Transition}
+                                    keepMounted
+                                    onClose={closeDialogUpdate}
+                                    aria-labelledby="alert-dialog-slide-title"
+                                    aria-describedby="alert-dialog-slide-description"
+                                >
+                                <DialogTitle 
+                                    id="alert-dialog-slide-title">
+                                        {selectedMovie.MovieName}
+                                </DialogTitle>
+                                <DialogContent>
+                                <DialogContentText id="alert-dialog-slide-description">
+                                <form id="updatemovieform" autoComplete="off" onSubmit={handleSubmit(postUpdateMovie)}>
+                                        <div className="formgroup">
+                                            <label for="movienameupdt">Movie Name</label>
+                                            {/* Movie Name field requires value in order to proceed with the update movie process */}
+                                            <input id="MovieNameUpdt" type="text" placeholder="Movie Name" name="movienameupdt"  
+                                                defaultValue={selectedMovie.MovieName}
+                                            />
+                                        </div>
+
+                                        <div className="formgroup">
+                                            <label for="releasedateupdt">Release Date</label>
+                                            {/* Release Date field requires value in order to proceed with the update movie process */}
+                                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                                <DatePicker
+                                                    animateYearScrolling
+                                                    disableFuture
+                                                    minDate="1930-01-01"
+                                                    name="releasedateupdt"
+                                                    margin="normal"
+                                                    id="ReleaseDateUpdt"
+                                                    initialFocusedDate={selectedMovie.ReleaseDate}
+                                                    placeholder="Release Date"
+                                                    format="yyyy-MM-dd"
+                                                    value={selectedDate}
+                                                    onChange={handleDateChange}
+                                                />
+                                            </MuiPickersUtilsProvider>
+                                        </div>  
+
+                                        <br/>
+
+                                        <div className="formgroup">
+                                            <label for="moviedescriptionupdt">Movie Description</label>
+                                            {/* Movie Description field requires value in order to proceed with the update movie process */}
+                                            <textarea id="MovieDescriptionUpdt" name="moviedescriptionupdt"  cols="50" rows="10" 
+                                                defaultValue={selectedMovie.MovieDescription}
+                                            ></textarea>
+                                        </div>
+                                        <br />
+
+                                        <div className="formgroup">
+                                            <label for="genreupdt">Genre</label>
+                                            {/* Genre field requires value in order to proceed with the update movie process */}
+                                            <input id="GenreUpdt" type="text" placeholder="Genre" name="genreupdt"  
+                                                defaultValue={selectedMovie.Genre}
+                                            />    
+                                        </div>
+
+                                        <div className="formgroup">
+                                            <label for="movieimgupdt">Movie Image Reference Link</label>
+                                            {/* Movie Image field requires value in order to proceed with the update movie process */}
+                                            <input id="MovieIMGUpdt" type="text" placeholder="Movie Image Link" name="movieimgupdt" 
+                                                defaultValue={selectedMovie.MovieImage}
+                                            />    
+                                        </div>
+
+                                        <div className="formgroup">
+                                            <label for="movieIDupdt">MovieID</label>
+                                            {/* MovieID field has been preset with value and the field is uneditable*/}
+                                            <input id="MovieIDUpdt" type="text" name="movieIDupdt" 
+                                                value={selectedMovie.MovieID}
+                                            />
+                                        </div>
+                                        
+                                        <div id="add-button">
+                                        <Button
+                                            type="submit"
+                                            variant="contained" 
+                                            color="primary"
+                                            onClick={closeDialogUpdate}
+                                            className={classes.margin}>
+                                            Update Movie
+                                        </Button>  
+                                        </div>
+                                    </form>
+                                </DialogContentText>
+                                </DialogContent>
+                                <DialogActions>
+                                    <Button 
+                                        onClick={() => {closeDialogUpdate()}} 
+                                        color="primary"
+                                    >
+                                        Close
+                                    </Button>
+                                </DialogActions>
+                                </Dialog>
+                            ))}
+                            
+{/* ---------------------------------------------------------Dialog For Admin to confirm deleting selected movie ------------------------------------------------------------------ */}
+                            {movieDelete.map((movieDelete, index) => (
+                                <Dialog onClose={closeDialogDelete} aria-labelledby="simple-dialog-title" open={dialogDelete}>
+                                    <DialogTitle id="simple-dialog-title">Deleting movies</DialogTitle>
+                                    <DialogContent>
+                                    <DialogContentText id="alert-dialog-description">
+                                        Are you sure you want to delete this movie ?
+                                    </DialogContentText>
+                                    </DialogContent>
+                                    <DialogActions>
+                                    <Button onClick={() => {postDeleteMovie(movieDelete.MovieID); closeDialogDelete()}} color="primary">
+                                        Yes
+                                    </Button>
+                                
+                                    <Button onClick={closeDialogDelete} color="primary">
+                                        No
+                                    </Button>
+                                    </DialogActions>
+                                </Dialog>
+                            ))}
                     </div>
                     :
                     <div id="add-movie">
-                        {/* Add Movie Form Section */}
+{/* ---------------------------------------------------Add Movie Form Section------------------------------------------------------------------------------------------------------ */}
                         <form id="movieform" autoComplete="off" onSubmit={handleSubmit(postAddMovie)}>
                             <div className="formgroup">
                                 <label for="moviename">Movie Name</label>
-                                {/* Movie Name field requires value in order to proceed with the register process */}
+                                {/* Movie Name field requires value in order to proceed with the create movie process */}
                                 <input id="MovieName" type="text" placeholder="Movie Name" name="moviename"  defaultValue=""
                                     {...register("MovieName", { required: true })}
                                 />
-                                {/* Error message when the user did not provide username value in the movie name field */}
+                                {/* Error message when the user did not provide moviename value in the movie name field */}
                                 {errors?.MovieName?.type === "required" && <p className="errormssg">Movie Name field is required</p>}
                             </div>
 
                             <div className="formgroup">
                                 <label for="releasedate">Release Date</label>
-                                {/* Date of Birth field requires value and must in correct data format in order to proceed with the register process */}
+                                {/* Release Date field requires value in order to proceed with the create movie process */}
                                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                     <DatePicker
                                         animateYearScrolling
@@ -386,9 +534,6 @@ export default function ManageMovie() {
                                         format="yyyy-MM-dd"
                                         value={selectedDate}
                                         onChange={handleDateChange}
-                                        KeyboardButtonProps={{
-                                            'aria-label': 'change date',
-                                        }}
                                     />
                                 </MuiPickersUtilsProvider>
                             </div>  
@@ -397,32 +542,32 @@ export default function ManageMovie() {
 
                             <div className="formgroup">
                                 <label for="moviedescription">Movie Description</label>
-                                {/* Username field requires value in order to proceed with the register process */}
+                                {/* Movie Description field requires value in order to proceed with the create movie process */}
                                 <textarea id="MovieDescription" name="moviedescription"  cols="50" rows="10" 
                                     {...register("MovieDescription", { required: true })}
                                 />
-                                {/* Error message when the user did not provide username value in the unsername field */}
+                                {/* Error message when the user did not provide moviedescription value in the movie description field */}
                                 {errors?.MovieDescription?.type === "required" && <p className="errormssg">This field is required</p>}
                             </div>
                             <br />
 
                             <div className="formgroup">
                                 <label for="genre">Genre</label>
-                                {/* Genre field requires value and must be in correct data format in order to proceed with the register process */}
+                                {/* Genre field requires value in order to proceed with the create movie process */}
                                 <input id="Genre" type="text" placeholder="Genre" name="genre"  defaultValue=""
                                     {...register("Genre", { required: true })}
                                 />    
-                                {/* Error message when the user did not provide password value in the password field */}
+                                {/* Error message when the user did not provide genre value in the genre field */}
                                 {errors?.Genre?.type === "required" && <p className="errormssg">Genre field is required</p>}
                             </div>
 
                             <div className="formgroup">
                                 <label for="movieimg">Movie Image Reference Link</label>
-                                {/* Mobile Phone field requires value and must be in correct data format in order to proceed with the register process */}
-                                <input id="MovieIMG" type="url" placeholder="Movie Image Link" name="phone" defaultValue=""
-                                    {...register("MovieIMG", { required: true, maxLength: 10 })}
+                                {/* Movie Image field requires value in order to proceed with the create movie process */}
+                                <input id="MovieIMG" type="text" placeholder="Movie Image Link" name="phone" defaultValue=""
+                                    {...register("MovieIMG", { required: true })}
                                 />    
-                                {/* Error message when the user did not provide password value in the password field */}
+                                {/* Error message when the user did not provide MovieImageLink value in the MovieImageLink field */}
                                 {errors?.MovieIMG?.type === "required" && 
                                     <p className="errormssg">
                                         Movie Image Reference Link field is required 
@@ -440,135 +585,6 @@ export default function ManageMovie() {
                                 </Button>  
                             </div>    
                         </form>
-{/* -----------------------------------------------------------------------Movie Update Dialog------------------------------------------------------------ */}
-                        <Dialog onClose={closeDialogDelete} aria-labelledby="simple-dialog-title" open={dialogDelete}>
-                            <DialogTitle id="simple-dialog-title">Set backup account</DialogTitle>
-                            <DialogContent>
-                            <DialogContentText id="alert-dialog-description">
-                                {selectedMovie.map((selectedMovie, index) => (
-                                <form id="movieform" autoComplete="off" onSubmit={handleSubmit(postUpdateMovie)}>
-                                    <div className="formgroup">
-                                        <label for="moviename">Movie Name</label>
-                                        {/* Movie Name field requires value in order to proceed with the register process */}
-                                        <input id="MovieNameUpdt" type="text" placeholder="Movie Name" name="moviename"  defaultValue={selectedMovie.MovieName}
-                                            {...register("MovieName", { required: true })}
-                                        />
-                                        {/* Error message when the user did not provide username value in the movie name field */}
-                                        {errors?.MovieName?.type === "required" && <p className="errormssg">Movie Name field is required</p>}
-                                    </div>
-
-                                    <div className="formgroup">
-                                        <label for="releasedate">Release Date</label>
-                                        {/* Date of Birth field requires value and must in correct data format in order to proceed with the register process */}
-                                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                            <DatePicker
-                                                animateYearScrolling
-                                                disableFuture
-                                                minDate="1930-01-01"
-                                                name="releasedate"
-                                                margin="normal"
-                                                id="ReleaseDateUpdt"
-                                                initialFocusedDate={selectedMovie.ReleaseDate}
-                                                placeholder="Release Date"
-                                                format="yyyy-MM-dd"
-                                                value={selectedDate}
-                                                onChange={handleDateChange}
-                                                KeyboardButtonProps={{
-                                                    'aria-label': 'change date',
-                                                }}
-                                            />
-                                        </MuiPickersUtilsProvider>
-                                    </div>  
-
-                                    <br/>
-
-                                    <div className="formgroup">
-                                        <label for="moviedescription">Movie Description</label>
-                                        {/* Username field requires value in order to proceed with the register process */}
-                                        <textarea id="MovieDescriptionUpdt" name="moviedescription"  cols="50" rows="10" 
-                                            defaultValue={selectedMovie.MovieDescription}
-                                            {...register("MovieDescription", { required: true })}
-                                        />
-                                        {/* Error message when the user did not provide username value in the unsername field */}
-                                        {errors?.MovieDescription?.type === "required" && <p className="errormssg">This field is required</p>}
-                                    </div>
-                                    <br />
-
-                                    <div className="formgroup">
-                                        <label for="genre">Genre</label>
-                                        {/* Genre field requires value and must be in correct data format in order to proceed with the register process */}
-                                        <input id="GenreUpdt" type="text" placeholder="Genre" name="genre"  defaultValue={selectedMovie.Genre}
-                                            {...register("Genre", { required: true })}
-                                        />    
-                                        {/* Error message when the user did not provide password value in the password field */}
-                                        {errors?.Genre?.type === "required" && <p className="errormssg">Genre field is required</p>}
-                                    </div>
-
-                                    <div className="formgroup">
-                                        <label for="movieimg">Movie Image Reference Link</label>
-                                        {/* Mobile Phone field requires value and must be in correct data format in order to proceed with the register process */}
-                                        <input id="MovieIMGUpdt" type="url" placeholder="Movie Image Link" name="phone" defaultValue={selectedMovie.MovieImage}
-                                            {...register("MovieIMG", { required: true, maxLength: 10 })}
-                                        />    
-                                        {/* Error message when the user did not provide password value in the password field */}
-                                        {errors?.MovieIMG?.type === "required" && 
-                                            <p className="errormssg">
-                                                Movie Image Reference Link field is required 
-                                            </p>
-                                        }
-                                    </div>
-
-                                    <div className="formgroup">
-                                        <label for="movieID">MovieID</label>
-                                        {/* Mobile Phone field requires value and must be in correct data format in order to proceed with the register process */}
-                                        <input id="MovieIDUpdt" type="text" name="movieID" value={selectedMovie.MovieID}/>
-                                    </div>
-                                    
-                                    <div id="add-button">
-                                    <Button
-                                        type="submit"
-                                        variant="contained" 
-                                        color="primary"
-                                        className={classes.margin}>
-                                        Submit
-                                    </Button>  
-                                    </div>
-                                </form>
-                            ))}   
-                            </DialogContentText>
-                            </DialogContent>
-                            <DialogActions>                            
-                                <Button onClick={closeDialogUpdate} color="primary">
-                                    No
-                                </Button>
-                            </DialogActions>
-                        </Dialog>
-
-                        <Dialog onClose={closeDialogUpdate} aria-labelledby="update-dialog-title" open={dialogUpdate}>
-                        <DialogTitle id="update-dialog-title">Set backup account</DialogTitle>
-                        
-                        </Dialog>
-                    
-// --------------------------------------------------------------------Delete Movie Dialog-----------------------------------------------------------------------------------------
-                        <Dialog onClose={closeDialogDelete} aria-labelledby="simple-dialog-title" open={dialogDelete}>
-                            <DialogTitle id="simple-dialog-title">Set backup account</DialogTitle>
-                            <DialogContent>
-                            <DialogContentText id="alert-dialog-description">
-                                Are you sure you want to delete this movie ?
-                            </DialogContentText>
-                            </DialogContent>
-                            <DialogActions>
-                            {selectedMovie.map((selectedMovie, index) => (
-                            <Button onClick={() => postDeleteMovie(selectedMovie.MovieID)} color="primary">
-                                Yes
-                            </Button>
-                            ))}
-                            
-                            <Button onClick={closeDialogDelete} color="primary">
-                                No
-                            </Button>
-                            </DialogActions>
-                        </Dialog>
                     </div>
             }
         </div>

@@ -45,6 +45,8 @@ export default function Dashboard() {
     // React Const Activity Log set up empty array to store data that is succesfully fetched
     const [activityLog, setActivityLog] = useState([]);
 
+    // When the Favourite page/component is loaded, useEffect will use a JavaScript Function 
+    // to display Activity Log in JSON output only once
     useEffect(() => {
         postDashboardDisplay();
     }, []);

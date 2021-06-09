@@ -44,6 +44,7 @@ export default function Login() {
         formState: { errors } 
     } = useForm();
 
+// ------------------------------------------------------Admin Login Section-------------------------------------------------------------------------------------------------------
     function postAdminLogin() {
         var adminlogin = {
             'adminUsername' : document.getElementById("UserNameAdmin").value,
@@ -66,14 +67,15 @@ export default function Login() {
             if(response.status === 202) {
                 console.log(response);
                 console.log('success');
-                localStorage.setItem('UserStatus', 'Logged In');
+                localStorage.setItem('LoginStatus', 'Logged In');
                 console.log('Status: Logged In');
-                // document.getElementById('loginform').reset();
+                document.getElementById('login-form').reset();
                 history.push("/admin/dashboard");
                 return;
             }
         })
     }
+// --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     return(
         <div id="loginpage">
             {/* Render of Material UI Snackbar Alert Message that automatically hides after 4 seconds */}

@@ -55,13 +55,13 @@ class databaseOBJ {
     // Display User Profile by UserID
     function displayProfile() {
         try {
-        $mysql = "SELECT UserID, FirstName, LastName, DateOfBirth, Email, Phone, Username FROM users 
-        WHERE UserID = :userid";
-        $stmt = $this->dbconn->prepare($mysql);
-        $stmt->bindValue(':userid', $_SESSION['UserID']);
-        $stmt->execute();
-        $result = $stmt->fetchAll();
-        return $result;
+            $mysql = "SELECT UserID, FirstName, LastName, DateOfBirth, Email, Phone, Username FROM users 
+            WHERE UserID = :userid";
+            $stmt = $this->dbconn->prepare($mysql);
+            $stmt->bindValue(':userid', $_SESSION['UserID']);
+            $stmt->execute();
+            $result = $stmt->fetchAll();
+            return $result;
         }
         catch (PDOException $ex) { 
             throw $ex;
@@ -303,20 +303,20 @@ class databaseOBJ {
             $usertype = $row["AccessRight"];
             $_SESSION["UserType"] = $usertype;
             return true;
+            // Track which user logged in 
+            $User = $_SESSION["UserID"];
+            $sql = "INSERT INTO activitylog(ipAddress, DateAndTime, BrowserType, Action, UserID)
+            VALUES(:ipaddress, :time, :browsertype, :activity, :userid)";
+            $stmt = $this->dbconn->prepare($sql);
+            $stmt->bindValue(':ipaddress', $IPAddress);
+            $stmt->bindValue(':time', $Time);
+            $stmt->bindValue(':browsertype', $BrowserType);
+            $stmt->bindValue(':activity', $Activity);
+            $stmt->bindValue(':userid', $User);
+            return $stmt->execute();
         } else {
             return false;
         }
-         // Track which user logged in 
-         $User = $_SESSION["UserID"];
-         $sql = "INSERT INTO activitylog(ipAddress, DateAndTime, BrowserType, Action, UserID)
-         VALUES(:ipaddress, :time, :browsertype, :activity, :userid)";
-         $stmt = $this->dbconn->prepare($sql);
-         $stmt->bindValue(':ipaddress', $IPAddress);
-         $stmt->bindValue(':time', $Time);
-         $stmt->bindValue(':browsertype', $BrowserType);
-         $stmt->bindValue(':activity', $Activity);
-         $stmt->bindValue(':userid', $User);
-         return $stmt->execute();
     }
     // Display Activity Log in Admin Dashboard
     function displayDashBoard(){
@@ -361,17 +361,7 @@ class databaseOBJ {
             $mysql = "SELECT * FROM movie";
             $stmt = $this->dbconn->prepare($mysql);
             $stmt->execute();
-            $data = $stmt->fetchAll();
-            $result = array();
-            foreach($data as $moviedata) {
-                $jsonformat["MovieID"] = $moviedata["MovieID"];
-                $jsonformat["MovieName"] = $moviedata["MovieName"];
-                $jsonformat["ReleaseDate"] = $moviedata["ReleaseDate"];
-                $jsonformat["MovieDescription"] = $moviedata["MovieDescription"];
-                $jsonformat["Genre"] = $moviedata["Genre"];
-                $jsonformat["MovieImage"] = $moviedata["MovieImage"];
-                array_push($result, $jsonformat);
-            }
+            $result = $stmt->fetchAll();
             return $result;  
             return true;
         }
@@ -382,12 +372,16 @@ class databaseOBJ {
     // Display Movie Session in Admin Movie Session Management Section
     function admindisplaySession() {
         try {
-            $mysql = "SELECT * FROM moviesession";
+            $mysql = "SELECT movie.MovieName, moviesession.MovieSessionID, moviesession.SessionDate, 
+            moviesession.TimeStart, moviesession.MovieID 
+            FROM moviesession 
+            INNER JOIN movie on moviesession.MovieID = movie.MovieID ";
             $stmt = $this->dbconn->prepare($mysql);
             $stmt->execute();
             $data = $stmt->fetchAll();
             $result = array();
             foreach($data as $moviedata) {
+                $jsonformat["MovieName"] = $moviedata["MovieName"];
                 $jsonformat["MovieSessionID"] = $moviedata["MovieSessionID"];
                 $jsonformat["SessionDate"] = $moviedata["SessionDate"];
                 $jsonformat["TimeStart"] = $moviedata["TimeStart"];
@@ -434,5 +428,34 @@ class databaseOBJ {
         $stmt->bindValue(':movieid', $movieDelete);
         return $stmt->execute();
     }
+    // Add a Movie Session in Admin Movie Session Management Section
+    function adminAddSession($sessionDate, $sessionTime, $movie) {
+        $sql = "INSERT INTO moviesession(SessionDate, TimeStart, MovieID)
+        VALUES(:sessiondate, :timestart, :movieid)";
+        $stmt = $this->dbconn->prepare($sql);
+        $stmt->bindValue(':sessiondate', $sessionDate);
+        $stmt->bindValue(':timestart', $sessionTime);
+        $stmt->bindValue(':movieid',$movie);
+        return $stmt->execute();
+    }
+    // Update a Movie Session in Admin Movie Session Management Section
+    function adminUpdateSession($sessionDateUPDT, $sessionTimeUPDT, $movieUPDT, $movieSessionUPDT) {
+        $mysql = "UPDATE moviesession SET SessionDate = :sessiondateupdt, TimeStart = :timestartupdt, 
+        MovieID = :movieidupdt
+        WHERE MovieSessionID = :moviesessionidupdt";
+        $stmt = $this->dbconn->prepare($mysql);
+        $stmt->bindValue(':sessiondateupdt', $sessionDateUPDT);
+        $stmt->bindValue(':timestartupdt', $sessionTimeUPDT);
+        $stmt->bindValue(':movieidupdt', $movieUPDT);
+        $stmt->bindValue(':moviesessionidupdt', $movieSessionUPDT);
+        return $stmt->execute();
+    }
+    // Delete a Movie Session in Admin Movie Session Management Section
+    function admindeleteSession($sessionDelete) {
+        $sql = "DELETE from moviesession WHERE MovieSessionID = :moviesessionid";
+        $stmt = $this->dbconn->prepare($sql);
+        $stmt->bindValue(':moviesessionid', $sessionDelete);
+        return $stmt->execute();
+    } 
 }
 ?>
