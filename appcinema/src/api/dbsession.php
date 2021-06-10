@@ -53,7 +53,7 @@ class sessionOBJ {
         $this->last24hours = time() - 86400;
         // Once user logs out the session is destroyed and rate limiting resets
         foreach ($this->timeLimit as $time) {
-            if ($time < $this->last24hours) {
+            if ($time < $this->last24hours - 1) {
                 $key = array_search($time, $this->timeLimit);
                 array_splice($this->timeLimit, $key);
             }
@@ -70,7 +70,7 @@ class sessionOBJ {
         // The if statement check if the current session request is empty    
         if(isset($_SESSION['last_session_request'])){ 
             // If the current request time is equal to the current time, any activity in the app will be stopped for 1 second
-            if($_SESSION["last_session_request"] == time()){
+            if($_SESSION["last_session_request"] == time() - 1){
                 http_response_code(429);
                 die("Surpassed Rate Limit");
             } else {
