@@ -79,6 +79,9 @@ export default function MovieDisplay() {
     const [severity, setSeverity] = useState("info");
     const [message, setMessage] = useState("");
 
+    // React const for toggle between movie contents and seats display
+    const [dialog, setDialog] = useState("movie_contents");
+
     // On clickaway, close Snackbar Alert
     const closeSnackbar = (event, reason) => {
         if (reason === "clickaway") {
@@ -131,7 +134,7 @@ export default function MovieDisplay() {
         setSeatSelected([]);
         setRadioValue([]);
         setSeatHighlight([]);
-        closeSeatDisplay();
+        setDialog("movie_contents");
     };
 
     // React Const for loading screen before rendering
@@ -241,7 +244,6 @@ export default function MovieDisplay() {
     function postDisplaySeats(id) {
         // Turn on loading
         setLoading2(true);
-        openSeatDisplay();
         var moviesession = {
             'moviesessionid': id
         }
@@ -304,19 +306,6 @@ export default function MovieDisplay() {
 // --------------------------------------Storing Ticket Values into Hidden Input Form for Ticket Reservation-----------------------------------------------------------------------
     function transferSeatValue(id) {
         setSeatSelected(id);
-    }
-//-------------------------------------------------------Open and Close Seat Display-----------------------------------------------------------------------------------------------
-    function closeSeatDisplay() {
-        document.getElementById("movie-details").style.display = "block";
-        document.getElementById("sessiondisplay").style.display = "block";
-        document.getElementById("imgMovieDisplay").style.display = "block";
-        document.getElementById("seat-display").style.display = "none";
-    }
-    function openSeatDisplay() {
-        document.getElementById("movie-details").style.display = "none";
-        document.getElementById("sessiondisplay").style.display = "none";
-        document.getElementById("imgMovieDisplay").style.display = "none";
-        document.getElementById("seat-display").style.display = "block";
     }
 //---------------------------------------------------------Displaying Ticket Type--------------------------------------------------------------------------------------------------
     function postTicketTypes() {
@@ -525,77 +514,84 @@ export default function MovieDisplay() {
                             <DialogContent>
                                 <DialogContentText id="alert-dialog-slide-description">
                                     <div id="display-movie">
-                                        <div id="imgMovieDisplay">
-                                            <Grid id="grid-MovieIMG">
-                                                <img
-                                                    className="movie-img-cover"
-                                                    src={currentMovie.MovieImage}
-                                                />
-                                            </Grid>
-                                        </div>
-
-                                        <Divider />
-
-                                        {/* Render Movie Details in Material UI Dialog */}
-                                        <div id="movie-details">
-                                            <div>
-                                                {currentMovie.MovieDescription}
-                                            </div>
-                                            <Divider />
-                                            <div>
-                                                <strong>Genre:</strong> {currentMovie.Genre}
-                                            </div>
-                                            <div>
-                                                <strong>Release Date:</strong> {currentMovie.ReleaseDate}
+                                        {dialog == "movie_contents" ? (
+                                        <div id="movie-contents">
+                                            <div id="imgMovieDisplay">
+                                                <Grid id="grid-MovieIMG">
+                                                    <img
+                                                        className="movie-img-cover"
+                                                        src={currentMovie.MovieImage}
+                                                    />
+                                                </Grid>
                                             </div>
 
                                             <Divider />
 
-                                            {/* Render Movie Sessions in Material UI Dialog*/}
-                                            <div id="sessiondisplay">
-                                                <h3>Available Sessions</h3>
-                                                {/* Rendering a list of data from movieSession const in Material UI Dialog */}
-                                                {movieSession.map((movieSession, index) =>
-                                                // The View Movie Seats button will be disabled if the user is not logged in
-                                                {
-                                                    if (localStorage.getItem('UserStatus') === "Logged Out") {
-                                                        return (
-                                                            <div id="movie-session-content">
-                                                                <div>{movieSession.SessionDate}</div>
-                                                                <div>{movieSession.TimeStart}</div>
-                                                                <Button
-                                                                    disabled
-                                                                    endIcon={<EventSeat />}
-                                                                    variant="contained"
-                                                                    color="primary"
-                                                                    className={classes.margin}>
-                                                                    Please log in to book a seat
-                                                        </Button>
-                                                            </div>
-                                                        )
-                                                    } else {
-                                                        return (
-                                                            <div id="movie-session-content">
-                                                                <div>{movieSession.SessionDate}</div>
-                                                                <div>{movieSession.TimeStart}</div>
-                                                                <Button
-                                                                    endIcon={<EventSeat />}
-                                                                    onClick={() => { postDisplaySeats(movieSession.MovieSessionID); postTicketTypes(); }}
-                                                                    variant="contained"
-                                                                    color="primary"
-                                                                    className={classes.margin}>
-                                                                    View Seats
-                                                                </Button>
-                                                            </div>
-                                                        )
+                                            <div id="movie-details">
+                                                {/* Render Movie Details in Material UI Dialog */}
+                                                <div>
+                                                    {currentMovie.MovieDescription}
+                                                </div>
+                                                <Divider />
+                                                <div>
+                                                    <strong>Genre:</strong> {currentMovie.Genre}
+                                                </div>
+                                                <div>
+                                                    <strong>Release Date:</strong> {currentMovie.ReleaseDate}
+                                                </div>
+
+                                                <Divider />
+
+                                                {/* Render Movie Sessions in Material UI Dialog*/}
+                                                <div id="sessiondisplay">
+                                                    <h3>Available Sessions</h3>
+                                                    {/* Rendering a list of data from movieSession const in Material UI Dialog */}
+                                                    {movieSession.map((movieSession, index) =>
+                                                    // The View Movie Seats button will be disabled if the user is not logged in
+                                                    {
+                                                        if (localStorage.getItem('UserStatus') === "Logged Out") {
+                                                            return (
+                                                                <div id="movie-session-content">
+                                                                    <div>{movieSession.SessionDate}</div>
+                                                                    <div>{movieSession.TimeStart}</div>
+                                                                    <Button
+                                                                        disabled
+                                                                        endIcon={<EventSeat />}
+                                                                        variant="contained"
+                                                                        color="primary"
+                                                                        className={classes.margin}>
+                                                                        Please log in to book a seat
+                                                            </Button>
+                                                                </div>
+                                                            )
+                                                        } else {
+                                                            return (
+                                                                <div id="movie-session-content">
+                                                                    <div>{movieSession.SessionDate}</div>
+                                                                    <div>{movieSession.TimeStart}</div>
+                                                                    <Button
+                                                                        endIcon={<EventSeat />}
+                                                                        onClick={() => { 
+                                                                            postDisplaySeats(movieSession.MovieSessionID); 
+                                                                            postTicketTypes();
+                                                                            setDialog("display_seats");
+                                                                        }}
+                                                                        variant="contained"
+                                                                        color="primary"
+                                                                        className={classes.margin}>
+                                                                        View Seats
+                                                                    </Button>
+                                                                </div>
+                                                            )
+                                                        }
                                                     }
-                                                }
-                                                )}
-                                            </div>
-                                        </div>
-
-                                        {/* Render Seats in Material UI Dialog */}
-                                        <div id="seat-display" style={{ display: "none" }}>
+                                                    )}
+                                                </div>
+                                            </div>    
+                                        </div> 
+                                        ) : (
+                                        <div id="seat-display">
+                                            {/* Render Seats in Material UI Dialog */}
                                             <h3>Available Seats</h3>
                                             {loading2 ? (
                                                 <div className={classes.loadingcontent}>
@@ -675,6 +671,7 @@ export default function MovieDisplay() {
                                                 Reserve
                                             </Button>
                                         </div>
+                                        )}
                                     </div>
                                 </DialogContentText>
                             </DialogContent>

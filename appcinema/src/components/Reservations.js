@@ -63,7 +63,9 @@ export default function Reservations() {
     const [openSnackbar, setOpenSnackBar] = useState(false);
     const [severity, setSeverity] = useState("info");
     const [message, setMessage] = useState("");
-    const [dialog, setDialog] = useState("all_movie_sessions") // all_movie_sessions or seat_display
+
+    // React const for toggle between movie sessions and seat display
+    const [dialog, setDialog] = useState("all_movie_sessions");
 
     // On clickaway, close Snackbar Alert
     const closeSnackbar = (event, reason) => {
@@ -129,6 +131,7 @@ export default function Reservations() {
         postDisplayTicket();
         setRadioValue([]);
         setSeatHighlight([]);
+        setDialog("all_movie_sessions");
     }, [])
 
 // --------------------------------------Storing Ticket Values into Hidden Input Form for Ticket Update----------------------------------------------------------------------------
@@ -504,7 +507,7 @@ export default function Reservations() {
                                         <DialogContent>
                                         <DialogContentText id="alert-update-dialog-description">
                                         <div id="sessions-change">
-                                            {dialog == "all_movie_sessions" ? (
+                                        {dialog == "all_movie_sessions" ? (
                                             <div id="all-movie-sessions">
                                                 <h3>Available Sessions</h3>
                                                 {loading2 ? (
@@ -523,7 +526,11 @@ export default function Reservations() {
                                                             <div>{movieSession.TimeStart}</div>
                                                             <Button
                                                                 endIcon={<EventSeat />}
-                                                                onClick={() => { postDisplaySeats(movieSession.MovieSessionID); setDialog("display_seats"); postTicketTypes(); }}
+                                                                onClick={() => { 
+                                                                    postDisplaySeats(movieSession.MovieSessionID); 
+                                                                    setDialog("display_seats"); 
+                                                                    postTicketTypes(); 
+                                                                }}
                                                                 variant="contained" 
                                                                 color="primary"
                                                                 className={classes.margin}>
@@ -534,7 +541,7 @@ export default function Reservations() {
                                                     </div>
                                                 )}   
                                             </div>
-                                            ) : (
+                                        ) : (
                                             <div id="seat-display">
                                                 <h3>Available Seats</h3>
                                                 {loading3 ? (
@@ -607,7 +614,7 @@ export default function Reservations() {
                                                 )}
                                                     
                                                 {/* Hidden Form that allow seatID and ticketTypeID to be filled and prepare for reservation */}
-                                                <form id="seat-booking">
+                                                <form id="seat-booking" style={{display: 'none'}}>
                                                     <input id="seat-id-update" value={seatSelected} readOnly />
                                                     <input id="ticket-type-update" value={radioValue} readOnly />   
                                                     <input id="ticket-id" value={ticketSelected} readOnly />
@@ -623,7 +630,7 @@ export default function Reservations() {
                                                     Reserve
                                                 </Button>
                                             </div>
-                                            )}     
+                                        )}     
                                         </div>
                                         </DialogContentText>
                                         </DialogContent>

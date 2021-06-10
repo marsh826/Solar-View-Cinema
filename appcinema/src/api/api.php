@@ -2,15 +2,17 @@
 // The API requires the dbsession.php file that manages the web service session. 
 // The dbsession.php file is located in the same folder location as this api.php file
 require('dbsession.php');
+
 // CORS Headers are important for React App to function, or else it will be blocked 
 // due to the app not being in the same origin as the API link that is used for API fetch
 header("Content-Type: application/json");
 header("Access-Control-Allow-Headers: origin, content-type, accept");
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, ~OPTIONS");
 header("Access-Control-Allow-Origin: http://localhost:3000");
 header("Access-Control-Allow-Credentials: true");
+
 // The if statement is checking for pre-exisitng session,
-// if there is an existing session, it will replace it with a new one
+// if the session object is not found, a new one will be created
 if(!isset($_SESSION['session'])){
     $_SESSION['session'] = new sessionOBJ;
 }
@@ -18,7 +20,8 @@ if(!isset($_SESSION['session'])){
 // perform certain database queries. The dbconnection.php file is located in 
 // the same folder location as this api.php file
 require('dbconnection.php');
-// Establishing connection to the database
+
+// Establishing connection to the database through database object
 $db = new databaseOBJ;
 // Sanitise data sent via POST and SEND methods
 function testInput($data) {
@@ -30,20 +33,20 @@ function testInput($data) {
 }
 
 // Rate Limiter Activation
-// if($_GET["action"] == "logout") {
-//     // Allow the user to logout despite rate limit exceeded
-// } else {
-//     // If the daily request limit has been exceeded, block any other incoming requests
-//     if($_SESSION['session']->dailyrequestLimit() == true) {
-//         http_response_code(422);
-//         die();
-//     }
-//     // If the user breaks the rate limit by sending more than one request in one second, block any other incoming requests
-//     if($_SESSION['session']->rateLimit() == true) {
-//         http_response_code(429);
-//         die();
-//     }
-// }
+if($_GET["action"] == "logout") {
+    // Allow the user to logout despite rate limit exceeded
+} else {
+    // If the daily request limit has been exceeded, block any other incoming requests
+    if($_SESSION['session']->dailyrequestLimit() == true) {
+        http_response_code(422);
+        die();
+    }
+    // If the user breaks the rate limit by sending more than one request in one second, block any other incoming requests
+    if($_SESSION['session']->rateLimit() == true) {
+        http_response_code(429);
+        die();
+    }
+}
 
 // // IP Whitelisting
 if(!isset($_SERVER['HTTP_REFERER'])) {

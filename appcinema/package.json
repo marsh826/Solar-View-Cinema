@@ -1,6 +1,7 @@
 {
-  "name": "Solar-View-Cinema",
+  "name": "appcinema",
   "version": "0.1.0",
+  "homepage": "http://localhost:3000/Home",
   "private": true,
   "dependencies": {
     "@date-io/date-fns": "^1.3.13",
