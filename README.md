@@ -42,6 +42,7 @@ If installing on a new development environment, run the command lines below if y
 Change the fetch request links to the ones that corresponds to your own domain name instead of localhost and update the HTTP Referers as your IP Address and Domain name located in the api.php file.
 
 To redirect to the folder you want to access:
+
 -Redirect to web app
 cd appcinema
 
