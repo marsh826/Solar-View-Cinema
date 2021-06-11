@@ -1,7 +1,7 @@
 # Solar View Cinema
 Solar View Cinema is a newly established cinema exhibiting company in Brisbane. The company's goal is to bring the highest quality movie entertainment to Brisbane citizens while keeping the ticket fees at the minimum. Solar View Cinema has recently launched an web app called "SVC Cinema App" that provides Brisbane citizens to make seat reservations for their favourite movies online.
 
-#Business Rules
+# Business Rules
 1. Customers are required to register an account on the website, to be able to book a movie ticket. 
 
 2. Non-registered customers can still browse movies and its information despite unable to make booking.  
@@ -30,12 +30,12 @@ Administrator Account => Username: hanate || Password: rice
 #GitHub Repository
 https://github.com/marsh826/Solar-View-Cinema
 
-#Web App and Admin Panel access
+# Web App and Admin Panel access
 The web app can be accessed on 
 
 The admin panel can be accessed on
 
-#Local Installation on Development Environment
+# Local Installation on Development Environment
 Be sure to have React installed in order to access both web app and admin panel in development environment
 
 If installing on a new development environment, run the command lines below if you don't see a node_modueles folder in the repo. 
@@ -60,7 +60,7 @@ Create a build version of the app that merges all your CSS files into one file, 
 npm test
 Starts the test runner
 
-#Enabling React Service Worker
+# Enabling React Service Worker
 After the app was build into production using npm build, you can enable React Service Worker by:
 
 yarn global add server
@@ -69,7 +69,7 @@ Install the global dependency on serve
 serve -s build
 Each time a new build is generated, deploy the app
 
-#Technology used for both Web App and Admin Panel
+# Technology used for both Web App and Admin Panel
 Front End
 - With some basic implementation of HTML5, CSS3 and JavaScript in React Components
 -Layout Framework: Material UI version 4.11.1
