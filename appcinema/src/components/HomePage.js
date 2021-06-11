@@ -34,6 +34,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 export default function HomePage() {
+    // A React const that is assigned with Material UI Component Style Const 
     const classes = useStyles();
 
     // React const set up for Snackbar Alert messages

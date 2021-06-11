@@ -55,9 +55,10 @@ if(!isset($_SERVER['HTTP_REFERER'])) {
 }
 
 // Domain Locker
-if($_SERVER['HTTP_REFERER'] == "http://localhost:3000/" || $_SERVER['HTTP_REFERER'] == "http://localhost:3000/admin/"
-    // || $_SERVER['HTTP_REFERER'] == "http://192.168.0.8:3000"
-    // || $_SERVER['HTTP_REFERER'] == "https://solarviewcinema.malloriecini.com/" 
+if(
+    $_SERVER['HTTP_REFERER'] == "http://localhost:3000/" || $_SERVER['HTTP_REFERER'] == "http://localhost:3000/admin/"
+    || $_SERVER['HTTP_REFERER'] == "http://192.168.0.8:3000"
+    //  || $_SERVER['HTTP_REFERER'] == "https://solarviewcinema.malloriecini.com/" 
     // || $_SERVER['HTTP_REFERER'] == "https://solarviewcinema.malloriecini.com/admin/"
     ) {
     // Allow user access and proceed requests with valid URL
