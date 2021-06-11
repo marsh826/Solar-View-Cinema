@@ -27,7 +27,7 @@ Customer Account => Username: whoryou || Password: Iamu
 
 Administrator Account => Username: hanate || Password: rice
 
-#GitHub Repository
+# GitHub Repository
 https://github.com/marsh826/Solar-View-Cinema
 
 # Web App and Admin Panel access
