@@ -33,7 +33,11 @@ https://github.com/marsh826/Solar-View-Cinema
 # Web App and Admin Panel access
 The web app can be accessed on 
 
+https://solarviewcinema.malloriecini.com/Home
+
 The admin panel can be accessed on
+
+https://solarviewcinemaadmin.malloriecini.com/
 
 # Local Installation on Development Environment
 Be sure to have React installed in order to access both web app and admin panel in development environment
@@ -98,13 +102,3 @@ WAMP Version 3.2.0 - 64bit
 Visual Studio Code - used as code editor
 
 React Hook Forms for form validation on both web app and admin panel
-
-
-
-
-
-
-
-
-
-
