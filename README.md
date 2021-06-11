@@ -70,19 +70,25 @@ serve -s build
 Each time a new build is generated, deploy the app
 
 # Technology used for both Web App and Admin Panel
-Front End
+**Front End**
 With some basic implementation of HTML5, CSS3 and JavaScript in React Components
+
 Layout Framework: Material UI version 4.11.1
+
 React (JavaScript Library) implemented into the projects by local installation and command prompt
 
-Back End
+**Back End**
 PHP Hypertext Preprocessor Version 7.3.12
+
 phpMyAdmin
+
 MySQL
+
 Server Software: Apache/2.4.41 (Win64) PHP/7.3.12
+
 WAMP Version 3.2.0 - 64bit
 
-3rd Party Technologies
+**3rd Party Technologies**
 Visual Studio Code - used as code editor
 React Hook Forms for form validation on both web app and admin panel
 
