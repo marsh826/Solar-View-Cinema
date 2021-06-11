@@ -23,13 +23,9 @@ Solar View Cinema is a newly established cinema exhibiting company in Brisbane. 
 10. If the customer has booked a student ticket, a student ID is required to be provided to the employee before entering the cinema room. 
 
 # Pre-made Accounts 
-Customer Account
-Username: whoryou
-Password: Iamu
+Customer Account => Username: whoryou || Password: Iamu
 
-Administrator Account
-Username: hanate
-Password: rice
+Administrator Account => Username: hanate || Password: rice
 
 #GitHub Repository
 https://github.com/marsh826/Solar-View-Cinema
