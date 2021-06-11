@@ -62,12 +62,14 @@ npm test
 Starts the test runner
 
 # Enabling React Service Worker
-After the app was build into production using npm build, you can enable React Service Worker by:
+**After the app was build into production using npm build, you can enable React Service Worker by:**
 
 yarn global add server
+
 Install the global dependency on serve
 
 serve -s build
+
 Each time a new build is generated, deploy the app
 
 # Technology used for both Web App and Admin Panel
