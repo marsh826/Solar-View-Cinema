@@ -48,6 +48,7 @@ class databaseOBJ {
         $stmt->bindValue(':email', $email);
         $stmt->bindValue(':phone', $phone);
         $stmt->bindValue(':usernamereg', $usernamereg);
+        // One Way Password Hashing Method 
         $hpassword = password_hash($passwordreg, PASSWORD_DEFAULT); 
         $stmt->bindValue(':passwordreg', $hpassword);
         return $stmt->execute();
@@ -88,6 +89,7 @@ class databaseOBJ {
         $stmt->bindValue(':emailupdt', $EmailUPD);
         $stmt->bindValue(':phoneupdt', $PhoneUPD);
         $stmt->bindValue(':usernameupdt', $UsernameUPD);
+        // One Way Password Hashing Method 
         $HpasswordUPD = password_hash($PasswordUPD, PASSWORD_DEFAULT);
         $stmt->bindValue(':passwordupdt', $HpasswordUPD);
         return $stmt->execute();
@@ -289,7 +291,7 @@ class databaseOBJ {
         $stmt->bindValue(':userid', $User);
         return $stmt->execute();
     }
-    // Login for Admin 
+    // Login for Admin. Access restriction depends if the account has the access right of Administrator
     function adminLogin($usernameAdmin, $passwordAdmin, $IPAddress, $Time, $BrowserType, $Activity) {
         $mysql = "SELECT UserID, Password FROM users WHERE Username = :username AND AccessRight = 'Administrator' ";
         $stmt = $this->dbconn->prepare($mysql);

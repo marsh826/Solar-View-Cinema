@@ -10,6 +10,7 @@ header("Access-Control-Allow-Headers: origin, content-type, accept");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, ~OPTIONS");
 header("Access-Control-Allow-Origin: http://localhost:3000");
 // header("Access-Control-Allow-Origin: https://solarviewcinema.malloriecini.com");
+// header("Access-Control-Allow-Origin: https://solarviewcinemaadmin.malloriecini.com");
 header("Access-Control-Allow-Credentials: true");
 
 // The if statement is checking for pre-exisitng session,
@@ -59,7 +60,7 @@ if(
     $_SERVER['HTTP_REFERER'] == "http://localhost:3000/" || $_SERVER['HTTP_REFERER'] == "http://localhost:3000/admin/"
     || $_SERVER['HTTP_REFERER'] == "http://192.168.0.8:3000"
     //  || $_SERVER['HTTP_REFERER'] == "https://solarviewcinema.malloriecini.com/" 
-    // || $_SERVER['HTTP_REFERER'] == "https://solarviewcinema.malloriecini.com/admin/"
+    // || $_SERVER['HTTP_REFERER'] == "https://solarviewcinemaadmin.malloriecini.com/admin/"
     ) {
     // Allow user access and proceed requests with valid URL
 } else {
